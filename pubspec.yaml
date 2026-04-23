@@ -1,0 +1,54 @@
+name: mobile
+description: "A mobile app built to digitize the booking system for bus companies operating in Rwanda and neighboring countries"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.6
+  google_fonts: ^6.2.1
+  iconsax: ^0.0.8
+  intl: ^0.20.2
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+  dio: ^5.8.0+1
+  flutter_dotenv: ^5.2.1
+  flutter_secure_storage: ^9.2.4
+  riverpod: ^2.6.1
+  flutter_riverpod: ^2.6.1
+  shimmer: ^3.0.0
+  intl_phone_field: ^3.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
+
+flutter:
+  uses-material-design: true
+  assets:
+     - assets/
+     - .env
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/velotick_splash.png
+  android_gravity: center
+  ios_content_mode: center
+  android: true
+  ios: true
+  web: false
+  android_12:
+    color: "#FFFFFF"
+    image: assets/velotick_splash.png
+    icon_background_color: "#FFFFFF"
