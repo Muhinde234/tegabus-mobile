@@ -2,76 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/screens/my_ticket_card.dart';
+import 'package:mobile/utils/colors.dart';
 
 class MyTickets extends ConsumerWidget {
   const MyTickets({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final myTicketsState = ref.watch(myTicketsNotifierProvider);
+    final state = ref.watch(myTicketsNotifierProvider);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (myTicketsState.isInit) {
+    if (state.isInit) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(myTicketsNotifierProvider.notifier).fetchMyTickets();
-      }
-    });
+      });
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Tickets"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('My Tickets'), centerTitle: true),
       body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(myTicketsNotifierProvider.notifier).fetchMyTickets();
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Builder(
-            builder: (context) {
+        onRefresh: () =>
+            ref.read(myTicketsNotifierProvider.notifier).fetchMyTickets(),
+        child: _buildBody(context, state),
+      ),
+    );
+  }
 
-              if (myTicketsState.isLoading || myTicketsState.isInit) {
-                return const Center(child: CircularProgressIndicator());
-              }
+  Widget _buildBody(BuildContext context, dynamic state) {
+    if (state.isInit || state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-              else if (myTicketsState.isSuccess) {
-                final data = myTicketsState.data!;
-                // Check if there are no tickets
-                if (data.data.isEmpty) {
-                  return SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 100,
-                      child: const Center(child: Text("No tickets found.")),
-                    ),
-                  );
-                }
-
-                else {
-                  return ListView.builder(
-                    itemCount: data.data.length,
-                    itemBuilder: (context, index) => MyTicketCard(ticket: data.data[index]),
-                  );
-                }
-              }
-
-              else if (myTicketsState.isError) {
-                final exception = myTicketsState.error!;
-                return SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height - 100,
-                    child: Center(child: Text("Error: ${exception.toString()}")),
-                  ),
-                );
-              }
-
-              else {
-                return const Center(child: Text("Unexpected state"));
-              }
-            },
+    if (state.isSuccess) {
+      final tickets = state.data?.data ?? [];
+      if (tickets.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.confirmation_num_outlined,
+                  size: 72, color: DColors.neutral2),
+              SizedBox(height: 16),
+              Text('No tickets yet',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w700)),
+              SizedBox(height: 6),
+              Text('Book your first trip to see it here',
+                  style: TextStyle(color: DColors.neutral4)),
+            ],
           ),
-        ),
+        );
+      }
+      return ListView.separated(
+        padding: const EdgeInsets.all(16),
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: tickets.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        itemBuilder: (_, i) => MyTicketCard(ticket: tickets[i]),
+      );
+    }
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline,
+              color: DColors.danger6, size: 48),
+          const SizedBox(height: 12),
+          Text('${state.error}',
+              style: const TextStyle(color: DColors.neutral4)),
+        ],
       ),
     );
   }

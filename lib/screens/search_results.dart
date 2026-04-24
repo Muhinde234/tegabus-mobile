@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
+import 'package:mobile/utils/colors.dart';
 import 'package:mobile/widgets/shimmers/ticket_card_shimmer.dart';
 import 'package:mobile/widgets/ticket_card.dart';
 
@@ -10,83 +11,102 @@ class SearchResults extends ConsumerWidget {
   final DateTime date;
 
   const SearchResults({
+    super.key,
     required this.from,
     required this.to,
     required this.date,
-    super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final schedulesState = ref.watch(schedulesNotifierProvider);
+    final state = ref.watch(schedulesNotifierProvider);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (schedulesState.isInit) {
+    if (state.isInit) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(schedulesNotifierProvider.notifier).fetchSchedules(
-          origin: from,
-          destination: to,
-          date: date
-        );
-      }
-    });
+              from: from,
+              to: to,
+              date: date,
+            );
+      });
+    }
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title:  Text('$from - $to')),
+      appBar: AppBar(
+        title: Text('$from → $to'),
+        subtitle: Text(
+          '${date.day}/${date.month}/${date.year}',
+          style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+        ),
+      ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(schedulesNotifierProvider.notifier).fetchSchedules(
-            origin: from,
-            destination: to,
-            date: date,
-          );
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+        onRefresh: () => ref
+            .read(schedulesNotifierProvider.notifier)
+            .fetchSchedules(from: from, to: to, date: date),
+        child: _buildBody(context, state, ref),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, dynamic state, WidgetRef ref) {
+    if (state.isInit || state.isLoading) {
+      return ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: 5,
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        itemBuilder: (_, __) => const TicketCardShimmer(),
+      );
+    }
+
+    if (state.isSuccess) {
+      final schedules = state.data ?? [];
+      if (schedules.isEmpty) {
+        return Center(
           child: Column(
-            spacing: 20.0,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: () {
-                  if (schedulesState.isInit || schedulesState.isLoading) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
-                      itemBuilder: (context, index) =>
-                      const TicketCardShimmer(),
-                    );
-                  } else if (schedulesState.isSuccess) {
-                    final data = schedulesState.data!;
-                    if (data.data.isNotEmpty) {
-                      return ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: data.data.length,
-                        separatorBuilder: (context, index) =>
-                        const SizedBox(height: 16),
-                        itemBuilder: (context, index) {
-                          final schedule = data.data[index];
-                          return TicketCard(schedule: schedule);
-                        },
-                      );
-                    } else {
-                      return Center(
-                        child: Text("No Schedules | Buses found!"),
-                      );
-                    }
-                  } else if (schedulesState.isError) {
-                    return Center(
-                      child: Text("No Schedules | Buses found!"));
-                  }
-                  return const SizedBox.shrink();
-                }(),
-              ),
-              const SizedBox(height: 10),
+              const Icon(Icons.search_off,
+                  size: 64, color: DColors.neutral2),
+              const SizedBox(height: 16),
+              const Text('No schedules found',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 17)),
+              const SizedBox(height: 6),
+              Text('Try a different date or route',
+                  style: TextStyle(color: DColors.neutral4)),
             ],
           ),
+        );
+      }
+      return ListView.separated(
+        padding: const EdgeInsets.all(16),
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: schedules.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        itemBuilder: (_, i) => TicketCard(schedule: schedules[i]),
+      );
+    }
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.error_outline,
+                color: DColors.danger6, size: 48),
+            const SizedBox(height: 12),
+            Text('${state.error}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: DColors.neutral4)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => ref
+                  .read(schedulesNotifierProvider.notifier)
+                  .fetchSchedules(from: from, to: to, date: date),
+              child: const Text('Retry'),
+            ),
+          ],
         ),
       ),
     );

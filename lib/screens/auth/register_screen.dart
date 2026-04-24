@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/requests/sign_up_request.dart';
-import 'package:mobile/screens/auth/auth_layout.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 import 'package:mobile/utils/colors.dart';
 
@@ -11,248 +10,266 @@ class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _nationalityController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  String _phoneNumber = '';
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  final _firstNameCtrl = TextEditingController();
+  final _lastNameCtrl = TextEditingController();
+  final _nationalityCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passwordCtrl = TextEditingController();
+  final _confirmCtrl = TextEditingController();
+  String _phone = '';
+  bool _obscurePass = true;
+  bool _obscureConfirm = true;
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _nationalityController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _firstNameCtrl.dispose();
+    _lastNameCtrl.dispose();
+    _nationalityCtrl.dispose();
+    _emailCtrl.dispose();
+    _passwordCtrl.dispose();
+    _confirmCtrl.dispose();
     super.dispose();
-  }
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final signUpState = ref.watch(signUpNotifierProvider);
 
-    ref.listen(signUpNotifierProvider, (previous, current) {
-      if (current.isSuccess && (previous == null || !previous.isSuccess)) {
+    ref.listen(signUpNotifierProvider, (_, curr) {
+      if (curr.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Account created! Check your email to verify, then sign in.'),
+          backgroundColor: DColors.success6,
+          duration: Duration(seconds: 4),
+        ));
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
         );
-      } else if (current.isError && (previous == null || !previous.isError)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(current.error.toString())),
-        );
+      } else if (curr.isError) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(curr.error.toString()),
+          backgroundColor: DColors.danger6,
+        ));
       }
     });
 
-    return AuthLayout(
-      description:
-      "Create an account to start booking your bus tickets with ease.",
-      child: Column(
-        children: [
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _firstNameController,
-                  decoration: const InputDecoration(hintText: "First name"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _lastNameController,
-                  decoration: const InputDecoration(hintText: "Last name"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _nationalityController,
-                  decoration: const InputDecoration(hintText: "Nationality"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your nationality';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(hintText: "Email"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                        .hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                IntlPhoneField(
-                  decoration: const InputDecoration(
-                    hintText: "Phone Number",
-                    border: OutlineInputBorder(),
-                  ),
-                  initialCountryCode: 'RW',
-                  onChanged: (phone) {
-                    setState(() {
-                      _phoneNumber = phone.completeNumber;
-                    });
-                  },
-                  validator: (phone) {
-                    if (phone == null || phone.completeNumber.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: _togglePasswordVisibility,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: _obscureConfirmPassword,
-                  decoration: InputDecoration(
-                    hintText: "Confirm Password",
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirmPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: _toggleConfirmPasswordVisibility,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                      WidgetStateProperty.all(DColors.primary6),
-                    ),
-                    onPressed: signUpState.isLoading
-                        ? null
-                        : () {
-                      if (_formKey.currentState!.validate()) {
-                        final request = SignUpRequest(
-                          phoneNumber: _phoneNumber,
-                          firstname: _firstNameController.text,
-                          lastname: _lastNameController.text,
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          passwordConfirmation:
-                          _confirmPasswordController.text,
-                          nationality: _nationalityController.text,
-                        );
-                        ref
-                            .read(signUpNotifierProvider.notifier)
-                            .signUp(request);
-                      }
-                    },
-                    child: signUpState.isLoading
-                        ? const CircularProgressIndicator(
-                      valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.white),
-                    )
-                        : const Text("Register"),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: DColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Already have an account? "),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  );
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                    color: DColors.primary6,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: DColors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child:
+                          Image.asset('assets/logo.png', fit: BoxFit.cover),
+                    ),
                   ),
+                  const SizedBox(width: 12),
+                  const Text('TegaBus',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: DColors.primary)),
+                ],
+              ),
+              const SizedBox(height: 28),
+              const Text('Create account',
+                  style: TextStyle(
+                      fontSize: 28, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 6),
+              const Text('Book buses across Rwanda in seconds',
+                  style: TextStyle(color: DColors.neutral4, fontSize: 15)),
+              const SizedBox(height: 28),
+
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _firstNameCtrl,
+                            decoration: const InputDecoration(
+                                hintText: 'First name'),
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? 'Required'
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _lastNameCtrl,
+                            decoration: const InputDecoration(
+                                hintText: 'Last name'),
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? 'Required'
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _nationalityCtrl,
+                      decoration:
+                          const InputDecoration(hintText: 'Nationality'),
+                      validator: (v) =>
+                          (v == null || v.isEmpty) ? 'Required' : null,
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _emailCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration:
+                          const InputDecoration(hintText: 'Email address'),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return 'Required';
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(v)) return 'Invalid email';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    IntlPhoneField(
+                      decoration: const InputDecoration(
+                        hintText: 'Phone number',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: DColors.surfaceVariant,
+                      ),
+                      initialCountryCode: 'RW',
+                      onChanged: (p) =>
+                          setState(() => _phone = p.completeNumber),
+                      validator: (p) =>
+                          (p == null || p.completeNumber.isEmpty)
+                              ? 'Required'
+                              : null,
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _passwordCtrl,
+                      obscureText: _obscurePass,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscurePass
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined),
+                          onPressed: () =>
+                              setState(() => _obscurePass = !_obscurePass),
+                        ),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return 'Required';
+                        if (!RegExp(
+                                r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$')
+                            .hasMatch(v)) {
+                          return 'Min 8 chars, uppercase, lowercase & number';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _confirmCtrl,
+                      obscureText: _obscureConfirm,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm password',
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscureConfirm
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined),
+                          onPressed: () => setState(
+                              () => _obscureConfirm = !_obscureConfirm),
+                        ),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return 'Required';
+                        if (v != _passwordCtrl.text) {
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
               ),
+
+              const SizedBox(height: 28),
+
+              ElevatedButton(
+                onPressed: signUpState.isLoading
+                    ? null
+                    : () {
+                        if (_formKey.currentState!.validate()) {
+                          ref
+                              .read(signUpNotifierProvider.notifier)
+                              .signUp(SignUpRequest(
+                                firstName: _firstNameCtrl.text.trim(),
+                                lastName: _lastNameCtrl.text.trim(),
+                                email: _emailCtrl.text.trim(),
+                                password: _passwordCtrl.text,
+                                phoneNumber: _phone,
+                                nationality: _nationalityCtrl.text.trim(),
+                              ));
+                        }
+                      },
+                child: signUpState.isLoading
+                    ? const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Create Account'),
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Already have an account? ',
+                      style: TextStyle(color: DColors.neutral4)),
+                  GestureDetector(
+                    onTap: () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const LoginScreen()),
+                    ),
+                    child: const Text('Sign In',
+                        style: TextStyle(
+                            color: DColors.primary,
+                            fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
