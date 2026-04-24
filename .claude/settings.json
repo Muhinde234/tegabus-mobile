@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:/Users/IGIRIMPUHWE Dositha/AppData/Local/Android/sdk/cmdline-tools/latest/bin/sdkmanager.bat\" \"platforms;android-34\")"
+    ]
+  }
+}

@@ -3,12 +3,12 @@ import 'dart:ui';
 class DColors {
   DColors._();
 
-  static final Color primary6 = Color(0xFF2356CF);
-  static final Color primary5 = Color(0xCC2356CF);
-  static final Color primary4 = Color(0x992356CF);
-  static final Color primary3 = Color(0x662356CF);
-  static final Color primary2 = Color(0x332356CF);
-  static final Color primary1 = Color(0x1A2356CF);
+  static final Color primary6 = Color(0xFF0B3B2E);
+  static final Color primary5 = Color(0xCC0B3B2E);
+  static final Color primary4 = Color(0x990B3B2E);
+  static final Color primary3 = Color(0x660B3B2E);
+  static final Color primary2 = Color(0x330B3B2E);
+  static final Color primary1 = Color(0x1A0B3B2E);
 
   static final Color success6 = Color(0xFF0C7E6E);
   static final Color success5 = Color(0xCC0C7E6E);

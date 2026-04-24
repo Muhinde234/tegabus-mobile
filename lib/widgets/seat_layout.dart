@@ -41,7 +41,7 @@ class _SeatLayoutState extends State<SeatLayout> {
                 final isSelected = seat.seatNumber == _selectedSeat;
                 final color = seat.isBooked
                     ? Colors.grey.shade400
-                    : (isSelected ? Colors.blue : Colors.green);
+                    : (isSelected ? const Color(0xFF0B3B2E) : Colors.green);
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: GestureDetector(

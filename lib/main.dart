@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,11 +6,10 @@ import 'package:mobile/screens/layout.dart';
 import 'package:mobile/screens/onbording_screen.dart';
 import 'package:mobile/utils/theme.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
 
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   final token = await storage.read(key: 'token');
 
   final initialScreen = token != null ? const Layout() : const OnbordingScreen();
@@ -31,9 +28,9 @@ class Application extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white
+          surfaceTintColor: Colors.white,
         ),
         textTheme: GoogleFonts.outfitTextTheme(
           Theme.of(context).textTheme,
