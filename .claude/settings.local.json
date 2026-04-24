@@ -6,7 +6,8 @@
       "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/api-docs\")",
       "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/swagger-ui/index.html\")",
       "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/v3/api-docs\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/swagger-ui\")"
+      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/swagger-ui\")",
+      "Bash(xargs rm *)"
     ]
   }
 }
