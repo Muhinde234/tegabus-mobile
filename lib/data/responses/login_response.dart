@@ -4,32 +4,25 @@ part 'login_response.freezed.dart';
 part 'login_response.g.dart';
 
 @freezed
-abstract class User with _$User {
-  const factory User({
-    required int id,
-    required String firstname,
-    required String lastname,
-    @JsonKey(name: 'phone_number')
-    required String phoneNumber,
-    required String nationality,
-    @JsonKey(name: 'email_verified')
-    required int emailVerified,
-    @JsonKey(name: 'email_verified_at')
-    DateTime? emailVerifiedAt,
-    @JsonKey(name: 'profile_pic_url')
-    required String profilePicUrl,
-    required List<String> roles,
-    required List<String> permissions,
-  }) = _User;
+abstract class AuthUser with _$AuthUser {
+  const factory AuthUser({
+    required String id,
+    required String email,
+    required String fullName,
+    required String role,
+  }) = _AuthUser;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory AuthUser.fromJson(Map<String, dynamic> json) =>
+      _$AuthUserFromJson(json);
 }
 
 @freezed
 abstract class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
-    required String token,
-    required User user,
+    required String message,
+    required String accessToken,
+    required int expiresIn,
+    required AuthUser user,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
