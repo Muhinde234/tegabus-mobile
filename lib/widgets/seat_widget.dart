@@ -16,36 +16,42 @@ class SeatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = seat.isBooked
-        ? DColors.neutral5
+    final color = seat.booked
+        ? DColors.neutral2
         : isSelected
-        ? DColors.warning5
-        : DColors.success5;
+            ? DColors.warning5
+            : DColors.success5;
+
+    final iconColor = seat.booked
+        ? DColors.neutral3
+        : isSelected
+            ? DColors.warning6
+            : DColors.success6;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 45,
-        height: 45,
+        width: 48,
+        height: 52,
+        margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          border: Border.all(color: DColors.neutral3),
+          color: color,
           borderRadius: BorderRadius.circular(8),
+          border: isSelected
+              ? Border.all(color: DColors.warning6, width: 2)
+              : null,
         ),
-        margin: const EdgeInsets.only(bottom: 8.0),
-        child: Stack(
-          alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.event_seat,
-              size: 30,
-              color: color,
-            ),
-            Positioned(
-              bottom: 5,
-              child: Text(
-                seat.seatNumber,
-                style: const TextStyle(fontSize: 10, color: Colors.black),
-              ),
+            Icon(Icons.event_seat, size: 22, color: iconColor),
+            const SizedBox(height: 2),
+            Text(
+              seat.seatNumber,
+              style: TextStyle(
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  color: seat.booked ? DColors.neutral3 : DColors.neutral6),
             ),
           ],
         ),

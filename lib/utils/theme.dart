@@ -2,83 +2,117 @@ import 'package:flutter/material.dart';
 import 'package:mobile/utils/colors.dart';
 
 class DTheme {
-  const DTheme._();
+  DTheme._();
 
-  static final ElevatedButtonThemeData elevatedButtonThemeData =
+  static ElevatedButtonThemeData get elevatedButtonThemeData =>
       ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
+          backgroundColor: DColors.primary,
           foregroundColor: Colors.white,
-          textStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+          minimumSize: const Size(double.infinity, 52),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            letterSpacing: 0.3,
           ),
         ),
       );
 
-  static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-    errorMaxLines: 3,
-    floatingLabelBehavior: FloatingLabelBehavior.auto,
-    prefixIconColor: DColors.neutral2,
-    suffixIconColor: DColors.neutral2,
-    contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-    labelStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    hintStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
-    border: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(width: 2, color: Colors.black12),
-    ),
-    enabledBorder: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.black12),
-    ),
-    focusedBorder: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.black),
-    ),
-    errorBorder: const OutlineInputBorder().copyWith(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.red),
-    ),
-    focusedErrorBorder: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
-      borderSide: BorderSide(color: Colors.orange),
-    ),
-  );
+  static OutlinedButtonThemeData get outlinedButtonThemeData =>
+      OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: DColors.primary,
+          side: const BorderSide(color: DColors.primary, width: 1.5),
+          minimumSize: const Size(double.infinity, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+      );
 
-  static final CardThemeData cardThemeData = CardThemeData(
-    elevation: 0,
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-      side: BorderSide(color: DColors.neutral2),
-    ),
-  );
+  static InputDecorationTheme get inputDecorationTheme => InputDecorationTheme(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        filled: true,
+        fillColor: DColors.surfaceVariant,
+        labelStyle:
+            const TextStyle(fontSize: 14, color: DColors.neutral5),
+        hintStyle:
+            const TextStyle(fontSize: 14, color: DColors.neutral4),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColors.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColors.danger6, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColors.danger6, width: 2),
+        ),
+        errorMaxLines: 3,
+      );
 
-  static final TextStyle hintTextStyle = TextStyle(
-    fontSize: 14,
-    color: Colors.grey,
-    fontWeight: FontWeight.w400,
-  );
+  static CardTheme get cardThemeData => CardTheme(
+        elevation: 0,
+        color: DColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: DColors.neutral2),
+        ),
+        margin: EdgeInsets.zero,
+      );
 
-  static final InputDecoration dropdownInputDecoration = InputDecoration(
-    labelStyle: labelStyle,
-    border: InputBorder.none,
-    contentPadding: EdgeInsets.zero,
-  );
+  static AppBarTheme get appBarTheme => const AppBarTheme(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          color: DColors.neutral6,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
+        iconTheme: IconThemeData(color: DColors.neutral6),
+      );
 
-  static final TextStyle dropdownItemTextStyle = TextStyle(
-    fontSize: 14,
-    color: Colors.black87,
-    fontWeight: FontWeight.w600,
-  );
-
-  static final TextStyle labelStyle = TextStyle(
-    fontSize: 16,
-    color: DColors.neutral6,
-    fontWeight: FontWeight.w500,
-  );
-
-
+  static NavigationBarThemeData get navigationBarTheme =>
+      NavigationBarThemeData(
+        backgroundColor: Colors.white,
+        indicatorColor: DColors.primary2,
+        elevation: 8,
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: DColors.primary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            );
+          }
+          return const TextStyle(color: DColors.neutral4, fontSize: 12);
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: DColors.primary, size: 24);
+          }
+          return const IconThemeData(color: DColors.neutral4, size: 24);
+        }),
+      );
 }

@@ -7,7 +7,6 @@ import 'package:mobile/data/responses/profile.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/widgets/shimmers/profile_shimmer.dart';
 
-
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
@@ -15,116 +14,149 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileNotifierProvider);
 
-    Widget content;
-    if (profileState.isInit || profileState.isLoading) {
-      content = const ProfileShimmer();
-    } else if (profileState.isSuccess) {
-      final profile = profileState.data!.data;
-      content = ProfileContent(profile: profile);
-    } else {
-      content = Center(child: Text('Error fetching profile ${profileState.error}'));
-    }
-
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile"), centerTitle: true),
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(profileNotifierProvider.notifier).fetchProfile(),
+        onRefresh: () =>
+            ref.read(profileNotifierProvider.notifier).fetchProfile(),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: content,
-          ),
+          padding: const EdgeInsets.all(16),
+          child: switch (true) {
+            _ when profileState.isInit || profileState.isLoading =>
+              const ProfileShimmer(),
+            _ when profileState.isSuccess =>
+              _ProfileContent(profile: profileState.data!),
+            _ => Center(
+                child: Text('Error: ${profileState.error}',
+                    style: const TextStyle(color: DColors.danger6))),
+          },
         ),
       ),
     );
   }
 }
 
-Map<String, String> profileToMap(Profile profile) {
-  final dateFormat = DateFormat('MMMM d, y \'at\' h:mm a');
-
-  return {
-    'Name': '${profile.firstname} ${profile.lastname}',
-    'Email': profile.email,
-    'Phone Number': profile.phoneNumber,
-    'Nationality': profile.nationality,
-    'Role(s)': profile.roles.map((r) => r.name).join(', '),
-    'Created At': dateFormat.format(profile.createdAt),
-  };
-}
-
-
-class ProfileContent extends StatelessWidget {
+class _ProfileContent extends StatelessWidget {
   final Profile profile;
-
-  const ProfileContent({super.key, required this.profile});
+  const _ProfileContent({required this.profile});
 
   @override
   Widget build(BuildContext context) {
-    final profileMap = profileToMap(profile);
+    final joined = DateFormat('MMMM d, y').format(profile.createdAt);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Avatar
         Center(
-          child: ClipOval(
-            child: Image.network(
-              profile.profilePicUrl,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: 80,
-                height: 80,
-                color: Colors.grey[300],
-                child: const Icon(
-                  Icons.person,
-                  size: 60,
-                  color: Colors.grey,
+          child: Stack(
+            children: [
+              CircleAvatar(
+                radius: 44,
+                backgroundColor: DColors.primary2,
+                backgroundImage: (profile.profilePicUrl != null &&
+                        profile.profilePicUrl!.isNotEmpty)
+                    ? NetworkImage(profile.profilePicUrl!)
+                    : null,
+                child: (profile.profilePicUrl == null ||
+                        profile.profilePicUrl!.isEmpty)
+                    ? Text(
+                        '${profile.firstName[0]}${profile.lastName[0]}'
+                            .toUpperCase(),
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: DColors.primary),
+                      )
+                    : null,
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: const BoxDecoration(
+                      color: DColors.primary, shape: BoxShape.circle),
+                  child: const Icon(Icons.edit,
+                      color: Colors.white, size: 14),
                 ),
               ),
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              },
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Center(
+          child: Text(
+            '${profile.firstName} ${profile.lastName}',
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.w800),
+          ),
+        ),
+        Center(
+          child: Text(profile.email,
+              style: const TextStyle(
+                  color: DColors.neutral4, fontSize: 14)),
+        ),
+        Center(
+          child: Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: DColors.primary2,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              profile.role.toUpperCase(),
+              style: const TextStyle(
+                  color: DColors.primary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2),
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        Text(
-          "Personal Information",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 20),
-        ...profileMap.entries.map((entry) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Row(
-              children: [
-                Text(
-                  entry.key,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: DColors.neutral3,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  entry.value,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          );
-        }),
-        SizedBox(height: 60.0),
-        LogoutButton()
+        const SizedBox(height: 28),
+
+        const Text('Personal Information',
+            style:
+                TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+
+        _infoTile(Icons.phone_outlined, 'Phone', profile.phoneNumber),
+        _infoTile(Icons.public_outlined, 'Nationality', profile.nationality),
+        _infoTile(Icons.calendar_today_outlined, 'Member since', joined),
+
+        const SizedBox(height: 32),
+        const LogoutButton(),
+        const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _infoTile(IconData icon, String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: DColors.neutral2),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: DColors.primary, size: 20),
+          const SizedBox(width: 12),
+          Text(label,
+              style: const TextStyle(
+                  color: DColors.neutral4, fontSize: 13)),
+          const Spacer(),
+          Text(value,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 14)),
+        ],
+      ),
     );
   }
 }

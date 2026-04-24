@@ -1,188 +1,284 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/data/providers.dart';
+import 'package:mobile/data/responses/schedules_response.dart';
+import 'package:mobile/screens/booking_confirmation_screen.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/widgets/seat_widget.dart';
+import 'package:mobile/widgets/shimmers/seat_layout_shimmer.dart';
 
 class ScheduleDetailsScreen extends ConsumerStatefulWidget {
-  final int scheduleId;
+  final Schedule schedule;
 
-  const ScheduleDetailsScreen({super.key, required this.scheduleId});
+  const ScheduleDetailsScreen({super.key, required this.schedule});
 
   @override
   ConsumerState<ScheduleDetailsScreen> createState() =>
       _ScheduleDetailsScreenState();
 }
 
-class _ScheduleDetailsScreenState extends ConsumerState<ScheduleDetailsScreen> {
+class _ScheduleDetailsScreenState
+    extends ConsumerState<ScheduleDetailsScreen> {
   int? selectedSeatId;
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(scheduleDetailNotifierProvider(widget.scheduleId));
-    final buyTicketState = ref.watch(buyTicketNotifierProvider);
-    
-    ref.listen(buyTicketNotifierProvider, (prev, curr) {
-      if(curr.isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Seat booked successfully!')),
+    final seatsState =
+        ref.watch(seatsNotifierProvider(widget.schedule.id));
+    final buyState = ref.watch(buyTicketNotifierProvider);
+    final s = widget.schedule;
+
+    ref.listen(buyTicketNotifierProvider, (_, curr) {
+      if (curr.isSuccess) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                BookingConfirmationScreen(booking: curr.data!),
+          ),
         );
-        ref.read(scheduleDetailNotifierProvider(widget.scheduleId).notifier).fetchSchedule();
-        ref.read(schedulesNotifierProvider.notifier).fetchSchedules();
-
-        setState(() {
-          selectedSeatId = null;
-        });
-
       } else if (curr.isError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Booking failed: ${curr.error.toString()}')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(curr.error.toString()),
+          backgroundColor: DColors.danger6,
+        ));
       }
     });
 
+    final dep = DateFormat('h:mm a').format(s.departureTime);
+    final arr = DateFormat('h:mm a').format(s.arrivalTime);
+    final dur = s.arrivalTime.difference(s.departureTime);
+    final durationText = '${dur.inHours}h ${dur.inMinutes % 60}m';
+    final priceText =
+        NumberFormat('#,###').format(s.price.toInt()) + ' RWF';
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Schedule Details")),
+      appBar: AppBar(
+        title: Text('${s.from} → ${s.to}'),
+      ),
       body: SafeArea(
         top: false,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await ref
-                .read(
-                  scheduleDetailNotifierProvider(widget.scheduleId).notifier,
-                )
-                .fetchSchedule();
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: () {
-              if (state.isInit || state.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state.isSuccess) {
-                final schedule = state.data!;
-
-                final seatsByColumn = {
-                  'A':
-                      schedule.availabilities
-                          .where((seat) => seat.seatNumber.startsWith('A'))
-                          .toList(),
-                  'B':
-                      schedule.availabilities
-                          .where((seat) => seat.seatNumber.startsWith('B'))
-                          .toList(),
-                  'C':
-                      schedule.availabilities
-                          .where((seat) => seat.seatNumber.startsWith('C'))
-                          .toList(),
-                  'D':
-                      schedule.availabilities
-                          .where((seat) => seat.seatNumber.startsWith('D'))
-                          .toList(),
-                  'E':
-                      schedule.availabilities
-                          .where((seat) => seat.seatNumber.startsWith('E'))
-                          .toList(),
-                };
-
-                return SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    spacing: 20,
+        child: Column(
+          children: [
+            // Schedule summary header
+            Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: DColors.primary,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Text(s.bus,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15)),
+                      Text(priceText,
+                          style: const TextStyle(
+                              color: DColors.secondary,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15)),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(s.from,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16)),
+                            Text(dep,
+                                style: const TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      Column(
                         children: [
-                          _buildLegend(DColors.warning5, 'Selected'),
-                          const SizedBox(width: 20),
-                          _buildLegend(DColors.neutral5, 'Booked'),
-                          const SizedBox(width: 20),
-                          _buildLegend(DColors.success5, 'Available'),
+                          const Icon(Icons.arrow_forward,
+                              color: Colors.white54, size: 18),
+                          Text(durationText,
+                              style: const TextStyle(
+                                  color: Colors.white54, fontSize: 11)),
                         ],
                       ),
-                      SingleChildScrollView(
-                        child: Row(
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            for (var col in ['A', 'B', 'C', 'D', 'E'])
+                            Text(s.to,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16)),
+                            Text(arr,
+                                style: const TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Legend
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _legend(DColors.success5, 'Available'),
+                  const SizedBox(width: 20),
+                  _legend(DColors.warning5, 'Selected'),
+                  const SizedBox(width: 20),
+                  _legend(DColors.neutral3, 'Booked'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Seat grid
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () => ref
+                    .read(seatsNotifierProvider(widget.schedule.id).notifier)
+                    .fetchSeats(),
+                child: () {
+                  if (seatsState.isLoading || seatsState.isInit) {
+                    return const SeatLayoutShimmer();
+                  }
+                  if (seatsState.isError) {
+                    return Center(
+                        child: Text('Failed to load seats.\n'
+                            '${seatsState.error}'));
+                  }
+                  final seats = seatsState.data!.seats;
+                  final columns = {
+                    'A': seats
+                        .where((s) => s.seatNumber.startsWith('A'))
+                        .toList(),
+                    'B': seats
+                        .where((s) => s.seatNumber.startsWith('B'))
+                        .toList(),
+                    'C': seats
+                        .where((s) => s.seatNumber.startsWith('C'))
+                        .toList(),
+                    'D': seats
+                        .where((s) => s.seatNumber.startsWith('D'))
+                        .toList(),
+                    'E': seats
+                        .where((s) => s.seatNumber.startsWith('E'))
+                        .toList(),
+                  };
+
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final col in ['A', 'B', 'C', 'D', 'E'])
+                            if (columns[col]!.isNotEmpty)
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children:
-                                  seatsByColumn[col]!.map((seat) {
+                                  children: columns[col]!.map((seat) {
                                     return SeatWidget(
                                       seat: seat,
                                       isSelected:
-                                      selectedSeatId == seat.seatId,
-                                      onTap:
-                                      seat.isBooked
+                                          selectedSeatId == seat.seatId,
+                                      onTap: seat.booked
                                           ? null
-                                          : () {
-                                        setState(() {
-                                          selectedSeatId =
-                                              seat.seatId;
-                                        });
-                                      },
+                                          : () => setState(() =>
+                                              selectedSeatId = seat.seatId),
                                     );
                                   }).toList(),
                                 ),
                               ),
-                          ],
-                        ),
+                        ],
                       ),
-                      Container(
-                        decoration: BoxDecoration(color: DColors.primary6),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 18.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                style: TextStyle(color: Colors.white),
-                                "Book Seat",
-                              ),
-                              IconButton(
-                                onPressed: selectedSeatId == null || buyTicketState.isLoading
-                                    ? null
-                                    : () {
-                                  ref
-                                      .read(buyTicketNotifierProvider.notifier)
-                                      .buyTicket(widget.scheduleId, selectedSeatId!);
-                                },
-                                icon: buyTicketState.isLoading
-                                    ? const CircularProgressIndicator(color: Colors.white)
-                                    : const Icon(Icons.arrow_forward, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
+                  );
+                }(),
+              ),
+            ),
+
+            // Book button
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(top: BorderSide(color: DColors.neutral2)),
+              ),
+              child: SafeArea(
+                top: false,
+                child: ElevatedButton(
+                  onPressed: selectedSeatId == null || buyState.isLoading
+                      ? null
+                      : () => ref
+                          .read(buyTicketNotifierProvider.notifier)
+                          .buyTicket(widget.schedule.id, selectedSeatId!),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedSeatId == null
+                        ? DColors.neutral2
+                        : DColors.primary,
+                    disabledBackgroundColor: DColors.neutral2,
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
                   ),
-                );
-              } else if (state.isError) {
-                return Center(child: Text('Error: ${state.error.toString()}'));
-              }
-              return const SizedBox.shrink();
-            }(),
-          ),
+                  child: buyState.isLoading
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(
+                          selectedSeatId == null
+                              ? 'Select a Seat'
+                              : 'Book Seat',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w700),
+                        ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-Widget _buildLegend(Color color, String text) {
-  return Row(
-    children: [
-      Icon(Icons.event_seat, color: color, size: 24),
-      const SizedBox(width: 5),
-      Text(text),
-    ],
-  );
+  Widget _legend(Color color, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.event_seat, color: color, size: 18),
+        const SizedBox(width: 4),
+        Text(label,
+            style:
+                const TextStyle(fontSize: 12, color: DColors.neutral5)),
+      ],
+    );
+  }
 }

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/screens/layout.dart';
 import 'package:mobile/screens/onbording_screen.dart';
+import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
 
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: 'token');
 
-  final initialScreen = token != null ? const Layout() : const OnbordingScreen();
+  final initialScreen =
+      token != null ? const Layout() : const OnbordingScreen();
 
   runApp(ProviderScope(child: Application(initialScreen: initialScreen)));
 }
@@ -27,29 +31,31 @@ class Application extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: DColors.primary,
+          primary: DColors.primary,
+          surface: DColors.surface,
         ),
-        textTheme: GoogleFonts.outfitTextTheme(
-          Theme.of(context).textTheme,
-        ),
+        scaffoldBackgroundColor: DColors.background,
+        appBarTheme: DTheme.appBarTheme,
+        textTheme: GoogleFonts.outfitTextTheme(Theme.of(context).textTheme),
         elevatedButtonTheme: DTheme.elevatedButtonThemeData,
+        outlinedButtonTheme: DTheme.outlinedButtonThemeData,
         inputDecorationTheme: DTheme.inputDecorationTheme,
         cardTheme: DTheme.cardThemeData,
+        navigationBarTheme: DTheme.navigationBarTheme,
         dialogTheme: const DialogThemeData(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
         datePickerTheme: const DatePickerThemeData(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
       ),

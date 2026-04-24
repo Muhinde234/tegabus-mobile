@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/data/responses/my_ticket_response.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class MyTicketCard extends StatelessWidget {
   final Ticket ticket;
@@ -10,43 +11,13 @@ class MyTicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final departureTime = DateFormat('h:mm a').format(ticket.departureTime);
-    final departureDate = DateFormat('yyyy-MM-dd').format(ticket.departureTime);
-    final arrivalTime = DateFormat('h:mm a').format(ticket.arrivalTime);
-    final duration = ticket.arrivalTime.difference(ticket.departureTime);
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes % 60;
-    final durationText = '$hours h $minutes m';
+    final dep = DateFormat('h:mm a').format(ticket.departureTime);
+    final arr = DateFormat('h:mm a').format(ticket.arrivalTime);
+    final date = DateFormat('EEE, MMM d y').format(ticket.departureTime);
+    final dur = ticket.arrivalTime.difference(ticket.departureTime);
 
     return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Ticket #${ticket.id} - Scan QR Code'),
-            content: Image.network(
-              ticket.qrCodeUrl,
-              width: 200,
-              height: 200,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.error,
-                color: Colors.red,
-                size: 50,
-              ),
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const CircularProgressIndicator();
-              },
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-        );
-      },
+      onTap: () => _showQr(context),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -54,15 +25,15 @@ class MyTicketCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: DColors.primary6,
-                      borderRadius: BorderRadius.circular(12),
+                      color: DColors.primary2,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.confirmation_num, color: Colors.white),
+                    child: const Icon(Icons.confirmation_num,
+                        color: DColors.primary, size: 22),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -70,95 +41,127 @@ class MyTicketCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ticket #${ticket.id}',
+                          'Seat ${ticket.seatNumber}',
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                              fontWeight: FontWeight.w700, fontSize: 15),
                         ),
-                        Text(departureDate)
+                        Text(date,
+                            style: const TextStyle(
+                                color: DColors.neutral4, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: DColors.success2,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text('Confirmed',
+                        style: TextStyle(
+                            color: DColors.success6,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(ticket.origin,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(dep,
+                            style: const TextStyle(
+                                color: DColors.neutral4, fontSize: 13)),
                       ],
                     ),
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+                      const Icon(Icons.arrow_forward,
+                          color: DColors.neutral3, size: 16),
                       Text(
-                        ticket.price,
+                        '${dur.inHours}h ${dur.inMinutes % 60}m',
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        ticket.origin,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        departureTime,
-                        style: const TextStyle(color: Colors.grey),
+                            fontSize: 11, color: DColors.neutral4),
                       ),
                     ],
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        children: [
-                          Text(
-                            durationText,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(ticket.destination,
                             style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Container(
-                            height: 1,
-                            color: Colors.grey,
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                          ),
-                        ],
-                      ),
+                                fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(arr,
+                            style: const TextStyle(
+                                color: DColors.neutral4, fontSize: 13)),
+                      ],
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        ticket.destination,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        arrivalTime,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ],
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              Text(
-                'Seat: ${ticket.seatNumber}',
-                style: const TextStyle(fontSize: 14),
+              Row(
+                children: [
+                  const Icon(Icons.qr_code_2,
+                      color: DColors.neutral3, size: 16),
+                  const SizedBox(width: 4),
+                  const Text('Tap to view QR code',
+                      style: TextStyle(
+                          color: DColors.neutral4, fontSize: 12)),
+                ],
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showQr(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('${ticket.origin} → ${ticket.destination}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ticket.qrCodeUrl.isNotEmpty
+                ? Image.network(ticket.qrCodeUrl,
+                    width: 200,
+                    height: 200,
+                    errorBuilder: (_, __, ___) =>
+                        _buildQrFallback(ticket.id))
+                : _buildQrFallback(ticket.id),
+            const SizedBox(height: 8),
+            Text('Seat ${ticket.seatNumber}',
+                style: const TextStyle(fontWeight: FontWeight.w600)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQrFallback(String data) {
+    return QrImageView(
+      data: data.isNotEmpty ? data : 'TEGABUS-TICKET',
+      version: QrVersions.auto,
+      size: 200,
+      backgroundColor: Colors.white,
     );
   }
 }
