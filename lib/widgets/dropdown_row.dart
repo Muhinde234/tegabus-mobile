@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile/utils/colors.dart';
-import 'package:mobile/utils/theme.dart';
 
 class DropdownRow extends StatelessWidget {
   final String label;
@@ -27,31 +26,50 @@ class DropdownRow extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Theme(
-              data: Theme.of(
-                context,
-              ).copyWith(inputDecorationTheme: const InputDecorationTheme()),
+              data: Theme.of(context)
+                  .copyWith(inputDecorationTheme: const InputDecorationTheme()),
               child: DropdownButtonFormField<String>(
                 value: value,
                 hint: Text(
-                  'Select ${label.toLowerCase()}',
-                  style: DTheme.hintTextStyle,
+                  label,
+                  style: const TextStyle(
+                      fontSize: 14, color: DColors.neutral4),
                 ),
-                decoration: DTheme.dropdownInputDecoration.copyWith(
+                decoration: InputDecoration(
                   labelText: label,
+                  filled: true,
+                  fillColor: DColors.surfaceVariant,
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12, horizontal: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        const BorderSide(color: DColors.primary, width: 2),
+                  ),
                 ),
-                items:
-                    items.map((item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Text(item, style: DTheme.dropdownItemTextStyle),
-                      );
-                    }).toList(),
+                items: items.map((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item,
+                        style: const TextStyle(
+                            fontSize: 14, color: DColors.neutral6)),
+                  );
+                }).toList(),
                 onChanged: onChanged,
-                validator:
-                    (val) => val == null ? 'Please select a $label' : null,
+                validator: (val) =>
+                    val == null ? 'Please select $label' : null,
                 dropdownColor: Colors.white,
                 isExpanded: true,
-                icon: Icon(Icons.arrow_drop_down, color: DColors.neutral5),
+                icon: const Icon(Icons.arrow_drop_down,
+                    color: DColors.neutral5),
               ),
             ),
           ),

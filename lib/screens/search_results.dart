@@ -35,10 +35,15 @@ class SearchResults extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('$from → $to'),
-        subtitle: Text(
-          '${date.day}/${date.month}/${date.year}',
-          style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$from → $to'),
+            Text(
+              '${date.day}/${date.month}/${date.year}',
+              style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+            ),
+          ],
         ),
       ),
       body: RefreshIndicator(
@@ -76,7 +81,7 @@ class SearchResults extends ConsumerWidget {
                       fontWeight: FontWeight.w700, fontSize: 17)),
               const SizedBox(height: 6),
               Text(l.tryDifferentDateOrRoute,
-                  style: TextStyle(color: DColors.neutral4)),
+                  style: const TextStyle(color: DColors.neutral4)),
             ],
           ),
         );

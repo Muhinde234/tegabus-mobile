@@ -39,13 +39,13 @@ class _SeatLayoutState extends State<SeatLayout> {
               const SizedBox(width: 8),
               ...seats.map((seat) {
                 final isSelected = seat.seatNumber == _selectedSeat;
-                final color = seat.isBooked
+                final color = seat.booked
                     ? Colors.grey.shade400
                     : (isSelected ? const Color(0xFF0B3B2E) : Colors.green);
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: GestureDetector(
-                    onTap: seat.isBooked
+                    onTap: seat.booked
                         ? null
                         : () => setState(() => _selectedSeat = seat.seatNumber),
                     child: Container(
