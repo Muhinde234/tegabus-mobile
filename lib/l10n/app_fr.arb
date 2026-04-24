@@ -1,0 +1,128 @@
+{
+  "@@locale": "fr",
+
+  "appName": "TegaBus",
+  "retry": "Réessayer",
+  "close": "Fermer",
+  "required": "Obligatoire",
+
+  "onboardingTitle": "Votre voyage,\nà portée de clic.",
+  "onboardingSubtitle": "Réservez des tickets de bus au Rwanda instantanément.\nSans file. Sans tracas. Partez.",
+  "featureInstant": "Instantané",
+  "featureSecure": "Sécurisé",
+  "featureDigital": "Numérique",
+  "getStarted": "Commencer",
+  "alreadyHaveAccount": "Vous avez déjà un compte ? ",
+  "signInLink": "Se connecter",
+
+  "welcomeBack": "Bon retour",
+  "signInSubtitle": "Connectez-vous pour continuer",
+  "emailAddress": "Adresse e-mail",
+  "enterEmail": "Entrez votre e-mail",
+  "passwordLabel": "Mot de passe",
+  "enterPassword": "Entrez votre mot de passe",
+  "forgotPassword": "Mot de passe oublié ?",
+  "dontHaveAccount": "Pas encore de compte ? ",
+  "registerLink": "S'inscrire",
+  "signInButton": "Se connecter",
+
+  "createAccount": "Créer un compte",
+  "registerSubtitle": "Réservez des bus au Rwanda en quelques secondes",
+  "firstName": "Prénom",
+  "lastName": "Nom de famille",
+  "nationalityLabel": "Nationalité",
+  "phoneNumberLabel": "Numéro de téléphone",
+  "confirmPassword": "Confirmer le mot de passe",
+  "createAccountButton": "Créer un compte",
+  "invalidEmail": "Email invalide",
+  "passwordRequirements": "Min 8 car., majuscule, minuscule et chiffre",
+  "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+  "accountCreated": "Compte créé ! Vérifiez votre e-mail, puis connectez-vous.",
+
+  "navHome": "Accueil",
+  "navMyTickets": "Mes tickets",
+  "navExplore": "Explorer",
+  "navChat": "Chat",
+  "navProfile": "Profil",
+
+  "goodDay": "Bonjour ! 👋",
+  "whereAreYouGoing": "Où allez-vous ?",
+  "notifications": "Notifications",
+  "popularRoutes": "Itinéraires populaires",
+  "whyTegaBus": "Pourquoi TegaBus ?",
+  "safeAndSecure": "Sûr et sécurisé",
+  "instantBooking": "Réservation instantanée",
+  "digitalTicket": "Ticket numérique",
+
+  "fromLabel": "De",
+  "toLabel": "À",
+  "selectDate": "Choisir une date",
+  "searchBuses": "Rechercher des bus",
+  "selectOriginDestinationDate": "Veuillez sélectionner l'origine, la destination et la date",
+
+  "exploreRoutes": "Explorer les itinéraires",
+  "noSchedulesFound": "Aucun horaire trouvé",
+  "tryDifferentDateOrRoute": "Essayez une autre date ou un autre itinéraire",
+  "noSchedulesAvailable": "Aucun horaire disponible",
+
+  "myTickets": "Mes tickets",
+  "noTicketsYet": "Aucun ticket pour l'instant",
+  "bookFirstTrip": "Réservez votre premier voyage ici",
+  "confirmedStatus": "Confirmé",
+  "tapToViewQr": "Appuyez pour voir le QR code",
+  "seatLabel": "Siège {number}",
+  "@seatLabel": {
+    "placeholders": {
+      "number": { "type": "String" }
+    }
+  },
+  "seatsLeft": "{count} places restantes",
+  "@seatsLeft": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "profileTitle": "Profil",
+  "personalInformation": "Informations personnelles",
+  "phoneLabel": "Téléphone",
+  "nationalityInfo": "Nationalité",
+  "memberSince": "Membre depuis",
+  "logoutButton": "Se déconnecter",
+
+  "languageTitle": "Langue",
+  "englishLanguage": "Anglais",
+  "kinyarwandaLanguage": "Kinyarwanda",
+  "frenchLanguage": "Français",
+  "selectLanguage": "Choisir la langue",
+
+  "tegabusAssistant": "Assistant TegaBus",
+  "onlineStatus": "En ligne",
+  "askMeAnything": "Posez-moi n'importe quelle question...",
+
+  "forgotPasswordTitle": "Mot de passe oublié",
+  "resetYourPassword": "Réinitialiser votre mot de passe",
+  "forgotPasswordDesc": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  "sendResetLink": "Envoyer le lien",
+  "resetLinkSent": "Lien envoyé — vérifiez votre e-mail.",
+  "enterValidEmail": "Entrez un e-mail valide",
+
+  "bookingConfirmed": "Réservation confirmée !",
+  "ticketBookedSuccessfully": "Votre ticket a été réservé avec succès.",
+  "scanToVerify": "Scanner pour vérifier",
+  "bookingRef": "Réservation #{ref}",
+  "@bookingRef": {
+    "placeholders": {
+      "ref": { "type": "String" }
+    }
+  },
+  "goToHome": "Aller à l'accueil",
+  "viewMyTickets": "Voir mes tickets",
+
+  "availableSeat": "Disponible",
+  "selectedSeat": "Sélectionné",
+  "bookedSeat": "Réservé",
+  "selectASeat": "Sélectionnez un siège",
+  "bookSeat": "Réserver le siège",
+  "failedToLoadSeats": "Échec du chargement des sièges."
+}

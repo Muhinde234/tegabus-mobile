@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widgets/shimmers/ticket_card_shimmer.dart';
 import 'package:mobile/widgets/ticket_card.dart';
 
@@ -19,6 +20,7 @@ class SearchResults extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
     final state = ref.watch(schedulesNotifierProvider);
 
     if (state.isInit) {
@@ -43,12 +45,13 @@ class SearchResults extends ConsumerWidget {
         onRefresh: () => ref
             .read(schedulesNotifierProvider.notifier)
             .fetchSchedules(from: from, to: to, date: date),
-        child: _buildBody(context, state, ref),
+        child: _buildBody(context, state, ref, l),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, dynamic state, WidgetRef ref) {
+  Widget _buildBody(BuildContext context, dynamic state, WidgetRef ref,
+      dynamic l) {
     if (state.isInit || state.isLoading) {
       return ListView.separated(
         padding: const EdgeInsets.all(16),
@@ -68,11 +71,11 @@ class SearchResults extends ConsumerWidget {
               const Icon(Icons.search_off,
                   size: 64, color: DColors.neutral2),
               const SizedBox(height: 16),
-              const Text('No schedules found',
-                  style: TextStyle(
+              Text(l.noSchedulesFound,
+                  style: const TextStyle(
                       fontWeight: FontWeight.w700, fontSize: 17)),
               const SizedBox(height: 6),
-              Text('Try a different date or route',
+              Text(l.tryDifferentDateOrRoute,
                   style: TextStyle(color: DColors.neutral4)),
             ],
           ),
@@ -104,7 +107,7 @@ class SearchResults extends ConsumerWidget {
               onPressed: () => ref
                   .read(schedulesNotifierProvider.notifier)
                   .fetchSchedules(from: from, to: to, date: date),
-              child: const Text('Retry'),
+              child: Text(l.retry),
             ),
           ],
         ),

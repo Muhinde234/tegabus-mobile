@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 import 'package:mobile/screens/auth/register_screen.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class OnbordingScreen extends StatelessWidget {
   const OnbordingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
       body: Stack(
         children: [
-          // Background gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -21,8 +22,6 @@ class OnbordingScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Decorative circles
           Positioned(
             top: -120,
             right: -120,
@@ -47,16 +46,12 @@ class OnbordingScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Content
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
                 children: [
                   const Spacer(),
-
-                  // Logo
                   Container(
                     width: 80,
                     height: 80,
@@ -73,16 +68,14 @@ class OnbordingScreen extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.asset('assets/logo.png',
-                          fit: BoxFit.cover),
+                      child: Image.asset('assets/logo.png', fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(height: 32),
-
-                  const Text(
-                    'Your trip,\njust a tap away.',
+                  Text(
+                    l.onboardingTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 34,
                       fontWeight: FontWeight.w900,
@@ -90,31 +83,25 @@ class OnbordingScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.',
+                  Text(
+                    l.onboardingSubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
                       height: 1.6,
                     ),
                   ),
-
                   const Spacer(),
-
-                  // Features row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      _Feature(Icons.bolt_outlined, 'Instant'),
-                      _Feature(Icons.lock_outline, 'Secure'),
-                      _Feature(Icons.qr_code_outlined, 'Digital'),
+                    children: [
+                      _Feature(Icons.bolt_outlined, l.featureInstant),
+                      _Feature(Icons.lock_outline, l.featureSecure),
+                      _Feature(Icons.qr_code_outlined, l.featureDigital),
                     ],
                   ),
-
                   const SizedBox(height: 40),
-
-                  // Get Started button
                   SizedBox(
                     width: double.infinity,
                     height: 54,
@@ -133,26 +120,24 @@ class OnbordingScreen extends StatelessWidget {
                         textStyle: const TextStyle(
                             fontWeight: FontWeight.w700, fontSize: 16),
                       ),
-                      child: const Text('Get Started'),
+                      child: Text(l.getStarted),
                     ),
                   ),
                   const SizedBox(height: 14),
-
-                  // Already have account
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Already have an account? ',
-                          style: TextStyle(color: Colors.white70)),
+                      Text(l.alreadyHaveAccount,
+                          style: const TextStyle(color: Colors.white70)),
                       GestureDetector(
                         onTap: () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (_) => const LoginScreen()),
                         ),
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
+                        child: Text(
+                          l.signInLink,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                             decoration: TextDecoration.underline,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class ChatbotScreen extends ConsumerStatefulWidget {
   const ChatbotScreen({super.key});
@@ -46,6 +47,7 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final messages = ref.watch(chatNotifierProvider);
     _scrollToBottom();
 
@@ -66,12 +68,12 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('TegaBus Assistant',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-                Text('Online',
-                    style: TextStyle(
+              children: [
+                Text(l.tegabusAssistant,
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.w700)),
+                Text(l.onlineStatus,
+                    style: const TextStyle(
                         fontSize: 11,
                         color: DColors.success6,
                         fontWeight: FontWeight.w500)),
@@ -98,15 +100,14 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
             const Padding(
               padding: EdgeInsets.only(left: 20, bottom: 4),
               child: Row(
-                children: [
-                  _TypingIndicator(),
-                ],
+                children: [_TypingIndicator()],
               ),
             ),
           _ChatInput(
             controller: _controller,
             isSending: _isSending,
             onSend: _send,
+            hint: l.askMeAnything,
           ),
         ],
       ),
@@ -136,12 +137,10 @@ class _ChatBubble extends StatelessWidget {
             bottomLeft: Radius.circular(isUser ? 16 : 4),
             bottomRight: Radius.circular(isUser ? 4 : 16),
           ),
-          border: isUser
-              ? null
-              : Border.all(color: DColors.neutral2),
+          border: isUser ? null : Border.all(color: DColors.neutral2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -172,13 +171,13 @@ class _TypingIndicator extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: DColors.neutral2),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _Dot(delay: 0),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           _Dot(delay: 150),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           _Dot(delay: 300),
         ],
       ),
@@ -238,11 +237,13 @@ class _ChatInput extends StatelessWidget {
   final TextEditingController controller;
   final bool isSending;
   final VoidCallback onSend;
+  final String hint;
 
   const _ChatInput({
     required this.controller,
     required this.isSending,
     required this.onSend,
+    required this.hint,
   });
 
   @override
@@ -262,7 +263,7 @@ class _ChatInput extends StatelessWidget {
                 controller: controller,
                 onSubmitted: (_) => onSend(),
                 decoration: InputDecoration(
-                  hintText: 'Ask me anything...',
+                  hintText: hint,
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 12),
                   filled: true,

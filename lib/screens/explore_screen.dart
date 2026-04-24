@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widgets/shimmers/ticket_card_shimmer.dart';
 import 'package:mobile/widgets/ticket_card.dart';
 
@@ -10,9 +11,9 @@ class ExploreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
     final state = ref.watch(schedulesNotifierProvider);
 
-    // Auto-load on first view
     if (state.isInit) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(schedulesNotifierProvider.notifier).fetchSchedules();
@@ -20,16 +21,17 @@ class ExploreScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Explore Routes')),
+      appBar: AppBar(title: Text(l.exploreRoutes)),
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(schedulesNotifierProvider.notifier).fetchSchedules(),
-        child: _buildBody(context, state, ref),
+        child: _buildBody(context, state, ref, l),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, dynamic state, WidgetRef ref) {
+  Widget _buildBody(BuildContext context, dynamic state, WidgetRef ref,
+      dynamic l) {
     if (state.isInit || state.isLoading) {
       return ListView.separated(
         padding: const EdgeInsets.all(16),
@@ -42,16 +44,16 @@ class ExploreScreen extends ConsumerWidget {
     if (state.isSuccess) {
       final schedules = state.data ?? [];
       if (schedules.isEmpty) {
-        return const Center(
+        return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.directions_bus_outlined,
+              const Icon(Icons.directions_bus_outlined,
                   size: 64, color: DColors.neutral2),
-              SizedBox(height: 16),
-              Text('No schedules available',
-                  style:
-                      TextStyle(color: DColors.neutral4, fontSize: 15)),
+              const SizedBox(height: 16),
+              Text(l.noSchedulesAvailable,
+                  style: const TextStyle(
+                      color: DColors.neutral4, fontSize: 15)),
             ],
           ),
         );
@@ -82,7 +84,7 @@ class ExploreScreen extends ConsumerWidget {
               onPressed: () => ref
                   .read(schedulesNotifierProvider.notifier)
                   .fetchSchedules(),
-              child: const Text('Retry'),
+              child: Text(l.retry),
             ),
           ],
         ),

@@ -3,24 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class LogoutButton extends ConsumerWidget {
   const LogoutButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
 
-    ref.listen(
-      logoutNotifierProvider,
-          (previous, next) {
-        if (next.isSuccess) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
-          );
-        }
-      },
-    );
+    ref.listen(logoutNotifierProvider, (previous, next) {
+      if (next.isSuccess) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    });
 
     final logoutState = ref.watch(logoutNotifierProvider);
 
@@ -31,15 +30,15 @@ class LogoutButton extends ConsumerWidget {
         onPressed: () {
           ref.read(logoutNotifierProvider.notifier).logout();
         },
-        style: ButtonStyle(
+        style: const ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(DColors.warning5),
         ),
         child: logoutState.isLoading
             ? const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        )
-            : const Text("Logout"),
-      )
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              )
+            : Text(l.logoutButton),
+      ),
     );
   }
 }

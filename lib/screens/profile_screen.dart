@@ -5,6 +5,7 @@ import 'package:mobile/atoms/logout_button.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/responses/profile.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widgets/shimmers/profile_shimmer.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -12,10 +13,11 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
     final profileState = ref.watch(profileNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
+      appBar: AppBar(title: Text(l.profileTitle), centerTitle: true),
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(profileNotifierProvider.notifier).fetchProfile(),
@@ -37,18 +39,19 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-class _ProfileContent extends StatelessWidget {
+class _ProfileContent extends ConsumerWidget {
   final Profile profile;
   const _ProfileContent({required this.profile});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
     final joined = DateFormat('MMMM d, y').format(profile.createdAt);
+    final currentLocale = ref.watch(localeProvider).languageCode;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Avatar
         Center(
           child: Stack(
             children: [
@@ -119,14 +122,47 @@ class _ProfileContent extends StatelessWidget {
         ),
         const SizedBox(height: 28),
 
-        const Text('Personal Information',
-            style:
-                TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        Text(l.personalInformation,
+            style: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w700)),
         const SizedBox(height: 12),
 
-        _infoTile(Icons.phone_outlined, 'Phone', profile.phoneNumber),
-        _infoTile(Icons.public_outlined, 'Nationality', profile.nationality),
-        _infoTile(Icons.calendar_today_outlined, 'Member since', joined),
+        _infoTile(Icons.phone_outlined, l.phoneLabel, profile.phoneNumber),
+        _infoTile(
+            Icons.public_outlined, l.nationalityInfo, profile.nationality),
+        _infoTile(
+            Icons.calendar_today_outlined, l.memberSince, joined),
+
+        const SizedBox(height: 24),
+
+        Text(l.languageTitle,
+            style: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 12),
+
+        _LanguageTile(
+          flag: '🇬🇧',
+          label: l.englishLanguage,
+          code: 'en',
+          isSelected: currentLocale == 'en',
+          ref: ref,
+        ),
+        const SizedBox(height: 8),
+        _LanguageTile(
+          flag: '🇷🇼',
+          label: l.kinyarwandaLanguage,
+          code: 'rw',
+          isSelected: currentLocale == 'rw',
+          ref: ref,
+        ),
+        const SizedBox(height: 8),
+        _LanguageTile(
+          flag: '🇫🇷',
+          label: l.frenchLanguage,
+          code: 'fr',
+          isSelected: currentLocale == 'fr',
+          ref: ref,
+        ),
 
         const SizedBox(height: 32),
         const LogoutButton(),
@@ -156,6 +192,55 @@ class _ProfileContent extends StatelessWidget {
               style: const TextStyle(
                   fontWeight: FontWeight.w600, fontSize: 14)),
         ],
+      ),
+    );
+  }
+}
+
+class _LanguageTile extends StatelessWidget {
+  final String flag;
+  final String label;
+  final String code;
+  final bool isSelected;
+  final WidgetRef ref;
+
+  const _LanguageTile({
+    required this.flag,
+    required this.label,
+    required this.code,
+    required this.isSelected,
+    required this.ref,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () =>
+          ref.read(localeProvider.notifier).setLocale(code),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isSelected ? DColors.primary2 : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+              color: isSelected ? DColors.primary : DColors.neutral2),
+        ),
+        child: Row(
+          children: [
+            Text(flag, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 12),
+            Text(label,
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color:
+                        isSelected ? DColors.primary : DColors.neutral6)),
+            const Spacer(),
+            if (isSelected)
+              const Icon(Icons.check_circle,
+                  color: DColors.primary, size: 20),
+          ],
+        ),
       ),
     );
   }

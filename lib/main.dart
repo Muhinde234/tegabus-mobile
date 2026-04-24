@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile/data/providers.dart';
 import 'package:mobile/screens/layout.dart';
 import 'package:mobile/screens/onbording_screen.dart';
 import 'package:mobile/utils/colors.dart';
@@ -14,21 +17,43 @@ void main() async {
 
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: 'token');
+  final localeCode = await storage.read(key: 'locale') ?? 'en';
 
   final initialScreen =
       token != null ? const Layout() : const OnbordingScreen();
 
-  runApp(ProviderScope(child: Application(initialScreen: initialScreen)));
+  runApp(
+    ProviderScope(
+      overrides: [
+        localeProvider.overrideWith((ref) => LocaleNotifier(localeCode)),
+      ],
+      child: Application(initialScreen: initialScreen),
+    ),
+  );
 }
 
-class Application extends StatelessWidget {
+class Application extends ConsumerWidget {
   final Widget initialScreen;
   const Application({super.key, required this.initialScreen});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      locale: locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('rw'),
+        Locale('fr'),
+      ],
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(

@@ -5,6 +5,7 @@ import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/screens/booking_confirmation_screen.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widgets/seat_widget.dart';
 import 'package:mobile/widgets/shimmers/seat_layout_shimmer.dart';
 
@@ -24,6 +25,7 @@ class _ScheduleDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final seatsState =
         ref.watch(seatsNotifierProvider(widget.schedule.id));
     final buyState = ref.watch(buyTicketNotifierProvider);
@@ -51,7 +53,7 @@ class _ScheduleDetailsScreenState
     final dur = s.arrivalTime.difference(s.departureTime);
     final durationText = '${dur.inHours}h ${dur.inMinutes % 60}m';
     final priceText =
-        NumberFormat('#,###').format(s.price.toInt()) + ' RWF';
+        '${NumberFormat('#,###').format(s.price.toInt())} RWF';
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +63,6 @@ class _ScheduleDetailsScreenState
         top: false,
         child: Column(
           children: [
-            // Schedule summary header
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
@@ -136,23 +137,21 @@ class _ScheduleDetailsScreenState
               ),
             ),
 
-            // Legend
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _legend(DColors.success5, 'Available'),
+                  _legend(DColors.success5, l.availableSeat),
                   const SizedBox(width: 20),
-                  _legend(DColors.warning5, 'Selected'),
+                  _legend(DColors.warning5, l.selectedSeat),
                   const SizedBox(width: 20),
-                  _legend(DColors.neutral3, 'Booked'),
+                  _legend(DColors.neutral3, l.bookedSeat),
                 ],
               ),
             ),
             const SizedBox(height: 12),
 
-            // Seat grid
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () => ref
@@ -164,7 +163,7 @@ class _ScheduleDetailsScreenState
                   }
                   if (seatsState.isError) {
                     return Center(
-                        child: Text('Failed to load seats.\n'
+                        child: Text('${l.failedToLoadSeats}\n'
                             '${seatsState.error}'));
                   }
                   final seats = seatsState.data!.seats;
@@ -221,7 +220,6 @@ class _ScheduleDetailsScreenState
               ),
             ),
 
-            // Book button
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -255,8 +253,8 @@ class _ScheduleDetailsScreenState
                         )
                       : Text(
                           selectedSeatId == null
-                              ? 'Select a Seat'
-                              : 'Book Seat',
+                              ? l.selectASeat
+                              : l.bookSeat,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w700),
                         ),
@@ -276,8 +274,8 @@ class _ScheduleDetailsScreenState
         Icon(Icons.event_seat, color: color, size: 18),
         const SizedBox(width: 4),
         Text(label,
-            style:
-                const TextStyle(fontSize: 12, color: DColors.neutral5)),
+            style: const TextStyle(
+                fontSize: 12, color: DColors.neutral5)),
       ],
     );
   }

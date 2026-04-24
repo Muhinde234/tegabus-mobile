@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/screens/schedule_details_screen.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class TicketCard extends StatelessWidget {
   final Schedule schedule;
@@ -11,13 +12,13 @@ class TicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final dep = DateFormat('h:mm a').format(schedule.departureTime);
     final arr = DateFormat('h:mm a').format(schedule.arrivalTime);
     final dur = schedule.arrivalTime.difference(schedule.departureTime);
-    final durationText =
-        '${dur.inHours}h ${dur.inMinutes % 60}m';
+    final durationText = '${dur.inHours}h ${dur.inMinutes % 60}m';
     final priceText =
-        NumberFormat('#,###').format(schedule.price.toInt()) + ' RWF';
+        '${NumberFormat('#,###').format(schedule.price.toInt())} RWF';
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -61,7 +62,7 @@ class TicketCard extends StatelessWidget {
                               color: DColors.primary)),
                       const SizedBox(height: 2),
                       Text(
-                        '${schedule.remainingSeats} seats left',
+                        l.seatsLeft(schedule.remainingSeats),
                         style: TextStyle(
                             color: schedule.remainingSeats <= 5
                                 ? DColors.danger6
@@ -99,11 +100,11 @@ class TicketCard extends StatelessWidget {
                                 color: DColors.neutral4,
                                 fontWeight: FontWeight.w500)),
                         const SizedBox(height: 4),
-                        Row(children: [
+                        const Row(children: [
                           Expanded(
                               child: Divider(
                                   color: DColors.neutral2, thickness: 1)),
-                          const Icon(Icons.arrow_forward,
+                          Icon(Icons.arrow_forward,
                               size: 14, color: DColors.neutral3),
                         ]),
                       ],

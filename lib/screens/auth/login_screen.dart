@@ -6,6 +6,7 @@ import 'package:mobile/screens/auth/forgot_password_screen.dart';
 import 'package:mobile/screens/auth/register_screen.dart';
 import 'package:mobile/screens/layout.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -29,6 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final loginState = ref.watch(loginNotifierProvider);
 
     ref.listen(loginNotifierProvider, (_, curr) {
@@ -54,7 +56,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              // Logo + title
               Row(
                 children: [
                   Container(
@@ -66,8 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset('assets/logo.png',
-                          fit: BoxFit.cover),
+                      child: Image.asset('assets/logo.png', fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -79,12 +79,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 36),
-              const Text('Welcome back',
-                  style: TextStyle(
+              Text(l.welcomeBack,
+                  style: const TextStyle(
                       fontSize: 28, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text('Sign in to continue booking',
-                  style: TextStyle(color: DColors.neutral4, fontSize: 15)),
+              Text(l.signInSubtitle,
+                  style:
+                      const TextStyle(color: DColors.neutral4, fontSize: 15)),
               const SizedBox(height: 32),
 
               Form(
@@ -94,12 +95,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     TextFormField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: 'Email address',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        hintText: l.emailAddress,
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Enter your email';
+                        if (v == null || v.isEmpty) return l.enterEmail;
                         return null;
                       },
                     ),
@@ -108,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       controller: _passwordCtrl,
                       obscureText: _obscure,
                       decoration: InputDecoration(
-                        hintText: 'Password',
+                        hintText: l.passwordLabel,
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(_obscure
@@ -119,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Enter your password';
+                        if (v == null || v.isEmpty) return l.enterPassword;
                         return null;
                       },
                     ),
@@ -130,12 +131,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) =>
-                                  const ForgotPasswordScreen()),
+                              builder: (_) => const ForgotPasswordScreen()),
                         ),
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
+                        child: Text(
+                          l.forgotPassword,
+                          style: const TextStyle(
                               color: DColors.primary,
                               fontWeight: FontWeight.w600,
                               fontSize: 13),
@@ -168,7 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: Colors.white),
                       )
-                    : const Text('Sign In'),
+                    : Text(l.signInButton),
               ),
 
               const SizedBox(height: 24),
@@ -176,17 +176,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? ",
-                      style: TextStyle(color: DColors.neutral4)),
+                  Text(l.dontHaveAccount,
+                      style: const TextStyle(color: DColors.neutral4)),
                   GestureDetector(
                     onTap: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (_) => const RegisterScreen()),
                     ),
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(
+                    child: Text(
+                      l.registerLink,
+                      style: const TextStyle(
                           color: DColors.primary,
                           fontWeight: FontWeight.w700),
                     ),

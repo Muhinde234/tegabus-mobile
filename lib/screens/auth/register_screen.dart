@@ -5,6 +5,7 @@ import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/requests/sign_up_request.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -38,15 +39,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final signUpState = ref.watch(signUpNotifierProvider);
 
     ref.listen(signUpNotifierProvider, (_, curr) {
       if (curr.isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Account created! Check your email to verify, then sign in.'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(l.accountCreated),
           backgroundColor: DColors.success6,
-          duration: Duration(seconds: 4),
+          duration: const Duration(seconds: 4),
         ));
         Navigator.pushReplacement(
           context,
@@ -80,8 +81,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child:
-                          Image.asset('assets/logo.png', fit: BoxFit.cover),
+                      child: Image.asset('assets/logo.png', fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -93,12 +93,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ],
               ),
               const SizedBox(height: 28),
-              const Text('Create account',
-                  style: TextStyle(
+              Text(l.createAccount,
+                  style: const TextStyle(
                       fontSize: 28, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text('Book buses across Rwanda in seconds',
-                  style: TextStyle(color: DColors.neutral4, fontSize: 15)),
+              Text(l.registerSubtitle,
+                  style:
+                      const TextStyle(color: DColors.neutral4, fontSize: 15)),
               const SizedBox(height: 28),
 
               Form(
@@ -110,10 +111,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         Expanded(
                           child: TextFormField(
                             controller: _firstNameCtrl,
-                            decoration: const InputDecoration(
-                                hintText: 'First name'),
+                            decoration:
+                                InputDecoration(hintText: l.firstName),
                             validator: (v) => (v == null || v.isEmpty)
-                                ? 'Required'
+                                ? l.required
                                 : null,
                           ),
                         ),
@@ -121,10 +122,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         Expanded(
                           child: TextFormField(
                             controller: _lastNameCtrl,
-                            decoration: const InputDecoration(
-                                hintText: 'Last name'),
+                            decoration:
+                                InputDecoration(hintText: l.lastName),
                             validator: (v) => (v == null || v.isEmpty)
-                                ? 'Required'
+                                ? l.required
                                 : null,
                           ),
                         ),
@@ -134,28 +135,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     TextFormField(
                       controller: _nationalityCtrl,
                       decoration:
-                          const InputDecoration(hintText: 'Nationality'),
+                          InputDecoration(hintText: l.nationalityLabel),
                       validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Required' : null,
+                          (v == null || v.isEmpty) ? l.required : null,
                     ),
                     const SizedBox(height: 14),
                     TextFormField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
                       decoration:
-                          const InputDecoration(hintText: 'Email address'),
+                          InputDecoration(hintText: l.emailAddress),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Required';
+                        if (v == null || v.isEmpty) return l.required;
                         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                            .hasMatch(v)) return 'Invalid email';
+                            .hasMatch(v)) {
+                          return l.invalidEmail;
+                        }
                         return null;
                       },
                     ),
                     const SizedBox(height: 14),
                     IntlPhoneField(
-                      decoration: const InputDecoration(
-                        hintText: 'Phone number',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        hintText: l.phoneNumberLabel,
+                        border: const OutlineInputBorder(),
                         filled: true,
                         fillColor: DColors.surfaceVariant,
                       ),
@@ -164,7 +167,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           setState(() => _phone = p.completeNumber),
                       validator: (p) =>
                           (p == null || p.completeNumber.isEmpty)
-                              ? 'Required'
+                              ? l.required
                               : null,
                     ),
                     const SizedBox(height: 14),
@@ -172,7 +175,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _passwordCtrl,
                       obscureText: _obscurePass,
                       decoration: InputDecoration(
-                        hintText: 'Password',
+                        hintText: l.passwordLabel,
                         suffixIcon: IconButton(
                           icon: Icon(_obscurePass
                               ? Icons.visibility_off_outlined
@@ -182,11 +185,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Required';
+                        if (v == null || v.isEmpty) return l.required;
                         if (!RegExp(
                                 r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$')
                             .hasMatch(v)) {
-                          return 'Min 8 chars, uppercase, lowercase & number';
+                          return l.passwordRequirements;
                         }
                         return null;
                       },
@@ -196,7 +199,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _confirmCtrl,
                       obscureText: _obscureConfirm,
                       decoration: InputDecoration(
-                        hintText: 'Confirm password',
+                        hintText: l.confirmPassword,
                         suffixIcon: IconButton(
                           icon: Icon(_obscureConfirm
                               ? Icons.visibility_off_outlined
@@ -206,9 +209,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Required';
+                        if (v == null || v.isEmpty) return l.required;
                         if (v != _passwordCtrl.text) {
-                          return 'Passwords do not match';
+                          return l.passwordsDoNotMatch;
                         }
                         return null;
                       },
@@ -243,7 +246,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: Colors.white),
                       )
-                    : const Text('Create Account'),
+                    : Text(l.createAccountButton),
               ),
 
               const SizedBox(height: 20),
@@ -251,16 +254,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Already have an account? ',
-                      style: TextStyle(color: DColors.neutral4)),
+                  Text(l.alreadyHaveAccount,
+                      style: const TextStyle(color: DColors.neutral4)),
                   GestureDetector(
                     onTap: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (_) => const LoginScreen()),
                     ),
-                    child: const Text('Sign In',
-                        style: TextStyle(
+                    child: Text(l.signInLink,
+                        style: const TextStyle(
                             color: DColors.primary,
                             fontWeight: FontWeight.w700)),
                   ),

@@ -1,0 +1,131 @@
+{
+  "@@locale": "en",
+
+  "appName": "TegaBus",
+  "retry": "Retry",
+  "close": "Close",
+  "required": "Required",
+
+  "onboardingTitle": "Your trip,\njust a tap away.",
+  "onboardingSubtitle": "Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.",
+  "featureInstant": "Instant",
+  "featureSecure": "Secure",
+  "featureDigital": "Digital",
+  "getStarted": "Get Started",
+  "alreadyHaveAccount": "Already have an account? ",
+  "signInLink": "Sign In",
+
+  "welcomeBack": "Welcome back",
+  "signInSubtitle": "Sign in to continue booking",
+  "emailAddress": "Email address",
+  "enterEmail": "Enter your email",
+  "passwordLabel": "Password",
+  "enterPassword": "Enter your password",
+  "forgotPassword": "Forgot password?",
+  "dontHaveAccount": "Don't have an account? ",
+  "registerLink": "Register",
+  "signInButton": "Sign In",
+
+  "createAccount": "Create account",
+  "registerSubtitle": "Book buses across Rwanda in seconds",
+  "firstName": "First name",
+  "lastName": "Last name",
+  "nationalityLabel": "Nationality",
+  "phoneNumberLabel": "Phone number",
+  "confirmPassword": "Confirm password",
+  "createAccountButton": "Create Account",
+  "invalidEmail": "Invalid email",
+  "passwordRequirements": "Min 8 chars, uppercase, lowercase & number",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "accountCreated": "Account created! Check your email to verify, then sign in.",
+
+  "navHome": "Home",
+  "navMyTickets": "My Tickets",
+  "navExplore": "Explore",
+  "navChat": "Chat",
+  "navProfile": "Profile",
+
+  "goodDay": "Good day! 👋",
+  "whereAreYouGoing": "Where are you going?",
+  "notifications": "Notifications",
+  "popularRoutes": "Popular Routes",
+  "whyTegaBus": "Why TegaBus?",
+  "safeAndSecure": "Safe & Secure",
+  "instantBooking": "Instant Booking",
+  "digitalTicket": "Digital Ticket",
+
+  "fromLabel": "From",
+  "toLabel": "To",
+  "selectDate": "Select date",
+  "searchBuses": "Search Buses",
+  "selectOriginDestinationDate": "Please select origin, destination and date",
+
+  "exploreRoutes": "Explore Routes",
+  "noSchedulesFound": "No schedules found",
+  "tryDifferentDateOrRoute": "Try a different date or route",
+  "noSchedulesAvailable": "No schedules available",
+
+  "myTickets": "My Tickets",
+  "noTicketsYet": "No tickets yet",
+  "bookFirstTrip": "Book your first trip to see it here",
+  "confirmedStatus": "Confirmed",
+  "tapToViewQr": "Tap to view QR code",
+  "seatLabel": "Seat {number}",
+  "@seatLabel": {
+    "description": "Label showing seat number",
+    "placeholders": {
+      "number": { "type": "String" }
+    }
+  },
+  "seatsLeft": "{count} seats left",
+  "@seatsLeft": {
+    "description": "Number of remaining seats",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "profileTitle": "Profile",
+  "personalInformation": "Personal Information",
+  "phoneLabel": "Phone",
+  "nationalityInfo": "Nationality",
+  "memberSince": "Member since",
+  "logoutButton": "Logout",
+
+  "languageTitle": "Language",
+  "englishLanguage": "English",
+  "kinyarwandaLanguage": "Kinyarwanda",
+  "frenchLanguage": "French",
+  "selectLanguage": "Select Language",
+
+  "tegabusAssistant": "TegaBus Assistant",
+  "onlineStatus": "Online",
+  "askMeAnything": "Ask me anything...",
+
+  "forgotPasswordTitle": "Forgot Password",
+  "resetYourPassword": "Reset your password",
+  "forgotPasswordDesc": "Enter your email address and we'll send you a link to reset your password.",
+  "sendResetLink": "Send Reset Link",
+  "resetLinkSent": "Reset link sent — check your email.",
+  "enterValidEmail": "Enter a valid email",
+
+  "bookingConfirmed": "Booking Confirmed!",
+  "ticketBookedSuccessfully": "Your ticket has been booked successfully.",
+  "scanToVerify": "Scan to verify",
+  "bookingRef": "Booking #{ref}",
+  "@bookingRef": {
+    "description": "Booking reference ID label",
+    "placeholders": {
+      "ref": { "type": "String" }
+    }
+  },
+  "goToHome": "Go to Home",
+  "viewMyTickets": "View My Tickets",
+
+  "availableSeat": "Available",
+  "selectedSeat": "Selected",
+  "bookedSeat": "Booked",
+  "selectASeat": "Select a Seat",
+  "bookSeat": "Book Seat",
+  "failedToLoadSeats": "Failed to load seats."
+}

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart' show Locale;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobile/data/api/api_client.dart';
@@ -15,6 +16,22 @@ import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/data/responses/signup_response.dart';
 import 'package:mobile/data/responses/single_schedule_response.dart';
 import 'package:mobile/data/state/state.dart';
+
+// ── Locale provider ──────────────────────────────────────────────────────────
+
+class LocaleNotifier extends StateNotifier<Locale> {
+  static const _storage = FlutterSecureStorage();
+
+  LocaleNotifier(String code) : super(Locale(code));
+
+  Future<void> setLocale(String code) async {
+    await _storage.write(key: 'locale', value: code);
+    state = Locale(code);
+  }
+}
+
+final localeProvider =
+    StateNotifierProvider<LocaleNotifier, Locale>((ref) => LocaleNotifier('en'));
 
 // ── Service providers ────────────────────────────────────────────────────────
 

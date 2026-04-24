@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/screens/search_results.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:mobile/widgets/date_time_picker.dart';
 import 'package:mobile/widgets/dropdown_row.dart';
 
@@ -27,6 +28,7 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final originsState = ref.watch(originsNotifierProvider);
     final destinationsState = ref.watch(destinationsNotifierProvider);
 
@@ -48,7 +50,6 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
 
     return Column(
       children: [
-        // From / To card
         Container(
           decoration: BoxDecoration(
             color: DColors.surfaceVariant,
@@ -61,14 +62,14 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
                 child: Column(
                   children: [
                     DropdownRow(
-                      label: 'From',
+                      label: l.fromLabel,
                       value: _from,
                       onChanged: (v) => setState(() => _from = v),
                       items: origins,
                     ),
                     const Divider(height: 1, color: DColors.neutral2),
                     DropdownRow(
-                      label: 'To',
+                      label: l.toLabel,
                       value: _to,
                       onChanged: (v) => setState(() => _to = v),
                       items: destinations,
@@ -100,14 +101,12 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
         ),
         const SizedBox(height: 10),
 
-        // Date picker
         DateTimePicker(
-          hint: 'Select date',
+          hint: l.selectDate,
           onDateTimeSelected: (dt) => setState(() => _date = dt),
         ),
         const SizedBox(height: 12),
 
-        // Search button
         ElevatedButton.icon(
           onPressed: () {
             if (_formKey.currentState!.validate() &&
@@ -125,15 +124,14 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content:
-                    Text('Please select origin, destination and date'),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(l.selectOriginDestinationDate),
                 backgroundColor: DColors.warning6,
               ));
             }
           },
           icon: const Icon(Icons.search),
-          label: const Text('Search Buses'),
+          label: Text(l.searchBuses),
         ),
       ],
     );

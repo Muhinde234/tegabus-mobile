@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/data/responses/buy_ticket_response.dart';
 import 'package:mobile/screens/layout.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:intl/intl.dart';
 
 class BookingConfirmationScreen extends StatelessWidget {
   final BuyTicketResponse booking;
@@ -12,8 +13,12 @@ class BookingConfirmationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final dep = DateFormat('EEE, MMM d • h:mm a').format(booking.departureTime);
     final arr = DateFormat('h:mm a').format(booking.arrivalTime);
+    final shortRef = booking.id.length > 8
+        ? booking.id.substring(0, 8).toUpperCase()
+        : booking.id.toUpperCase();
 
     return Scaffold(
       backgroundColor: DColors.background,
@@ -24,7 +29,6 @@ class BookingConfirmationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 12),
-              // Success icon
               Container(
                 width: 80,
                 height: 80,
@@ -36,9 +40,9 @@ class BookingConfirmationScreen extends StatelessWidget {
                     color: DColors.success6, size: 48),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Booking Confirmed!',
-                style: TextStyle(
+              Text(
+                l.bookingConfirmed,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
                   color: DColors.neutral6,
@@ -46,15 +50,12 @@ class BookingConfirmationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Your ticket has been booked successfully.',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: DColors.neutral4),
+                l.ticketBookedSuccessfully,
+                style: const TextStyle(fontSize: 14, color: DColors.neutral4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
 
-              // Ticket card
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -70,7 +71,6 @@ class BookingConfirmationScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // Green header
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -91,7 +91,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Seat ${booking.seatNumber}',
+                            l.seatLabel(booking.seatNumber),
                             style: const TextStyle(
                                 color: Colors.white70, fontSize: 14),
                           ),
@@ -99,7 +99,6 @@ class BookingConfirmationScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Route row
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Row(
@@ -144,14 +143,13 @@ class BookingConfirmationScreen extends StatelessWidget {
 
                     const Divider(height: 1, color: DColors.neutral2),
 
-                    // QR Code
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          const Text(
-                            'Scan to verify',
-                            style: TextStyle(
+                          Text(
+                            l.scanToVerify,
+                            style: const TextStyle(
                                 color: DColors.neutral4, fontSize: 12),
                           ),
                           const SizedBox(height: 12),
@@ -166,7 +164,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                               : _buildQrFallback(booking.id),
                           const SizedBox(height: 8),
                           Text(
-                            'Booking #${booking.id.length > 8 ? booking.id.substring(0, 8).toUpperCase() : booking.id.toUpperCase()}',
+                            l.bookingRef(shortRef),
                             style: const TextStyle(
                               color: DColors.neutral5,
                               fontSize: 12,
@@ -183,22 +181,19 @@ class BookingConfirmationScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // Action buttons
               ElevatedButton(
                 onPressed: () => Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => const Layout()),
                   (_) => false,
                 ),
-                child: const Text('Go to Home'),
+                child: Text(l.goToHome),
               ),
               const SizedBox(height: 12),
               OutlinedButton(
                 onPressed: () => Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          const Layout()),
+                  MaterialPageRoute(builder: (_) => const Layout()),
                   (_) => false,
                 ),
                 style: OutlinedButton.styleFrom(
@@ -208,7 +203,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                 ),
-                child: const Text('View My Tickets'),
+                child: Text(l.viewMyTickets),
               ),
             ],
           ),

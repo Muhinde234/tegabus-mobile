@@ -5,6 +5,7 @@ import 'package:mobile/screens/explore_screen.dart';
 import 'package:mobile/screens/home_screen.dart';
 import 'package:mobile/screens/my_tickets.dart';
 import 'package:mobile/screens/profile_screen.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -18,22 +19,23 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentPageIndex,
         onDestinationSelected: (int idx) =>
             setState(() => _currentPageIndex = idx),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-              icon: Icon(Iconsax.home), label: 'Home'),
+              icon: const Icon(Iconsax.home), label: l.navHome),
           NavigationDestination(
-              icon: Icon(Iconsax.ticket), label: 'My Tickets'),
+              icon: const Icon(Iconsax.ticket), label: l.navMyTickets),
           NavigationDestination(
-              icon: Icon(Iconsax.search_normal), label: 'Explore'),
+              icon: const Icon(Iconsax.search_normal), label: l.navExplore),
           NavigationDestination(
-              icon: Icon(Iconsax.message), label: 'Chat'),
+              icon: const Icon(Iconsax.message), label: l.navChat),
           NavigationDestination(
-              icon: Icon(Iconsax.user), label: 'Profile'),
+              icon: const Icon(Iconsax.user), label: l.navProfile),
         ],
       ),
       body: IndexedStack(

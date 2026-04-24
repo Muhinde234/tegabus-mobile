@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mobile/atoms/home_search.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/extensions.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     return Scaffold(
       backgroundColor: DColors.background,
       body: CustomScrollView(
@@ -32,16 +34,16 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'Good day! 👋',
-                          style: TextStyle(
+                          l.goodDay,
+                          style: const TextStyle(
                               color: Colors.white70, fontSize: 14),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Where are you going?',
-                          style: TextStyle(
+                          l.whereAreYouGoing,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
@@ -64,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {},
                   icon: const Icon(Iconsax.notification,
                       color: Colors.white, size: 22),
-                  tooltip: 'Notifications',
+                  tooltip: l.notifications,
                 ),
               ),
             ],
@@ -75,7 +77,6 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Search card
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -94,10 +95,9 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 28),
 
-                  // Quick routes section
-                  const Text(
-                    'Popular Routes',
-                    style: TextStyle(
+                  Text(
+                    l.popularRoutes,
+                    style: const TextStyle(
                         fontSize: 17, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 12),
@@ -117,35 +117,34 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 28),
 
-                  // Features section
-                  const Text(
-                    'Why TegaBus?',
-                    style: TextStyle(
+                  Text(
+                    l.whyTegaBus,
+                    style: const TextStyle(
                         fontSize: 17, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 12),
                   Row(
-                    children: const [
+                    children: [
                       Expanded(
                         child: _FeatureTile(
                           icon: Icons.verified_outlined,
-                          label: 'Safe & Secure',
+                          label: l.safeAndSecure,
                           color: DColors.primary,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: _FeatureTile(
                           icon: Icons.bolt_outlined,
-                          label: 'Instant Booking',
+                          label: l.instantBooking,
                           color: DColors.warning6,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: _FeatureTile(
                           icon: Icons.qr_code_outlined,
-                          label: 'Digital Ticket',
+                          label: l.digitalTicket,
                           color: DColors.success6,
                         ),
                       ),

@@ -1,0 +1,128 @@
+{
+  "@@locale": "rw",
+
+  "appName": "TegaBus",
+  "retry": "Ongera ugerageze",
+  "close": "Funga",
+  "required": "Ngombwa",
+
+  "onboardingTitle": "Urugendo rwawe,\nku gufunga habusa.",
+  "onboardingSubtitle": "Gutura amatike ya bisi mu Rwanda byihuse.\nNta murongo. Nta ngorane. Genda.",
+  "featureInstant": "Byihuse",
+  "featureSecure": "Birakingitse",
+  "featureDigital": "Dijitali",
+  "getStarted": "Tangira",
+  "alreadyHaveAccount": "Usanzwe ufite konti? ",
+  "signInLink": "Injira",
+
+  "welcomeBack": "Murakaza neza",
+  "signInSubtitle": "Injira ukomeze gutuza",
+  "emailAddress": "Imeyili",
+  "enterEmail": "Shyira imeyili yawe",
+  "passwordLabel": "Ijambobanga",
+  "enterPassword": "Shyira ijambobanga ryawe",
+  "forgotPassword": "Wibagiwe ijambobanga?",
+  "dontHaveAccount": "Nta konti ufite? ",
+  "registerLink": "Iyandikishe",
+  "signInButton": "Injira",
+
+  "createAccount": "Fungura konti",
+  "registerSubtitle": "Tuza bisi mu Rwanda mu masegonda make",
+  "firstName": "Izina rya mbere",
+  "lastName": "Irindi zina",
+  "nationalityLabel": "Ubwenegihugu",
+  "phoneNumberLabel": "Nimero ya telefoni",
+  "confirmPassword": "Emeza ijambobanga",
+  "createAccountButton": "Fungura konti",
+  "invalidEmail": "Imeyili itari nziza",
+  "passwordRequirements": "Nibura inyuguti 8, ikuzo, agace k'amazi n'inomero",
+  "passwordsDoNotMatch": "Amagambo banga ntangana",
+  "accountCreated": "Konti yarakozwe! Reba imeyili yawe, hanyuma injira.",
+
+  "navHome": "Ahabanza",
+  "navMyTickets": "Amatike yanjye",
+  "navExplore": "Shakisha",
+  "navChat": "Ikiganiro",
+  "navProfile": "Umwirondoro",
+
+  "goodDay": "Mwaramutse! 👋",
+  "whereAreYouGoing": "Ujya he?",
+  "notifications": "Amakuru",
+  "popularRoutes": "Inzira zikunzwe",
+  "whyTegaBus": "Kuki TegaBus?",
+  "safeAndSecure": "Ufite umutekano",
+  "instantBooking": "Gutuza byihuse",
+  "digitalTicket": "Itike ya dijitali",
+
+  "fromLabel": "Kuva",
+  "toLabel": "Kujya",
+  "selectDate": "Hitamo itariki",
+  "searchBuses": "Shakisha bisi",
+  "selectOriginDestinationDate": "Hitamo aho uvuye, aho ujya n'itariki",
+
+  "exploreRoutes": "Shakisha inzira",
+  "noSchedulesFound": "Nta gahunda zabonetse",
+  "tryDifferentDateOrRoute": "Gerageza itariki cyangwa inzira ndi imwe",
+  "noSchedulesAvailable": "Nta gahunda zihari",
+
+  "myTickets": "Amatike yanjye",
+  "noTicketsYet": "Nta matike urabonaweho",
+  "bookFirstTrip": "Tuza urugendo rwawe rwa mbere hano",
+  "confirmedStatus": "Byemejwe",
+  "tapToViewQr": "Kanda urebe kodi QR",
+  "seatLabel": "Intebe {number}",
+  "@seatLabel": {
+    "placeholders": {
+      "number": { "type": "String" }
+    }
+  },
+  "seatsLeft": "Intebe {count} zisigaye",
+  "@seatsLeft": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "profileTitle": "Umwirondoro",
+  "personalInformation": "Amakuru ku giti cyawe",
+  "phoneLabel": "Telefoni",
+  "nationalityInfo": "Ubwenegihugu",
+  "memberSince": "Umunyamuryango kuva",
+  "logoutButton": "Sohoka",
+
+  "languageTitle": "Ururimi",
+  "englishLanguage": "Icyongereza",
+  "kinyarwandaLanguage": "Ikinyarwanda",
+  "frenchLanguage": "Igifaransa",
+  "selectLanguage": "Hitamo ururimi",
+
+  "tegabusAssistant": "Umufasha wa TegaBus",
+  "onlineStatus": "Ahari",
+  "askMeAnything": "Mbaza ikibazo cyose...",
+
+  "forgotPasswordTitle": "Wibagiwe ijambobanga",
+  "resetYourPassword": "Hindura ijambobanga ryawe",
+  "forgotPasswordDesc": "Shyira imeyili yawe kandi tuzakoherereza uhuza wo guhindura ijambobanga.",
+  "sendResetLink": "Ohereza uhuza",
+  "resetLinkSent": "Uhuza woherejwe — reba imeyili yawe.",
+  "enterValidEmail": "Shyira imeyili ikwiye",
+
+  "bookingConfirmed": "Gutuza byemejwe!",
+  "ticketBookedSuccessfully": "Itike yawe yaturijwe neza.",
+  "scanToVerify": "Kanya urebe",
+  "bookingRef": "Gutuza #{ref}",
+  "@bookingRef": {
+    "placeholders": {
+      "ref": { "type": "String" }
+    }
+  },
+  "goToHome": "Subira ahabanza",
+  "viewMyTickets": "Reba amatike yanjye",
+
+  "availableSeat": "Ihari",
+  "selectedSeat": "Yahitiwe",
+  "bookedSeat": "Yaturijwe",
+  "selectASeat": "Hitamo intebe",
+  "bookSeat": "Tuza intebe",
+  "failedToLoadSeats": "Gutegura intebe byanze."
+}
