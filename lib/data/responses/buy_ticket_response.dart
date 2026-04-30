@@ -4,7 +4,7 @@ part 'buy_ticket_response.freezed.dart';
 part 'buy_ticket_response.g.dart';
 
 @freezed
-class BuyTicketResponse with _$BuyTicketResponse {
+abstract class BuyTicketResponse with _$BuyTicketResponse {
   const factory BuyTicketResponse({
     required String id,
     required String fullName,

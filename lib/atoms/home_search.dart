@@ -39,10 +39,24 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
 
     if (loading) {
       return const Center(
-          child: Padding(
-        padding: EdgeInsets.all(24),
-        child: CircularProgressIndicator(),
-      ));
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (originsState.isError || destinationsState.isError) {
+      return _SearchErrorState(
+        onRetry: () {
+          if (originsState.isError) {
+            ref.read(originsNotifierProvider.notifier).fetchOrigins();
+          }
+          if (destinationsState.isError) {
+            ref.read(destinationsNotifierProvider.notifier).fetchDestinations();
+          }
+        },
+      );
     }
 
     final origins = originsState.data ?? [];

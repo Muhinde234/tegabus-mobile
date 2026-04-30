@@ -4,7 +4,7 @@ part 'signup_response.freezed.dart';
 part 'signup_response.g.dart';
 
 @freezed
-class SignupUser with _$SignupUser {
+abstract class SignupUser with _$SignupUser {
   const factory SignupUser({
     required String id,
     required String email,
@@ -17,7 +17,7 @@ class SignupUser with _$SignupUser {
 }
 
 @freezed
-class SignupResponse with _$SignupResponse {
+abstract class SignupResponse with _$SignupResponse {
   const factory SignupResponse({
     required String message,
     required SignupUser user,

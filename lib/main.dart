@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mobile/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,8 +20,9 @@ void main() async {
   final token = await storage.read(key: 'token');
   final localeCode = await storage.read(key: 'locale') ?? 'en';
 
-  final initialScreen =
-      token != null ? const Layout() : const OnbordingScreen();
+  final initialScreen = kDebugMode
+      ? const Layout()
+      : (token != null ? const Layout() : const OnbordingScreen());
 
   runApp(
     ProviderScope(

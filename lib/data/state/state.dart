@@ -15,7 +15,8 @@ class State<T> with _$State<T> {
   bool get isLoading => this is _Loading<T>;
   bool get isSuccess => this is _Success<T>;
   bool get isError => this is _Error<T>;
-  T? get data => (this as _Success<T>?)?.data;
-  Exception? get error => (this as _Error<T>?)?.exception;
+  T? get data => this is _Success<T> ? (this as _Success<T>).data : null;
+  Exception? get error =>
+      this is _Error<T> ? (this as _Error<T>).exception : null;
 
 }

@@ -1,17 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/api\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/api-docs\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/swagger-ui/index.html\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/v3/api-docs\")",
-      "Bash(curl -s -L --max-time 30 \"https://tegabus-be.onrender.com/swagger-ui\")",
-      "Bash(xargs rm *)",
-      "Bash(flutter pub *)",
       "Bash(dart run *)",
+      "Bash(flutter build *)",
+      "Bash(flutter analyze *)",
+      "Bash(dart pub *)",
+      "Bash(python -c \"import json,sys; deps=json.load\\(sys.stdin\\); [print\\(p['name'], p['version']\\) for p in deps.get\\('packages',[]\\) if p['name'] in \\('freezed','freezed_annotation','build_runner'\\)]\")",
+      "Bash(dart --version)",
+      "Bash(flutter --version)",
+      "Bash(dart analyze *)",
+      "Bash(dart compile *)",
       "Bash(flutter gen-l10n *)",
-      "Bash(flutter analyze *)"
+      "Bash(flutter clean *)",
+      "Bash(flutter pub *)"
     ]
   }
 }

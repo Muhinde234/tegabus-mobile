@@ -5,7 +5,7 @@ part 'my_ticket_response.g.dart';
 
 /// Locally stored ticket (persisted after a successful booking).
 @freezed
-class Ticket with _$Ticket {
+abstract class Ticket with _$Ticket {
   const factory Ticket({
     required String id,
     required String origin,
@@ -24,7 +24,7 @@ class Ticket with _$Ticket {
 }
 
 @freezed
-class MyTicketResponse with _$MyTicketResponse {
+abstract class MyTicketResponse with _$MyTicketResponse {
   const factory MyTicketResponse({
     required List<Ticket> data,
   }) = _MyTicketResponse;

@@ -4,7 +4,7 @@ part 'single_schedule_response.freezed.dart';
 part 'single_schedule_response.g.dart';
 
 @freezed
-class SeatAvailability with _$SeatAvailability {
+abstract class SeatAvailability with _$SeatAvailability {
   const factory SeatAvailability({
     required int seatId,
     required String seatNumber,
@@ -17,7 +17,7 @@ class SeatAvailability with _$SeatAvailability {
 }
 
 @freezed
-class ScheduleSeats with _$ScheduleSeats {
+abstract class ScheduleSeats with _$ScheduleSeats {
   const factory ScheduleSeats({
     required List<SeatAvailability> seats,
   }) = _ScheduleSeats;
