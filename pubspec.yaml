@@ -46,14 +46,14 @@ flutter:
      - .env
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: assets/velotick_splash.png
+  color: "#0B3B2E"
+  image: assets/logo.png
   android_gravity: center
   ios_content_mode: center
   android: true
   ios: true
   web: false
   android_12:
-    color: "#FFFFFF"
-    image: assets/velotick_splash.png
-    icon_background_color: "#FFFFFF"
+    color: "#0B3B2E"
+    image: assets/logo.png
+    icon_background_color: "#0B3B2E"

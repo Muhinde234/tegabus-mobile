@@ -1,4 +1,4 @@
-package com.velotick.mobile
+package com.tegabus.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

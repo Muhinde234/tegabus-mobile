@@ -29,9 +29,10 @@ class ProfileScreen extends ConsumerWidget {
               const ProfileShimmer(),
             _ when profileState.isSuccess =>
               _ProfileContent(profile: profileState.data!),
-            _ => Center(
-                child: Text('Error: ${profileState.error}',
-                    style: const TextStyle(color: DColors.danger6))),
+            _ => _ProfileError(
+                onRetry: () => ref
+                    .read(profileNotifierProvider.notifier)
+                    .fetchProfile()),
           },
         ),
       ),
@@ -241,6 +242,50 @@ class _LanguageTile extends StatelessWidget {
                   color: DColors.primary, size: 20),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ProfileError extends StatelessWidget {
+  final VoidCallback onRetry;
+  const _ProfileError({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.6,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: DColors.danger6.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.wifi_off_rounded,
+                size: 48, color: DColors.danger6),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Could not load profile',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Check your connection and try again.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: DColors.neutral4, fontSize: 14, height: 1.5),
+          ),
+          const SizedBox(height: 28),
+          ElevatedButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh_rounded, size: 18),
+            label: const Text('Retry'),
+          ),
+        ],
       ),
     );
   }

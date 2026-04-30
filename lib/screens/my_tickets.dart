@@ -64,15 +64,34 @@ class MyTickets extends ConsumerWidget {
     }
 
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.error_outline,
-              color: DColors.danger6, size: 48),
-          const SizedBox(height: 12),
-          Text('${state.error}',
-              style: const TextStyle(color: DColors.neutral4)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: DColors.danger6.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.wifi_off_rounded,
+                  size: 48, color: DColors.danger6),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Something went wrong',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'We couldn\'t load your tickets.\nPull down to refresh.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: DColors.neutral4, fontSize: 14, height: 1.5),
+            ),
+          ],
+        ),
       ),
     );
   }

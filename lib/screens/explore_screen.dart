@@ -69,22 +69,36 @@ class ExploreScreen extends ConsumerWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline,
-                color: DColors.danger6, size: 48),
-            const SizedBox(height: 12),
-            Text('${state.error}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: DColors.neutral4)),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: DColors.danger6.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.wifi_off_rounded,
+                  size: 48, color: DColors.danger6),
+            ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => ref
-                  .read(schedulesNotifierProvider.notifier)
-                  .fetchSchedules(),
-              child: Text(l.retry),
+            const Text(
+              'No connection',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'We couldn\'t fetch schedules.\nCheck your internet and try again.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: DColors.neutral4, fontSize: 14, height: 1.5),
+            ),
+            const SizedBox(height: 28),
+            ElevatedButton.icon(
+              onPressed: () =>
+                  ref.read(schedulesNotifierProvider.notifier).fetchSchedules(),
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: Text(l.retry),
             ),
           ],
         ),

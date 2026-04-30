@@ -151,3 +151,51 @@ class _HomeSearchState extends ConsumerState<HomeSearch> {
     );
   }
 }
+
+class _SearchErrorState extends StatelessWidget {
+  final VoidCallback onRetry;
+  const _SearchErrorState({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: DColors.danger6.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.wifi_off_rounded,
+                size: 36, color: DColors.danger6),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Could not load routes',
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Check your connection and try again.',
+            style: TextStyle(color: DColors.neutral4, fontSize: 13),
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh_rounded, size: 18),
+            label: const Text('Retry'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: DColors.primary,
+              side: const BorderSide(color: DColors.primary),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
