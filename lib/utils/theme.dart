@@ -70,12 +70,11 @@ class DTheme {
         errorMaxLines: 3,
       );
 
-  static CardTheme get cardThemeData => CardTheme(
+  static CardThemeData get cardThemeData => CardThemeData(
         elevation: 0,
         color: DColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: DColors.neutral2),
         ),
         margin: EdgeInsets.zero,
       );
@@ -96,23 +95,25 @@ class DTheme {
   static NavigationBarThemeData get navigationBarTheme =>
       NavigationBarThemeData(
         backgroundColor: Colors.white,
-        indicatorColor: DColors.primary2,
-        elevation: 8,
+        indicatorColor: DColors.primary1,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return const TextStyle(
               color: DColors.primary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
             );
           }
-          return const TextStyle(color: DColors.neutral4, fontSize: 12);
+          return const TextStyle(color: DColors.neutral4, fontSize: 11);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: DColors.primary, size: 24);
+            return const IconThemeData(color: DColors.primary, size: 22);
           }
-          return const IconThemeData(color: DColors.neutral4, size: 24);
+          return const IconThemeData(color: DColors.neutral4, size: 22);
         }),
       );
 }

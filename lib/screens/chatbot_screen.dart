@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/extensions.dart';
@@ -15,6 +16,12 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   bool _isSending = false;
+
+  final _suggestions = [
+    'What routes are available?',
+    'How do I book a ticket?',
+    'Ticket price Kigali→Huye?',
+  ];
 
   @override
   void dispose() {
@@ -35,12 +42,12 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
     });
   }
 
-  Future<void> _send() async {
-    final text = _controller.text.trim();
-    if (text.isEmpty || _isSending) return;
+  Future<void> _send([String? text]) async {
+    final msg = text ?? _controller.text.trim();
+    if (msg.isEmpty || _isSending) return;
     _controller.clear();
     setState(() => _isSending = true);
-    await ref.read(chatNotifierProvider.notifier).sendMessage(text);
+    await ref.read(chatNotifierProvider.notifier).sendMessage(msg);
     setState(() => _isSending = false);
     _scrollToBottom();
   }
@@ -52,18 +59,20 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
     _scrollToBottom();
 
     return Scaffold(
+      backgroundColor: DColors.background,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Row(
           children: [
             Container(
-              width: 36,
-              height: 36,
-              decoration: const BoxDecoration(
-                color: DColors.primary,
-                shape: BoxShape.circle,
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                gradient: DColors.primaryGradient,
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.support_agent,
-                  color: Colors.white, size: 20),
+              child: const Icon(Iconsax.message_programming,
+                  color: Colors.white, size: 18),
             ),
             const SizedBox(width: 10),
             Column(
@@ -72,11 +81,24 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                 Text(l.tegabusAssistant,
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.w700)),
-                Text(l.onlineStatus,
-                    style: const TextStyle(
-                        fontSize: 11,
+                Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
                         color: DColors.success6,
-                        fontWeight: FontWeight.w500)),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(l.onlineStatus,
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: DColors.success6,
+                            fontWeight: FontWeight.w500)),
+                  ],
+                ),
               ],
             ),
           ],
@@ -84,6 +106,36 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
       ),
       body: Column(
         children: [
+          // ── Quick suggestions ──
+          if (messages.length <= 1)
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _suggestions.map((s) {
+                  return GestureDetector(
+                    onTap: () => _send(s),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: DColors.primary3),
+                      ),
+                      child: Text(s,
+                          style: const TextStyle(
+                              color: DColors.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+
+          // ── Messages ──
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -96,6 +148,8 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
               },
             ),
           ),
+
+          // ── Typing indicator ──
           if (_isSending)
             const Padding(
               padding: EdgeInsets.only(left: 20, bottom: 4),
@@ -103,10 +157,12 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                 children: [_TypingIndicator()],
               ),
             ),
+
+          // ── Input ──
           _ChatInput(
             controller: _controller,
             isSending: _isSending,
-            onSend: _send,
+            onSend: () => _send(),
             hint: l.askMeAnything,
           ),
         ],
@@ -122,38 +178,56 @@ class _ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUser = message.isUser;
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.75),
-        decoration: BoxDecoration(
-          color: isUser ? DColors.primary : Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isUser ? 16 : 4),
-            bottomRight: Radius.circular(isUser ? 4 : 16),
-          ),
-          border: isUser ? null : Border.all(color: DColors.neutral2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (!isUser) ...[
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                gradient: DColors.primaryGradient,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Iconsax.message_programming,
+                  color: Colors.white, size: 14),
             ),
+            const SizedBox(width: 8),
           ],
-        ),
-        child: Text(
-          message.text,
-          style: TextStyle(
-            color: isUser ? Colors.white : DColors.neutral6,
-            fontSize: 14,
-            height: 1.4,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.72),
+            decoration: BoxDecoration(
+              color: isUser ? DColors.primary : Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(16),
+                topRight: const Radius.circular(16),
+                bottomLeft: Radius.circular(isUser ? 16 : 4),
+                bottomRight: Radius.circular(isUser ? 4 : 16),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              message.text,
+              style: TextStyle(
+                color: isUser ? Colors.white : DColors.neutral6,
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -169,7 +243,7 @@ class _TypingIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: DColors.neutral2),
+        boxShadow: DColors.softShadow,
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
@@ -225,7 +299,7 @@ class _DotState extends State<_Dot> with SingleTickerProviderStateMixin {
         width: 8,
         height: 8,
         decoration: const BoxDecoration(
-          color: DColors.neutral4,
+          color: DColors.primary,
           shape: BoxShape.circle,
         ),
       ),
@@ -250,9 +324,15 @@ class _ChatInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(color: DColors.neutral2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -283,8 +363,18 @@ class _ChatInput extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: isSending ? DColors.neutral2 : DColors.primary,
+                  gradient: isSending ? null : DColors.primaryGradient,
+                  color: isSending ? DColors.neutral2 : null,
                   shape: BoxShape.circle,
+                  boxShadow: isSending
+                      ? null
+                      : [
+                          BoxShadow(
+                            color: DColors.primary.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                 ),
                 child: isSending
                     ? const Padding(
@@ -294,8 +384,8 @@ class _ChatInput extends StatelessWidget {
                           color: Colors.white,
                         ),
                       )
-                    : const Icon(Icons.send_rounded,
-                        color: Colors.white, size: 20),
+                    : const Icon(Iconsax.send_1,
+                        color: Colors.white, size: 18),
               ),
             ),
           ],

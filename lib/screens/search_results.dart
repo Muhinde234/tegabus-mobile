@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/extensions.dart';
@@ -33,20 +34,56 @@ class SearchResults extends ConsumerWidget {
       });
     }
 
+    final resultCount = state.isSuccess ? (state.data?.length ?? 0) : 0;
+
     return Scaffold(
+      backgroundColor: DColors.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: DColors.surfaceVariant,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Iconsax.arrow_left_2, size: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('$from → $to'),
-            Text(
-              '${date.day}/${date.month}/${date.year}',
-              style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+            Row(
+              children: [
+                Text(
+                  '${date.day}/${date.month}/${date.year}',
+                  style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+                ),
+                if (state.isSuccess) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: DColors.primary1,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '$resultCount found',
+                      style: const TextStyle(
+                          color: DColors.primary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ],
         ),
       ),
       body: RefreshIndicator(
+        color: DColors.primary,
         onRefresh: () => ref
             .read(schedulesNotifierProvider.notifier)
             .fetchSchedules(from: from, to: to, date: date),
@@ -61,7 +98,7 @@ class SearchResults extends ConsumerWidget {
       return ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: 5,
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, __) => const TicketCardShimmer(),
       );
     }
@@ -70,19 +107,42 @@ class SearchResults extends ConsumerWidget {
       final schedules = state.data ?? [];
       if (schedules.isEmpty) {
         return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.search_off,
-                  size: 64, color: DColors.neutral2),
-              const SizedBox(height: 16),
-              Text(l.noSchedulesFound,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 17)),
-              const SizedBox(height: 6),
-              Text(l.tryDifferentDateOrRoute,
-                  style: const TextStyle(color: DColors.neutral4)),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: DColors.primary1,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Iconsax.search_status,
+                      size: 40, color: DColors.primary3),
+                ),
+                const SizedBox(height: 16),
+                Text(l.noSchedulesFound,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 17)),
+                const SizedBox(height: 6),
+                Text(l.tryDifferentDateOrRoute,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: DColors.neutral4, fontSize: 14)),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Iconsax.arrow_left_2, size: 16),
+                  label: const Text('Modify Search'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: DColors.primary,
+                    side: const BorderSide(color: DColors.primary),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }
@@ -90,7 +150,7 @@ class SearchResults extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: schedules.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, i) => TicketCard(schedule: schedules[i]),
       );
     }
@@ -101,9 +161,16 @@ class SearchResults extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline,
-                color: DColors.danger6, size: 48),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: DColors.danger1,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.error_outline,
+                  color: DColors.danger6, size: 40),
+            ),
+            const SizedBox(height: 16),
             Text('${state.error}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: DColors.neutral4)),

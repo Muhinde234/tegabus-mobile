@@ -124,5 +124,47 @@
   "bookedSeat": "Yaturijwe",
   "selectASeat": "Hitamo intebe",
   "bookSeat": "Tuza intebe",
-  "failedToLoadSeats": "Gutegura intebe byanze."
+  "failedToLoadSeats": "Gutegura intebe byanze.",
+
+  "companiesTitle": "Sosiyete z'amabisi",
+  "seeAll": "Reba byose",
+  "byCompany": "Na {company}",
+  "@byCompany": {
+    "placeholders": { "company": { "type": "String" } }
+  },
+  "routesCount": "Inzira {count}",
+  "@routesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "schedulesByCompany": "Gahunda za {company}",
+  "@schedulesByCompany": {
+    "placeholders": { "company": { "type": "String" } }
+  },
+  "noSchedulesForCompany": "Nta gahunda iri kuri iyi sosiyete",
+  "recentTrips": "Ingendo ziheruka",
+  "operatedBy": "ITWAJWE NA",
+  "filterByCompany": "Shyungura ku isosiyete",
+  "allCompanies": "Byose",
+  "searchByRoute": "Shaka inzira (urugero: Kigali → Huye)",
+  "filtersTitle": "Iyungurura",
+  "applyFilters": "Emeza",
+  "clearFilters": "Siba byose",
+
+  "paymentTitle": "Kwishyura",
+  "paymentSummary": "Incamake",
+  "paymentMethod": "Hitamo uburyo bwo kwishyura",
+  "paymentMtn": "MTN Mobile Money",
+  "paymentAirtel": "Airtel Money",
+  "paymentPhoneLabel": "Nimero ya Mobile Money",
+  "paymentPhoneHint": "07X XXX XXXX",
+  "paymentPhoneInvalid": "Andika nimero yemewe",
+  "paymentPayNow": "Ishyura {amount}",
+  "@paymentPayNow": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "paymentProcessing": "Kwishyura biri kubaho…",
+  "paymentInstructions": "Uzohererezwa ubutumwa kuri telefoni yawe. Bwemeze kugirango wishyure.",
+  "paymentTotal": "Igiteranyo",
+  "paymentSeat": "Intebe",
+  "paymentTrip": "Urugendo"
 }

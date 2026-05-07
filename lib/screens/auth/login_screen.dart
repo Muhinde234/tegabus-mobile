@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/requests/login_request.dart';
 import 'package:mobile/screens/auth/forgot_password_screen.dart';
@@ -43,6 +44,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(curr.error.toString()),
           backgroundColor: DColors.danger6,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ));
       }
     });
@@ -56,38 +59,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
+
+              // ── Logo ──
               Row(
                 children: [
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
-                      color: DColors.primary,
-                      borderRadius: BorderRadius.circular(12),
+                      gradient: DColors.primaryGradient,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: DColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                       child: Image.asset('assets/logo.png', fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(width: 12),
                   const Text('TegaBus',
                       style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
                           color: DColors.primary)),
                 ],
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 40),
+
+              // ── Heading ──
               Text(l.welcomeBack,
                   style: const TextStyle(
-                      fontSize: 28, fontWeight: FontWeight.w800)),
+                      fontSize: 30, fontWeight: FontWeight.w900)),
               const SizedBox(height: 6),
               Text(l.signInSubtitle,
                   style:
                       const TextStyle(color: DColors.neutral4, fontSize: 15)),
-              const SizedBox(height: 32),
+              const SizedBox(height: 36),
 
+              // ── Form ──
               Form(
                 key: _formKey,
                 child: Column(
@@ -97,7 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: l.emailAddress,
-                        prefixIcon: const Icon(Icons.email_outlined),
+                        prefixIcon: const Icon(Iconsax.sms, size: 20),
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return l.enterEmail;
@@ -110,11 +125,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       obscureText: _obscure,
                       decoration: InputDecoration(
                         hintText: l.passwordLabel,
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon: const Icon(Iconsax.lock, size: 20),
                         suffixIcon: IconButton(
-                          icon: Icon(_obscure
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined),
+                          icon: Icon(
+                            _obscure ? Iconsax.eye_slash : Iconsax.eye,
+                            size: 20,
+                          ),
                           onPressed: () =>
                               setState(() => _obscure = !_obscure),
                         ),
@@ -124,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
@@ -146,33 +162,94 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 32),
 
-              ElevatedButton(
-                onPressed: loginState.isLoading
-                    ? null
-                    : () {
-                        if (_formKey.currentState!.validate()) {
-                          ref.read(loginNotifierProvider.notifier).login(
-                                LoginRequest(
-                                  email: _emailCtrl.text.trim(),
-                                  password: _passwordCtrl.text,
-                                ),
-                              );
-                        }
-                      },
-                child: loginState.isLoading
-                    ? const SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
-                      )
-                    : Text(l.signInButton),
+              // ── Sign In button ──
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: DColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: DColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: loginState.isLoading
+                      ? null
+                      : () {
+                          if (_formKey.currentState!.validate()) {
+                            ref.read(loginNotifierProvider.notifier).login(
+                                  LoginRequest(
+                                    email: _emailCtrl.text.trim(),
+                                    password: _passwordCtrl.text,
+                                  ),
+                                );
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    disabledBackgroundColor: Colors.transparent,
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: loginState.isLoading
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(l.signInButton,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700)),
+                ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
+              // ── Divider ──
+              Row(
+                children: [
+                  const Expanded(child: Divider(color: DColors.neutral2)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('or',
+                        style: TextStyle(
+                            color: DColors.neutral4,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                  const Expanded(child: Divider(color: DColors.neutral2)),
+                ],
+              ),
+
+              const SizedBox(height: 28),
+
+              // ── Social login ──
+              _SocialButton(
+                icon: Icons.g_mobiledata,
+                label: 'Continue with Google',
+                onTap: () {},
+              ),
+              const SizedBox(height: 12),
+              _SocialButton(
+                icon: Icons.apple,
+                label: 'Continue with Apple',
+                onTap: () {},
+              ),
+
+              const SizedBox(height: 32),
+
+              // ── Register link ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -195,6 +272,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SocialButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _SocialButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: DColors.neutral2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 22, color: DColors.neutral6),
+            const SizedBox(width: 10),
+            Text(label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: DColors.neutral6)),
+          ],
         ),
       ),
     );

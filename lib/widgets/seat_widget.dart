@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:mobile/data/responses/single_schedule_response.dart';
 import 'package:mobile/utils/colors.dart';
 
@@ -16,11 +17,11 @@ class SeatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = seat.booked
-        ? DColors.neutral2
+    final bgColor = seat.booked
+        ? DColors.neutral1
         : isSelected
-            ? DColors.warning5
-            : DColors.success5;
+            ? DColors.warning1
+            : DColors.success1;
 
     final iconColor = seat.booked
         ? DColors.neutral3
@@ -28,23 +29,36 @@ class SeatWidget extends StatelessWidget {
             ? DColors.warning6
             : DColors.success6;
 
+    final borderColor = seat.booked
+        ? Colors.transparent
+        : isSelected
+            ? DColors.warning6
+            : Colors.transparent;
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 48,
-        height: 52,
-        margin: const EdgeInsets.only(bottom: 8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        width: 50,
+        height: 54,
+        margin: const EdgeInsets.only(bottom: 6),
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(8),
-          border: isSelected
-              ? Border.all(color: DColors.warning6, width: 2)
-              : null,
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: borderColor,
+            width: isSelected ? 2 : 0,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.event_seat, size: 22, color: iconColor),
+            Icon(
+              seat.booked ? Iconsax.user : Iconsax.personalcard,
+              size: 20,
+              color: iconColor,
+            ),
             const SizedBox(height: 2),
             Text(
               seat.seatNumber,

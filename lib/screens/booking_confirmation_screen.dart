@@ -1,24 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/responses/buy_ticket_response.dart';
+import 'package:mobile/data/responses/company.dart';
 import 'package:mobile/screens/layout.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/extensions.dart';
+import 'package:mobile/widgets/dashed_line.dart';
+import 'package:mobile/widgets/ticket_clipper.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class BookingConfirmationScreen extends StatelessWidget {
+class BookingConfirmationScreen extends StatefulWidget {
   final BuyTicketResponse booking;
 
   const BookingConfirmationScreen({super.key, required this.booking});
 
   @override
+  State<BookingConfirmationScreen> createState() =>
+      _BookingConfirmationScreenState();
+}
+
+class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseCtrl;
+  late final Animation<double> _pulseAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+    _pulseAnim = Tween<double>(begin: 0.9, end: 1.1).animate(
+      CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final dep = DateFormat('EEE, MMM d • h:mm a').format(booking.departureTime);
-    final arr = DateFormat('h:mm a').format(booking.arrivalTime);
-    final shortRef = booking.id.length > 8
-        ? booking.id.substring(0, 8).toUpperCase()
-        : booking.id.toUpperCase();
+    final b = widget.booking;
+    final dep = DateFormat('EEE, MMM d • h:mm a').format(b.departureTime);
+    final arr = DateFormat('h:mm a').format(b.arrivalTime);
+    final shortRef = b.id.length > 8
+        ? b.id.substring(0, 8).toUpperCase()
+        : b.id.toUpperCase();
+    final company = DummyCompanies.byId(
+      MyTicketsNotifier.companyIdForTicket(b.id),
+    );
 
     return Scaffold(
       backgroundColor: DColors.background,
@@ -28,23 +65,43 @@ class BookingConfirmationScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 80,
-                height: 80,
-                decoration: const BoxDecoration(
-                  color: DColors.success2,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.check_rounded,
-                    color: DColors.success6, size: 48),
-              ),
               const SizedBox(height: 20),
+
+              // ── Success animation ──
+              ScaleTransition(
+                scale: _pulseAnim,
+                child: Container(
+                  width: 90,
+                  height: 90,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        DColors.success6,
+                        DColors.success6.withValues(alpha: 0.8),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: DColors.success6.withValues(alpha: 0.3),
+                        blurRadius: 30,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.check_rounded,
+                      color: Colors.white, size: 48),
+                ),
+              ),
+
+              const SizedBox(height: 24),
               Text(
                 l.bookingConfirmed,
                 style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
                   color: DColors.neutral6,
                 ),
               ),
@@ -56,141 +113,248 @@ class BookingConfirmationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: DColors.primary,
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            booking.fullName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            l.seatLabel(booking.seatNumber),
-                            style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+              // ── Ticket card with notch ──
+              ClipPath(
+                clipper: TicketClipper(notchRadius: 20, notchPosition: 0.48),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: DColors.elevatedShadow,
+                  ),
+                  child: Column(
+                    children: [
+                      // Header
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          gradient: DColors.primaryGradient,
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(booking.origin,
+                                Expanded(
+                                  child: Text(
+                                    b.fullName,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16)),
-                                const SizedBox(height: 2),
-                                Text(dep,
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    l.seatLabel(b.seatNumber),
                                     style: const TextStyle(
-                                        color: DColors.neutral4,
-                                        fontSize: 12)),
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                          const Icon(Icons.arrow_forward,
-                              color: DColors.primary),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(booking.destination,
-                                    style: const TextStyle(
+                            const SizedBox(height: 10),
+                            // ── Operating company chip ──
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 22,
+                                      height: 22,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        company.logoLetter,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 11,
+                                          color: company.brandColor,
+                                          height: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      company.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 16)),
-                                const SizedBox(height: 2),
-                                Text(arr,
-                                    style: const TextStyle(
-                                        color: DColors.neutral4,
-                                        fontSize: 12)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(b.origin,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 18)),
+                                      const SizedBox(height: 2),
+                                      Text(dep,
+                                          style: TextStyle(
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.7),
+                                              fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Iconsax.bus,
+                                      color: Colors.white, size: 16),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(b.destination,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 18)),
+                                      const SizedBox(height: 2),
+                                      Text(arr,
+                                          style: TextStyle(
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.7),
+                                              fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    const Divider(height: 1, color: DColors.neutral2),
+                      // Dashed separator
+                      const SizedBox(height: 12),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28),
+                        child: DashedLine(color: DColors.neutral2),
+                      ),
 
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            l.scanToVerify,
-                            style: const TextStyle(
-                                color: DColors.neutral4, fontSize: 12),
-                          ),
-                          const SizedBox(height: 12),
-                          booking.qrCodeUrl.isNotEmpty
-                              ? Image.network(
-                                  booking.qrCodeUrl,
-                                  width: 160,
-                                  height: 160,
-                                  errorBuilder: (_, __, ___) =>
-                                      _buildQrFallback(booking.id),
-                                )
-                              : _buildQrFallback(booking.id),
-                          const SizedBox(height: 8),
-                          Text(
-                            l.bookingRef(shortRef),
-                            style: const TextStyle(
-                              color: DColors.neutral5,
-                              fontSize: 12,
-                              fontFamily: 'monospace',
-                              letterSpacing: 1.5,
+                      // QR Code section
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            Text(
+                              l.scanToVerify,
+                              style: const TextStyle(
+                                  color: DColors.neutral4, fontSize: 12),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 14),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: DColors.surfaceVariant,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: b.qrCodeUrl.isNotEmpty
+                                  ? Image.network(
+                                      b.qrCodeUrl,
+                                      width: 160,
+                                      height: 160,
+                                      errorBuilder: (_, __, ___) =>
+                                          _buildQrFallback(b.id),
+                                    )
+                                  : _buildQrFallback(b.id),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              l.bookingRef(shortRef),
+                              style: const TextStyle(
+                                color: DColors.neutral5,
+                                fontSize: 12,
+                                fontFamily: 'monospace',
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              ElevatedButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const Layout()),
-                  (_) => false,
+              // ── Actions ──
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: DColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: DColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Text(l.goToHome),
+                child: ElevatedButton.icon(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const Layout()),
+                    (_) => false,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  icon: const Icon(Iconsax.home, size: 18),
+                  label: Text(l.goToHome),
+                ),
               ),
+
               const SizedBox(height: 12),
-              OutlinedButton(
+              OutlinedButton.icon(
                 onPressed: () => Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => const Layout()),
@@ -203,7 +367,8 @@ class BookingConfirmationScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),
                 ),
-                child: Text(l.viewMyTickets),
+                icon: const Icon(Iconsax.ticket, size: 18),
+                label: Text(l.viewMyTickets),
               ),
             ],
           ),

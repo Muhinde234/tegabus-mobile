@@ -9,6 +9,7 @@ import 'package:mobile/data/api/services/ticket_schedule_service.dart';
 import 'package:mobile/data/requests/login_request.dart';
 import 'package:mobile/data/requests/sign_up_request.dart';
 import 'package:mobile/data/responses/buy_ticket_response.dart';
+import 'package:mobile/data/responses/company.dart';
 import 'package:mobile/data/responses/login_response.dart';
 import 'package:mobile/data/responses/my_ticket_response.dart';
 import 'package:mobile/data/responses/profile.dart';
@@ -157,6 +158,7 @@ class SchedulesNotifier extends StateNotifier<State<List<Schedule>>> {
     String? from,
     String? to,
     DateTime? date,
+    String? companyId,
   }) async {
     state = const State.loading();
     try {
@@ -167,6 +169,7 @@ class SchedulesNotifier extends StateNotifier<State<List<Schedule>>> {
         from: from,
         to: to,
         departureDate: departureDate,
+        companyId: companyId,
       );
       state = State.success(schedules);
     } catch (e) {
@@ -178,6 +181,29 @@ class SchedulesNotifier extends StateNotifier<State<List<Schedule>>> {
 final schedulesNotifierProvider = StateNotifierProvider.autoDispose<
     SchedulesNotifier, State<List<Schedule>>>((ref) {
   return SchedulesNotifier(ref.watch(ticketScheduleServiceProvider));
+});
+
+// ── Companies ────────────────────────────────────────────────────────────────
+
+class CompaniesNotifier extends StateNotifier<State<List<Company>>> {
+  final TicketScheduleService _service;
+  CompaniesNotifier(this._service) : super(const State.init()) {
+    fetchCompanies();
+  }
+
+  Future<void> fetchCompanies() async {
+    state = const State.loading();
+    try {
+      state = State.success(await _service.getCompanies());
+    } catch (e) {
+      state = State.error(Exception(e.toString()));
+    }
+  }
+}
+
+final companiesNotifierProvider =
+    StateNotifierProvider<CompaniesNotifier, State<List<Company>>>((ref) {
+  return CompaniesNotifier(ref.watch(ticketScheduleServiceProvider));
 });
 
 class SeatsNotifier extends StateNotifier<State<ScheduleSeats>> {
@@ -209,26 +235,116 @@ class MyTicketsNotifier extends StateNotifier<State<MyTicketResponse>> {
   MyTicketsNotifier() : super(const State.init());
 
   static const _storageKey = 'my_tickets';
+  static const _companyMapKey = 'my_tickets_company_map';
   final _storage = const FlutterSecureStorage();
 
-  Future<void> fetchMyTickets() async {
-    state = const State.loading();
+  // Side-map of ticket id → company id. Lives next to the freezed Ticket model
+  // so we don't have to regenerate freezed just to add a field. Resolved at
+  // display time via `companyIdForTicket`. Includes the dummy seed mappings.
+  static final Map<String, String> _ticketCompany = {
+    'TGB-DEMO-001': 'volcano',
+    'TGB-DEMO-002': 'ritco',
+    'TGB-DEMO-003': 'horizon',
+  };
+
+  /// Public accessor for screens that want to badge a ticket with its company.
+  /// Falls back to Volcano if the mapping is missing (e.g. legacy stored
+  /// tickets booked before this map existed).
+  static String companyIdForTicket(String ticketId) =>
+      _ticketCompany[ticketId] ?? 'volcano';
+
+  // Dummy seed tickets shown when nothing has been booked locally yet.
+  // Remove this when integrating the real /me/tickets endpoint.
+  static List<Ticket> _seedTickets() {
+    final now = DateTime.now();
+    DateTime at(int dayOffset, int hour, int minute) =>
+        DateTime(now.year, now.month, now.day, hour, minute)
+            .add(Duration(days: dayOffset));
+
+    return [
+      Ticket(
+        id: 'TGB-DEMO-001',
+        origin: 'Kigali',
+        destination: 'Musanze',
+        seatNumber: 'B4',
+        departureTime: at(2, 7, 30),
+        arrivalTime: at(2, 10, 0),
+        bookingDate: now.toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Denis Rukwaya',
+        price: 5000,
+      ),
+      Ticket(
+        id: 'TGB-DEMO-002',
+        origin: 'Kigali',
+        destination: 'Rubavu',
+        seatNumber: 'C7',
+        departureTime: at(5, 6, 0),
+        arrivalTime: at(5, 9, 30),
+        bookingDate: now.toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Denis Rukwaya',
+        price: 7000,
+      ),
+      Ticket(
+        id: 'TGB-DEMO-003',
+        origin: 'Kigali',
+        destination: 'Huye',
+        seatNumber: 'A2',
+        departureTime: at(-7, 9, 0),
+        arrivalTime: at(-7, 11, 30),
+        bookingDate: now.toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Denis Rukwaya',
+        price: 4500,
+      ),
+    ];
+  }
+
+  Future<void> _loadCompanyMap() async {
+    final raw = await _storage.read(key: _companyMapKey);
+    if (raw == null) return;
     try {
-      final raw = await _storage.read(key: _storageKey);
-      if (raw == null) {
-        state = const State.success(MyTicketResponse(data: []));
-        return;
-      }
-      final list = (jsonDecode(raw) as List)
-          .map((e) => Ticket.fromJson(e as Map<String, dynamic>))
-          .toList();
-      state = State.success(MyTicketResponse(data: list));
-    } catch (e) {
-      state = State.error(Exception(e.toString()));
+      final decoded = (jsonDecode(raw) as Map<String, dynamic>)
+          .map((k, v) => MapEntry(k, v.toString()));
+      _ticketCompany.addAll(decoded);
+    } catch (_) {
+      // Ignore corrupted side-map; the seed entries still apply.
     }
   }
 
-  Future<void> addTicket(BuyTicketResponse booking) async {
+  Future<void> _persistCompanyMap() async {
+    await _storage.write(
+      key: _companyMapKey,
+      value: jsonEncode(_ticketCompany),
+    );
+  }
+
+  Future<void> fetchMyTickets() async {
+    state = const State.loading();
+    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      await _loadCompanyMap();
+      final raw = await _storage.read(key: _storageKey);
+      final stored = raw == null
+          ? <Ticket>[]
+          : (jsonDecode(raw) as List)
+              .map((e) => Ticket.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+      // Combine any locally-booked tickets with the dummy seed tickets.
+      final combined = [...stored, ..._seedTickets()];
+      state = State.success(MyTicketResponse(data: combined));
+    } catch (e) {
+      state = State.success(MyTicketResponse(data: _seedTickets()));
+    }
+  }
+
+  Future<void> addTicket(
+    BuyTicketResponse booking, {
+    double? price,
+    String? companyId,
+  }) async {
     final ticket = Ticket(
       id: booking.id,
       origin: booking.origin,
@@ -239,17 +355,33 @@ class MyTicketsNotifier extends StateNotifier<State<MyTicketResponse>> {
       bookingDate: booking.bookingDate,
       qrCodeUrl: booking.qrCodeUrl,
       fullName: booking.fullName,
+      price: price,
     );
 
-    final current = state.data?.data ?? [];
-    final updated = [ticket, ...current];
+    if (companyId != null) {
+      _ticketCompany[booking.id] = companyId;
+      await _persistCompanyMap();
+    }
 
+    // Read existing storage so a fresh booking shows up in My Tickets even
+    // when the user hasn't opened that tab yet (state.data may still be null).
+    final raw = await _storage.read(key: _storageKey);
+    final stored = raw == null
+        ? <Ticket>[]
+        : (jsonDecode(raw) as List)
+            .map((e) => Ticket.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+    final persisted = [ticket, ...stored];
     await _storage.write(
       key: _storageKey,
-      value: jsonEncode(updated.map((t) => t.toJson()).toList()),
+      value: jsonEncode(persisted.map((t) => t.toJson()).toList()),
     );
 
-    state = State.success(MyTicketResponse(data: updated));
+    // For the live UI, surface persisted bookings + dummy seeds.
+    state = State.success(
+      MyTicketResponse(data: [...persisted, ..._seedTickets()]),
+    );
   }
 }
 
@@ -267,11 +399,16 @@ class BuyTicketNotifier extends StateNotifier<State<BuyTicketResponse>> {
   BuyTicketNotifier(this._service, this._myTickets)
       : super(const State.init());
 
-  Future<void> buyTicket(int scheduleId, int seatId) async {
+  Future<void> buyTicket(int scheduleId, int seatId, {double? price}) async {
     state = const State.loading();
     try {
       final ticket = await _service.buyTicket(scheduleId, seatId);
-      await _myTickets.addTicket(ticket);
+      final company = TicketScheduleService.companyFor(scheduleId);
+      await _myTickets.addTicket(
+        ticket,
+        price: price,
+        companyId: company.id,
+      );
       state = State.success(ticket);
     } catch (e) {
       state = State.error(Exception(e.toString()));

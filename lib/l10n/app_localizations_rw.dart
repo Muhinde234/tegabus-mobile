@@ -24,7 +24,8 @@ class AppLocalizationsRw extends AppLocalizations {
   String get onboardingTitle => 'Urugendo rwawe,\nku gufunga habusa.';
 
   @override
-  String get onboardingSubtitle => 'Gutura amatike ya bisi mu Rwanda byihuse.\nNta murongo. Nta ngorane. Genda.';
+  String get onboardingSubtitle =>
+      'Gutura amatike ya bisi mu Rwanda byihuse.\nNta murongo. Nta ngorane. Genda.';
 
   @override
   String get featureInstant => 'Byihuse';
@@ -102,13 +103,15 @@ class AppLocalizationsRw extends AppLocalizations {
   String get invalidEmail => 'Imeyili itari nziza';
 
   @override
-  String get passwordRequirements => 'Nibura inyuguti 8, ikuzo, agace k\'amazi n\'inomero';
+  String get passwordRequirements =>
+      'Nibura inyuguti 8, ikuzo, agace k\'amazi n\'inomero';
 
   @override
   String get passwordsDoNotMatch => 'Amagambo banga ntangana';
 
   @override
-  String get accountCreated => 'Konti yarakozwe! Reba imeyili yawe, hanyuma injira.';
+  String get accountCreated =>
+      'Konti yarakozwe! Reba imeyili yawe, hanyuma injira.';
 
   @override
   String get navHome => 'Ahabanza';
@@ -162,7 +165,8 @@ class AppLocalizationsRw extends AppLocalizations {
   String get searchBuses => 'Shakisha bisi';
 
   @override
-  String get selectOriginDestinationDate => 'Hitamo aho uvuye, aho ujya n\'itariki';
+  String get selectOriginDestinationDate =>
+      'Hitamo aho uvuye, aho ujya n\'itariki';
 
   @override
   String get exploreRoutes => 'Shakisha inzira';
@@ -171,7 +175,8 @@ class AppLocalizationsRw extends AppLocalizations {
   String get noSchedulesFound => 'Nta gahunda zabonetse';
 
   @override
-  String get tryDifferentDateOrRoute => 'Gerageza itariki cyangwa inzira ndi imwe';
+  String get tryDifferentDateOrRoute =>
+      'Gerageza itariki cyangwa inzira ndi imwe';
 
   @override
   String get noSchedulesAvailable => 'Nta gahunda zihari';
@@ -250,7 +255,8 @@ class AppLocalizationsRw extends AppLocalizations {
   String get resetYourPassword => 'Hindura ijambobanga ryawe';
 
   @override
-  String get forgotPasswordDesc => 'Shyira imeyili yawe kandi tuzakoherereza uhuza wo guhindura ijambobanga.';
+  String get forgotPasswordDesc =>
+      'Shyira imeyili yawe kandi tuzakoherereza uhuza wo guhindura ijambobanga.';
 
   @override
   String get sendResetLink => 'Ohereza uhuza';
@@ -298,4 +304,97 @@ class AppLocalizationsRw extends AppLocalizations {
 
   @override
   String get failedToLoadSeats => 'Gutegura intebe byanze.';
+
+  @override
+  String get companiesTitle => 'Sosiyete z\'amabisi';
+
+  @override
+  String get seeAll => 'Reba byose';
+
+  @override
+  String byCompany(String company) {
+    return 'Na $company';
+  }
+
+  @override
+  String routesCount(int count) {
+    return 'Inzira $count';
+  }
+
+  @override
+  String schedulesByCompany(String company) {
+    return 'Gahunda za $company';
+  }
+
+  @override
+  String get noSchedulesForCompany => 'Nta gahunda iri kuri iyi sosiyete';
+
+  @override
+  String get recentTrips => 'Ingendo ziheruka';
+
+  @override
+  String get operatedBy => 'ITWAJWE NA';
+
+  @override
+  String get filterByCompany => 'Shyungura ku isosiyete';
+
+  @override
+  String get allCompanies => 'Byose';
+
+  @override
+  String get searchByRoute => 'Shaka inzira (urugero: Kigali → Huye)';
+
+  @override
+  String get filtersTitle => 'Iyungurura';
+
+  @override
+  String get applyFilters => 'Emeza';
+
+  @override
+  String get clearFilters => 'Siba byose';
+
+  @override
+  String get paymentTitle => 'Kwishyura';
+
+  @override
+  String get paymentSummary => 'Incamake';
+
+  @override
+  String get paymentMethod => 'Hitamo uburyo bwo kwishyura';
+
+  @override
+  String get paymentMtn => 'MTN Mobile Money';
+
+  @override
+  String get paymentAirtel => 'Airtel Money';
+
+  @override
+  String get paymentPhoneLabel => 'Nimero ya Mobile Money';
+
+  @override
+  String get paymentPhoneHint => '07X XXX XXXX';
+
+  @override
+  String get paymentPhoneInvalid => 'Andika nimero yemewe';
+
+  @override
+  String paymentPayNow(String amount) {
+    return 'Ishyura $amount';
+  }
+
+  @override
+  String get paymentProcessing => 'Kwishyura biri kubaho…';
+
+  @override
+  String get paymentInstructions =>
+      'Uzohererezwa ubutumwa kuri telefoni yawe. Bwemeze kugirango wishyure.';
+
+  @override
+  String get paymentTotal => 'Igiteranyo';
+
+  @override
+  String get paymentSeat => 'Intebe';
+
+  @override
+  String get paymentTrip => 'Urugendo';
 }

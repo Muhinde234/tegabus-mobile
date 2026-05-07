@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class DColors {
   DColors._();
@@ -11,6 +12,10 @@ class DColors {
   static const Color primary3 = Color(0x660B3B2E);
   static const Color primary2 = Color(0x330B3B2E);
   static const Color primary1 = Color(0x1A0B3B2E);
+
+  // ── Primary Light (for gradient endpoints) ────────────────────────────────
+  static const Color primaryLight = Color(0xFF1A6B52);
+  static const Color primaryMid = Color(0xFF145A44);
 
   // ── Secondary (Gold accent) ───────────────────────────────────────────────
   static const Color secondary = Color(0xFFF5A623);
@@ -53,4 +58,48 @@ class DColors {
   static const Color background = Color(0xFFF8FAF9);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceVariant = Color(0xFFF0F4F2);
+
+  // ── Gradients ─────────────────────────────────────────────────────────────
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF0B3B2E), Color(0xFF145A44), Color(0xFF1A6B52)],
+  );
+
+  static const LinearGradient primaryGradientVertical = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFF0B3B2E), Color(0xFF1A6B52)],
+  );
+
+  static const LinearGradient goldGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF5A623), Color(0xFFE8941E)],
+  );
+
+  // ── Shadows ───────────────────────────────────────────────────────────────
+  static List<BoxShadow> get cardShadow => [
+        BoxShadow(
+          color: const Color(0xFF0B3B2E).withValues(alpha: 0.08),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+      ];
+
+  static List<BoxShadow> get softShadow => [
+        BoxShadow(
+          color: const Color(0xFF000000).withValues(alpha: 0.05),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      ];
+
+  static List<BoxShadow> get elevatedShadow => [
+        BoxShadow(
+          color: const Color(0xFF0B3B2E).withValues(alpha: 0.12),
+          blurRadius: 32,
+          offset: const Offset(0, 12),
+        ),
+      ];
 }

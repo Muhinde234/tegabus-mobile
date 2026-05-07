@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile/l10n/app_localizations.dart';
@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/data/providers.dart';
-import 'package:mobile/screens/layout.dart';
 import 'package:mobile/screens/onbording_screen.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/theme.dart';
@@ -17,12 +16,13 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   const storage = FlutterSecureStorage();
-  final token = await storage.read(key: 'token');
   final localeCode = await storage.read(key: 'locale') ?? 'en';
 
-  final initialScreen = kDebugMode
-      ? const Layout()
-      : (token != null ? const Layout() : const OnbordingScreen());
+  // Demo mode: always start at onboarding so the full passenger journey
+  // (onboarding → login → home → book → ticket) can be walked through on every
+  // launch. Drop any leftover dummy token from previous runs.
+  await storage.delete(key: 'token');
+  const initialScreen = OnbordingScreen();
 
   runApp(
     ProviderScope(
@@ -50,6 +50,12 @@ class Application extends ConsumerWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        // Flutter's GlobalMaterialLocalizations / GlobalCupertinoLocalizations
+        // don't ship Kinyarwanda. We still want app strings in rw, but Material
+        // widgets need *some* MaterialLocalizations to render. These shims
+        // satisfy the requirement by reusing the English implementations.
+        _RwMaterialLocalizationsDelegate(),
+        _RwCupertinoLocalizationsDelegate(),
       ],
       supportedLocales: const [
         Locale('en'),
@@ -90,4 +96,42 @@ class Application extends ConsumerWidget {
       home: initialScreen,
     );
   }
+}
+
+// ── Locale shims ─────────────────────────────────────────────────────────────
+// Flutter ships MaterialLocalizations / CupertinoLocalizations for ~80 locales,
+// but Kinyarwanda (`rw`) isn't one of them. Without a delegate that accepts
+// `rw`, every Material widget throws "No MaterialLocalizations found" the
+// moment the user picks Kinyarwanda. These two shims accept `rw` and reuse
+// the English implementations so the UI keeps rendering — only our own
+// AppLocalizations strings change.
+
+class _RwMaterialLocalizationsDelegate
+    extends LocalizationsDelegate<MaterialLocalizations> {
+  const _RwMaterialLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'rw';
+
+  @override
+  Future<MaterialLocalizations> load(Locale locale) =>
+      GlobalMaterialLocalizations.delegate.load(const Locale('en'));
+
+  @override
+  bool shouldReload(_RwMaterialLocalizationsDelegate old) => false;
+}
+
+class _RwCupertinoLocalizationsDelegate
+    extends LocalizationsDelegate<CupertinoLocalizations> {
+  const _RwCupertinoLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'rw';
+
+  @override
+  Future<CupertinoLocalizations> load(Locale locale) =>
+      GlobalCupertinoLocalizations.delegate.load(const Locale('en'));
+
+  @override
+  bool shouldReload(_RwCupertinoLocalizationsDelegate old) => false;
 }

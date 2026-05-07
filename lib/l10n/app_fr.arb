@@ -124,5 +124,47 @@
   "bookedSeat": "Réservé",
   "selectASeat": "Sélectionnez un siège",
   "bookSeat": "Réserver le siège",
-  "failedToLoadSeats": "Échec du chargement des sièges."
+  "failedToLoadSeats": "Échec du chargement des sièges.",
+
+  "companiesTitle": "Compagnies de bus",
+  "seeAll": "Voir tout",
+  "byCompany": "Par {company}",
+  "@byCompany": {
+    "placeholders": { "company": { "type": "String" } }
+  },
+  "routesCount": "{count} itinéraires",
+  "@routesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "schedulesByCompany": "Horaires de {company}",
+  "@schedulesByCompany": {
+    "placeholders": { "company": { "type": "String" } }
+  },
+  "noSchedulesForCompany": "Aucun horaire pour cette compagnie",
+  "recentTrips": "Trajets récents",
+  "operatedBy": "OPÉRÉ PAR",
+  "filterByCompany": "Filtrer par compagnie",
+  "allCompanies": "Tous",
+  "searchByRoute": "Rechercher un itinéraire (ex: Kigali → Huye)",
+  "filtersTitle": "Filtres",
+  "applyFilters": "Appliquer",
+  "clearFilters": "Tout effacer",
+
+  "paymentTitle": "Paiement",
+  "paymentSummary": "Récapitulatif",
+  "paymentMethod": "Choisir le mode de paiement",
+  "paymentMtn": "MTN Mobile Money",
+  "paymentAirtel": "Airtel Money",
+  "paymentPhoneLabel": "Numéro Mobile Money",
+  "paymentPhoneHint": "07X XXX XXXX",
+  "paymentPhoneInvalid": "Entrez un numéro valide",
+  "paymentPayNow": "Payer {amount}",
+  "@paymentPayNow": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "paymentProcessing": "Paiement en cours…",
+  "paymentInstructions": "Un message sera envoyé sur votre téléphone. Confirmez pour finaliser le paiement.",
+  "paymentTotal": "Total",
+  "paymentSeat": "Siège",
+  "paymentTrip": "Trajet"
 }

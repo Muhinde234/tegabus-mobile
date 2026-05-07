@@ -7,40 +7,51 @@ import 'package:mobile/data/responses/login_response.dart';
 import 'package:mobile/data/responses/profile.dart';
 import 'package:mobile/data/responses/signup_response.dart';
 
+// NOTE: Service stubbed with dummy data for UI development.
+// Replace each method body with the real API call when integrating.
 class AuthService {
   final ApiClient _apiClient;
 
   AuthService({required ApiClient apiClient}) : _apiClient = apiClient;
 
+  static const _fakeDelay = Duration(milliseconds: 600);
+
   Future<SignupResponse> signUp(SignUpRequest request) async {
-    try {
-      final response = await _apiClient.post(
-        '/api/v1/auth/sign-up',
-        data: request.toJson(),
-      );
-      return SignupResponse.fromJson(response.data as Map<String, dynamic>);
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
+    return SignupResponse(
+      message: 'Account created successfully',
+      user: SignupUser(
+        id: 'dummy-user-id',
+        email: request.email,
+        fullName: '${request.firstName} ${request.lastName}',
+        role: 'PASSENGER',
+      ),
+    );
   }
 
   Future<LoginResponse> login(LoginRequest request) async {
-    try {
-      final response = await _apiClient.post(
-        '/api/v1/auth/login',
-        data: request.toJson(),
-      );
-      final loginResponse =
-          LoginResponse.fromJson(response.data as Map<String, dynamic>);
-      await _apiClient.storage.write(
-          key: 'token', value: loginResponse.accessToken);
-      await _apiClient.storage.write(
-          key: 'user_data',
-          value: jsonEncode(loginResponse.user.toJson()));
-      return loginResponse;
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
+
+    final user = AuthUser(
+      id: 'dummy-user-id',
+      email: request.email,
+      fullName: 'Denis Rukwaya',
+      role: 'PASSENGER',
+    );
+
+    final loginResponse = LoginResponse(
+      message: 'Login successful',
+      accessToken: 'dummy-access-token',
+      expiresIn: 3600,
+      user: user,
+    );
+
+    await _apiClient.storage.write(key: 'token', value: loginResponse.accessToken);
+    await _apiClient.storage.write(
+      key: 'user_data',
+      value: jsonEncode(loginResponse.user.toJson()),
+    );
+    return loginResponse;
   }
 
   Future<void> logout() async {
@@ -49,56 +60,37 @@ class AuthService {
   }
 
   Future<void> forgotPassword(String email) async {
-    try {
-      await _apiClient.post(
-        '/api/v1/auth/forgot-password',
-        data: {'email': email},
-      );
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
   }
 
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
-    try {
-      await _apiClient.post(
-        '/api/v1/auth/change-password',
-        data: {
-          'currentPassword': currentPassword,
-          'newPassword': newPassword,
-        },
-      );
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
   }
 
   Future<Profile> me() async {
-    try {
-      final raw = await _apiClient.storage.read(key: 'user_data');
-      if (raw == null) throw Exception('Not authenticated');
-      final userData = jsonDecode(raw) as Map<String, dynamic>;
-      final userId = userData['id'] as String;
-      final response = await _apiClient.get('/api/v1/users/$userId');
-      return Profile.fromJson(response.data as Map<String, dynamic>);
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
+    return Profile(
+      id: 'dummy-user-id',
+      firstName: 'Denis',
+      lastName: 'Rukwaya',
+      email: 'denis.rukwaya@tegabus.rw',
+      profilePicUrl: null,
+      phoneNumber: '+250 788 123 456',
+      nationality: 'Rwandan',
+      role: 'PASSENGER',
+      createdAt: DateTime(2024, 8, 14),
+      updatedAt: DateTime(2026, 4, 22),
+    );
   }
 
   Future<Profile> updateProfile({
     required String userId,
     required Map<String, dynamic> data,
   }) async {
-    try {
-      final response =
-          await _apiClient.put('/api/v1/users/$userId', data: data);
-      return Profile.fromJson(response.data as Map<String, dynamic>);
-    } catch (e) {
-      throw Exception(ApiClient.extractError(e));
-    }
+    await Future.delayed(_fakeDelay);
+    return me();
   }
 }

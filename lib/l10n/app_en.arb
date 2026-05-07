@@ -127,5 +127,56 @@
   "bookedSeat": "Booked",
   "selectASeat": "Select a Seat",
   "bookSeat": "Book Seat",
-  "failedToLoadSeats": "Failed to load seats."
+  "failedToLoadSeats": "Failed to load seats.",
+
+  "companiesTitle": "Bus Companies",
+  "seeAll": "See all",
+  "byCompany": "By {company}",
+  "@byCompany": {
+    "description": "Subtitle showing which company runs this trip",
+    "placeholders": {
+      "company": { "type": "String" }
+    }
+  },
+  "routesCount": "{count} routes",
+  "@routesCount": {
+    "description": "Number of routes a company runs",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "schedulesByCompany": "{company} schedules",
+  "@schedulesByCompany": {
+    "description": "Title on the company-schedules screen",
+    "placeholders": {
+      "company": { "type": "String" }
+    }
+  },
+  "noSchedulesForCompany": "No schedules for this company yet",
+  "recentTrips": "Recent Trips",
+  "operatedBy": "OPERATED BY",
+  "filterByCompany": "Filter by company",
+  "allCompanies": "All",
+  "searchByRoute": "Search route (e.g. Kigali → Huye)",
+  "filtersTitle": "Filters",
+  "applyFilters": "Apply",
+  "clearFilters": "Clear all",
+
+  "paymentTitle": "Payment",
+  "paymentSummary": "Order summary",
+  "paymentMethod": "Choose payment method",
+  "paymentMtn": "MTN Mobile Money",
+  "paymentAirtel": "Airtel Money",
+  "paymentPhoneLabel": "Mobile money number",
+  "paymentPhoneHint": "07X XXX XXXX",
+  "paymentPhoneInvalid": "Enter a valid phone number",
+  "paymentPayNow": "Pay {amount}",
+  "@paymentPayNow": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "paymentProcessing": "Processing payment…",
+  "paymentInstructions": "A prompt will be sent to your phone. Approve it to complete payment.",
+  "paymentTotal": "Total",
+  "paymentSeat": "Seat",
+  "paymentTrip": "Trip"
 }

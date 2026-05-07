@@ -63,7 +63,8 @@ import 'app_localizations_rw.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,7 +72,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,18 +85,19 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('fr'),
-    Locale('rw')
+    Locale('rw'),
   ];
 
   /// No description provided for @appName.
@@ -666,9 +669,178 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load seats.'**
   String get failedToLoadSeats;
+
+  /// No description provided for @companiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus Companies'**
+  String get companiesTitle;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Subtitle showing which company runs this trip
+  ///
+  /// In en, this message translates to:
+  /// **'By {company}'**
+  String byCompany(String company);
+
+  /// Number of routes a company runs
+  ///
+  /// In en, this message translates to:
+  /// **'{count} routes'**
+  String routesCount(int count);
+
+  /// Title on the company-schedules screen
+  ///
+  /// In en, this message translates to:
+  /// **'{company} schedules'**
+  String schedulesByCompany(String company);
+
+  /// No description provided for @noSchedulesForCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules for this company yet'**
+  String get noSchedulesForCompany;
+
+  /// No description provided for @recentTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Trips'**
+  String get recentTrips;
+
+  /// No description provided for @operatedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'OPERATED BY'**
+  String get operatedBy;
+
+  /// No description provided for @filterByCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by company'**
+  String get filterByCompany;
+
+  /// No description provided for @allCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allCompanies;
+
+  /// No description provided for @searchByRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Search route (e.g. Kigali → Huye)'**
+  String get searchByRoute;
+
+  /// No description provided for @filtersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filtersTitle;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyFilters;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get clearFilters;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order summary'**
+  String get paymentSummary;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose payment method'**
+  String get paymentMethod;
+
+  /// No description provided for @paymentMtn.
+  ///
+  /// In en, this message translates to:
+  /// **'MTN Mobile Money'**
+  String get paymentMtn;
+
+  /// No description provided for @paymentAirtel.
+  ///
+  /// In en, this message translates to:
+  /// **'Airtel Money'**
+  String get paymentAirtel;
+
+  /// No description provided for @paymentPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile money number'**
+  String get paymentPhoneLabel;
+
+  /// No description provided for @paymentPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'07X XXX XXXX'**
+  String get paymentPhoneHint;
+
+  /// No description provided for @paymentPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number'**
+  String get paymentPhoneInvalid;
+
+  /// No description provided for @paymentPayNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount}'**
+  String paymentPayNow(String amount);
+
+  /// No description provided for @paymentProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing payment…'**
+  String get paymentProcessing;
+
+  /// No description provided for @paymentInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'A prompt will be sent to your phone. Approve it to complete payment.'**
+  String get paymentInstructions;
+
+  /// No description provided for @paymentTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get paymentTotal;
+
+  /// No description provided for @paymentSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat'**
+  String get paymentSeat;
+
+  /// No description provided for @paymentTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip'**
+  String get paymentTrip;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -677,26 +849,28 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'fr', 'rw'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'fr', 'rw'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'fr': return AppLocalizationsFr();
-    case 'rw': return AppLocalizationsRw();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'rw':
+      return AppLocalizationsRw();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

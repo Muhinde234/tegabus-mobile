@@ -24,7 +24,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Your trip,\njust a tap away.';
 
   @override
-  String get onboardingSubtitle => 'Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.';
+  String get onboardingSubtitle =>
+      'Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.';
 
   @override
   String get featureInstant => 'Instant';
@@ -102,13 +103,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'Invalid email';
 
   @override
-  String get passwordRequirements => 'Min 8 chars, uppercase, lowercase & number';
+  String get passwordRequirements =>
+      'Min 8 chars, uppercase, lowercase & number';
 
   @override
   String get passwordsDoNotMatch => 'Passwords do not match';
 
   @override
-  String get accountCreated => 'Account created! Check your email to verify, then sign in.';
+  String get accountCreated =>
+      'Account created! Check your email to verify, then sign in.';
 
   @override
   String get navHome => 'Home';
@@ -162,7 +165,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchBuses => 'Search Buses';
 
   @override
-  String get selectOriginDestinationDate => 'Please select origin, destination and date';
+  String get selectOriginDestinationDate =>
+      'Please select origin, destination and date';
 
   @override
   String get exploreRoutes => 'Explore Routes';
@@ -250,7 +254,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetYourPassword => 'Reset your password';
 
   @override
-  String get forgotPasswordDesc => 'Enter your email address and we\'ll send you a link to reset your password.';
+  String get forgotPasswordDesc =>
+      'Enter your email address and we\'ll send you a link to reset your password.';
 
   @override
   String get sendResetLink => 'Send Reset Link';
@@ -265,7 +270,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bookingConfirmed => 'Booking Confirmed!';
 
   @override
-  String get ticketBookedSuccessfully => 'Your ticket has been booked successfully.';
+  String get ticketBookedSuccessfully =>
+      'Your ticket has been booked successfully.';
 
   @override
   String get scanToVerify => 'Scan to verify';
@@ -298,4 +304,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToLoadSeats => 'Failed to load seats.';
+
+  @override
+  String get companiesTitle => 'Bus Companies';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String byCompany(String company) {
+    return 'By $company';
+  }
+
+  @override
+  String routesCount(int count) {
+    return '$count routes';
+  }
+
+  @override
+  String schedulesByCompany(String company) {
+    return '$company schedules';
+  }
+
+  @override
+  String get noSchedulesForCompany => 'No schedules for this company yet';
+
+  @override
+  String get recentTrips => 'Recent Trips';
+
+  @override
+  String get operatedBy => 'OPERATED BY';
+
+  @override
+  String get filterByCompany => 'Filter by company';
+
+  @override
+  String get allCompanies => 'All';
+
+  @override
+  String get searchByRoute => 'Search route (e.g. Kigali → Huye)';
+
+  @override
+  String get filtersTitle => 'Filters';
+
+  @override
+  String get applyFilters => 'Apply';
+
+  @override
+  String get clearFilters => 'Clear all';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentSummary => 'Order summary';
+
+  @override
+  String get paymentMethod => 'Choose payment method';
+
+  @override
+  String get paymentMtn => 'MTN Mobile Money';
+
+  @override
+  String get paymentAirtel => 'Airtel Money';
+
+  @override
+  String get paymentPhoneLabel => 'Mobile money number';
+
+  @override
+  String get paymentPhoneHint => '07X XXX XXXX';
+
+  @override
+  String get paymentPhoneInvalid => 'Enter a valid phone number';
+
+  @override
+  String paymentPayNow(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String get paymentProcessing => 'Processing payment…';
+
+  @override
+  String get paymentInstructions =>
+      'A prompt will be sent to your phone. Approve it to complete payment.';
+
+  @override
+  String get paymentTotal => 'Total';
+
+  @override
+  String get paymentSeat => 'Seat';
+
+  @override
+  String get paymentTrip => 'Trip';
 }
