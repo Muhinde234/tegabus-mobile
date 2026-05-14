@@ -93,37 +93,82 @@ class TicketScheduleService {
 
   // ── Booking ──────────────────────────────────────────────────────────────
 
-  Future<BuyTicketResponse> buyTicket(int scheduleId, int seatId,
-      {String? seatNumber}) async {
-    // POST /api/v1/tickets — body identifies the seat-availability row to
-    // lock. The schedule is implied by the seat availability on the backend.
-    // Seat locking gives idempotency naturally even without the
-    // `Idempotency-Key` header, so we don't need to thread it through here.
-    final res = await _apiClient.post(
-      '/api/v1/tickets',
-      data: {
-        'seatAvailabilityId': seatId,
-        if (seatNumber != null && seatNumber.isNotEmpty) 'seatNumber': seatNumber,
-      },
+  Future<BuyTicketResponse> buyTicket(
+    int scheduleId,
+    int seatId, {
+    String? seatNumber,
+    Schedule? schedule,
+    String? passengerName,
+  }) async {
+    // Mock: backend not yet available — return a confirmed ticket immediately
+    // using the real schedule data so the confirmation screen looks correct.
+    final now = DateTime.now();
+    final dep = schedule?.departureTime ?? now.add(const Duration(hours: 2));
+    final arr = schedule?.arrivalTime ?? dep.add(const Duration(hours: 3));
+    return BuyTicketResponse(
+      id: 'TGB-${now.millisecondsSinceEpoch.toString().substring(6)}',
+      fullName: passengerName ?? 'Passenger',
+      origin: schedule?.from ?? 'Kigali',
+      destination: schedule?.to ?? 'Musanze',
+      departureTime: dep,
+      arrivalTime: arr,
+      bookingDate: now.toIso8601String(),
+      seatNumber: seatNumber?.isNotEmpty == true ? seatNumber! : 'A1',
+      qrCodeUrl: '',
+      companyId: schedule?.companyId,
+      companyName: schedule?.companyName,
+      price: schedule?.price ?? 0,
+      status: 'CONFIRMED',
     );
-
-    final data = Map<String, dynamic>.from(res.data as Map);
-    return _ticketResponseFromBackend(data);
   }
 
   Future<List<Ticket>> getMyTickets() async {
-    final res = await _apiClient.get('/api/v1/tickets/my');
-    final raw = res.data;
-    // Spring's `Page<T>` envelopes data inside `.content`.
-    final List items = raw is List
-        ? raw
-        : (raw is Map && raw['content'] is List
-            ? raw['content'] as List
-            : const []);
-
-    return items
-        .map((e) => _ticketFromBackend(Map<String, dynamic>.from(e as Map)))
-        .toList();
+    // Mock: return sample tickets so the My Tickets tab works without a backend.
+    final now = DateTime.now();
+    return [
+      Ticket(
+        id: 'TGB-001',
+        origin: 'Kigali',
+        destination: 'Musanze',
+        seatNumber: 'B3',
+        departureTime: now.subtract(const Duration(days: 1, hours: 2)),
+        arrivalTime: now.subtract(const Duration(days: 1)),
+        bookingDate: now.subtract(const Duration(days: 2)).toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Demo Passenger',
+        price: 3000,
+        companyName: 'TegaBus',
+        status: 'CONFIRMED',
+      ),
+      Ticket(
+        id: 'TGB-002',
+        origin: 'Musanze',
+        destination: 'Kigali',
+        seatNumber: 'A5',
+        departureTime: now.add(const Duration(days: 2)),
+        arrivalTime: now.add(const Duration(days: 2, hours: 2)),
+        bookingDate: now.subtract(const Duration(hours: 3)).toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Demo Passenger',
+        price: 3000,
+        companyName: 'TegaBus',
+        status: 'CONFIRMED',
+      ),
+      Ticket(
+        id: 'TGB-003',
+        origin: 'Kigali',
+        destination: 'Huye',
+        seatNumber: 'C7',
+        departureTime: now.add(const Duration(days: 5, hours: 8)),
+        arrivalTime: now.add(const Duration(days: 5, hours: 11)),
+        bookingDate: now.toIso8601String(),
+        qrCodeUrl: '',
+        fullName: 'Demo Passenger',
+        price: 5000,
+        companyName: 'TegaBus',
+        status: 'PENDING_PAYMENT',
+      ),
+    ];
   }
 
   // ── Origins / Destinations ───────────────────────────────────────────────
@@ -211,56 +256,6 @@ class TicketScheduleService {
       arrivalTime: _parseDate(json['arrivalTime']),
       totalSeats: total,
       remainingSeats: remaining,
-    );
-  }
-
-  BuyTicketResponse _ticketResponseFromBackend(Map<String, dynamic> json) {
-    final firstName = json['firstName']?.toString() ?? '';
-    final lastName = json['lastName']?.toString() ?? '';
-    final fullName = '${firstName} ${lastName}'.trim();
-    final price = (json['price'] is num) ? (json['price'] as num).toDouble() : 0.0;
-
-    return BuyTicketResponse(
-      id: json['id']?.toString() ?? '',
-      fullName: fullName.isEmpty ? 'Passenger' : fullName,
-      origin: json['from']?.toString() ?? '',
-      destination: json['to']?.toString() ?? '',
-      departureTime: _parseDate(json['departureTime']),
-      // Backend `TicketResponse` doesn't carry arrival time — fall back to
-      // departure + 3h so the confirmation screen still renders sensibly.
-      arrivalTime: _parseDate(json['departureTime'])
-          .add(const Duration(hours: 3)),
-      bookingDate: DateTime.now().toIso8601String(),
-      seatNumber: json['seatNumber']?.toString() ?? '',
-      qrCodeUrl: json['qrCodeUrl']?.toString() ?? '',
-      companyId: json['companyId']?.toString(),
-      companyName: json['companyName']?.toString(),
-      price: price,
-      status: json['status']?.toString(),
-    );
-  }
-
-  Ticket _ticketFromBackend(Map<String, dynamic> json) {
-    final firstName = json['firstName']?.toString() ?? '';
-    final lastName = json['lastName']?.toString() ?? '';
-    final fullName = '$firstName $lastName'.trim();
-    final price = (json['price'] is num) ? (json['price'] as num).toDouble() : null;
-    final dep = _parseDate(json['departureTime']);
-
-    return Ticket(
-      id: json['id']?.toString() ?? '',
-      origin: json['from']?.toString() ?? '',
-      destination: json['to']?.toString() ?? '',
-      seatNumber: json['seatNumber']?.toString() ?? '',
-      departureTime: dep,
-      arrivalTime: dep.add(const Duration(hours: 3)),
-      bookingDate: DateTime.now().toIso8601String(),
-      qrCodeUrl: json['qrCodeUrl']?.toString() ?? '',
-      fullName: fullName.isEmpty ? null : fullName,
-      price: price,
-      companyId: json['companyId']?.toString(),
-      companyName: json['companyName']?.toString(),
-      status: json['status']?.toString(),
     );
   }
 

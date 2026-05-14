@@ -24,8 +24,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle => 'Your trip,\njust a tap away.';
 
   @override
-  String get onboardingSubtitle =>
-      'Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.';
+  String get onboardingSubtitle => 'Book bus tickets across Rwanda instantly.\nNo queues. No hassle. Just go.';
 
   @override
   String get featureInstant => 'Instant';
@@ -103,15 +102,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'Invalid email';
 
   @override
-  String get passwordRequirements =>
-      'Min 8 chars, uppercase, lowercase & number';
+  String get passwordRequirements => 'Min 8 chars, uppercase, lowercase & number';
 
   @override
   String get passwordsDoNotMatch => 'Passwords do not match';
 
   @override
-  String get accountCreated =>
-      'Account created! Check your email to verify, then sign in.';
+  String get accountCreated => 'Account created! Check your email to verify, then sign in.';
 
   @override
   String get navHome => 'Home';
@@ -165,8 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchBuses => 'Search Buses';
 
   @override
-  String get selectOriginDestinationDate =>
-      'Please select origin, destination and date';
+  String get selectOriginDestinationDate => 'Please select origin, destination and date';
 
   @override
   String get exploreRoutes => 'Explore Routes';
@@ -254,8 +250,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetYourPassword => 'Reset your password';
 
   @override
-  String get forgotPasswordDesc =>
-      'Enter your email address and we\'ll send you a link to reset your password.';
+  String get forgotPasswordDesc => 'Enter your email address and we\'ll send you a link to reset your password.';
 
   @override
   String get sendResetLink => 'Send Reset Link';
@@ -270,8 +265,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bookingConfirmed => 'Booking Confirmed!';
 
   @override
-  String get ticketBookedSuccessfully =>
-      'Your ticket has been booked successfully.';
+  String get ticketBookedSuccessfully => 'Your ticket has been booked successfully.';
 
   @override
   String get scanToVerify => 'Scan to verify';
@@ -386,8 +380,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentProcessing => 'Processing payment…';
 
   @override
-  String get paymentInstructions =>
-      'A prompt will be sent to your phone. Approve it to complete payment.';
+  String get paymentInstructions => 'A prompt will be sent to your phone. Approve it to complete payment.';
 
   @override
   String get paymentTotal => 'Total';

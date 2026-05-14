@@ -60,6 +60,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           price: widget.schedule.price,
           seatNumber: widget.seatNumber,
           companyId: widget.schedule.companyId,
+          schedule: widget.schedule,
         );
   }
 
@@ -277,7 +278,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   l.paymentInstructions,
                   style: TextStyle(
@@ -515,7 +516,7 @@ class _MethodTile extends StatelessWidget {
                     Text(title,
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w800)),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(subtitle,
                         style: TextStyle(
                             color: context.colors.neutral4, fontSize: 12)),

@@ -24,8 +24,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingTitle => 'Votre voyage,\nà portée de clic.';
 
   @override
-  String get onboardingSubtitle =>
-      'Réservez des tickets de bus au Rwanda instantanément.\nSans file. Sans tracas. Partez.';
+  String get onboardingSubtitle => 'Réservez des tickets de bus au Rwanda instantanément.\nSans file. Sans tracas. Partez.';
 
   @override
   String get featureInstant => 'Instantané';
@@ -79,8 +78,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get createAccount => 'Créer un compte';
 
   @override
-  String get registerSubtitle =>
-      'Réservez des bus au Rwanda en quelques secondes';
+  String get registerSubtitle => 'Réservez des bus au Rwanda en quelques secondes';
 
   @override
   String get firstName => 'Prénom';
@@ -104,15 +102,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidEmail => 'Email invalide';
 
   @override
-  String get passwordRequirements =>
-      'Min 8 car., majuscule, minuscule et chiffre';
+  String get passwordRequirements => 'Min 8 car., majuscule, minuscule et chiffre';
 
   @override
   String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas';
 
   @override
-  String get accountCreated =>
-      'Compte créé ! Vérifiez votre e-mail, puis connectez-vous.';
+  String get accountCreated => 'Compte créé ! Vérifiez votre e-mail, puis connectez-vous.';
 
   @override
   String get navHome => 'Accueil';
@@ -166,8 +162,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchBuses => 'Rechercher des bus';
 
   @override
-  String get selectOriginDestinationDate =>
-      'Veuillez sélectionner l\'origine, la destination et la date';
+  String get selectOriginDestinationDate => 'Veuillez sélectionner l\'origine, la destination et la date';
 
   @override
   String get exploreRoutes => 'Explorer les itinéraires';
@@ -176,8 +171,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noSchedulesFound => 'Aucun horaire trouvé';
 
   @override
-  String get tryDifferentDateOrRoute =>
-      'Essayez une autre date ou un autre itinéraire';
+  String get tryDifferentDateOrRoute => 'Essayez une autre date ou un autre itinéraire';
 
   @override
   String get noSchedulesAvailable => 'Aucun horaire disponible';
@@ -256,8 +250,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resetYourPassword => 'Réinitialiser votre mot de passe';
 
   @override
-  String get forgotPasswordDesc =>
-      'Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
+  String get forgotPasswordDesc => 'Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
 
   @override
   String get sendResetLink => 'Envoyer le lien';
@@ -272,8 +265,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bookingConfirmed => 'Réservation confirmée !';
 
   @override
-  String get ticketBookedSuccessfully =>
-      'Votre ticket a été réservé avec succès.';
+  String get ticketBookedSuccessfully => 'Votre ticket a été réservé avec succès.';
 
   @override
   String get scanToVerify => 'Scanner pour vérifier';
@@ -388,8 +380,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paymentProcessing => 'Paiement en cours…';
 
   @override
-  String get paymentInstructions =>
-      'Un message sera envoyé sur votre téléphone. Confirmez pour finaliser le paiement.';
+  String get paymentInstructions => 'Un message sera envoyé sur votre téléphone. Confirmez pour finaliser le paiement.';
 
   @override
   String get paymentTotal => 'Total';

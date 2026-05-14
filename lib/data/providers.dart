@@ -363,6 +363,7 @@ class BuyTicketNotifier extends StateNotifier<State<BuyTicketResponse>> {
     double? price,
     String? seatNumber,
     String? companyId,
+    Schedule? schedule,
   }) async {
     state = const State.loading();
     try {
@@ -370,6 +371,7 @@ class BuyTicketNotifier extends StateNotifier<State<BuyTicketResponse>> {
         scheduleId,
         seatId,
         seatNumber: seatNumber,
+        schedule: schedule,
       );
       // Prefer the company id the backend returned on the ticket; fall back
       // to whatever the caller supplied (from the originating schedule).

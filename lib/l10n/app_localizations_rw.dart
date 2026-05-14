@@ -24,8 +24,7 @@ class AppLocalizationsRw extends AppLocalizations {
   String get onboardingTitle => 'Urugendo rwawe,\nku gufunga habusa.';
 
   @override
-  String get onboardingSubtitle =>
-      'Gutura amatike ya bisi mu Rwanda byihuse.\nNta murongo. Nta ngorane. Genda.';
+  String get onboardingSubtitle => 'Gutura amatike ya bisi mu Rwanda byihuse.\nNta murongo. Nta ngorane. Genda.';
 
   @override
   String get featureInstant => 'Byihuse';
@@ -103,15 +102,13 @@ class AppLocalizationsRw extends AppLocalizations {
   String get invalidEmail => 'Imeyili itari nziza';
 
   @override
-  String get passwordRequirements =>
-      'Nibura inyuguti 8, ikuzo, agace k\'amazi n\'inomero';
+  String get passwordRequirements => 'Nibura inyuguti 8, ikuzo, agace k\'amazi n\'inomero';
 
   @override
   String get passwordsDoNotMatch => 'Amagambo banga ntangana';
 
   @override
-  String get accountCreated =>
-      'Konti yarakozwe! Reba imeyili yawe, hanyuma injira.';
+  String get accountCreated => 'Konti yarakozwe! Reba imeyili yawe, hanyuma injira.';
 
   @override
   String get navHome => 'Ahabanza';
@@ -165,8 +162,7 @@ class AppLocalizationsRw extends AppLocalizations {
   String get searchBuses => 'Shakisha bisi';
 
   @override
-  String get selectOriginDestinationDate =>
-      'Hitamo aho uvuye, aho ujya n\'itariki';
+  String get selectOriginDestinationDate => 'Hitamo aho uvuye, aho ujya n\'itariki';
 
   @override
   String get exploreRoutes => 'Shakisha inzira';
@@ -175,8 +171,7 @@ class AppLocalizationsRw extends AppLocalizations {
   String get noSchedulesFound => 'Nta gahunda zabonetse';
 
   @override
-  String get tryDifferentDateOrRoute =>
-      'Gerageza itariki cyangwa inzira ndi imwe';
+  String get tryDifferentDateOrRoute => 'Gerageza itariki cyangwa inzira ndi imwe';
 
   @override
   String get noSchedulesAvailable => 'Nta gahunda zihari';
@@ -255,8 +250,7 @@ class AppLocalizationsRw extends AppLocalizations {
   String get resetYourPassword => 'Hindura ijambobanga ryawe';
 
   @override
-  String get forgotPasswordDesc =>
-      'Shyira imeyili yawe kandi tuzakoherereza uhuza wo guhindura ijambobanga.';
+  String get forgotPasswordDesc => 'Shyira imeyili yawe kandi tuzakoherereza uhuza wo guhindura ijambobanga.';
 
   @override
   String get sendResetLink => 'Ohereza uhuza';
@@ -386,8 +380,7 @@ class AppLocalizationsRw extends AppLocalizations {
   String get paymentProcessing => 'Kwishyura biri kubaho…';
 
   @override
-  String get paymentInstructions =>
-      'Uzohererezwa ubutumwa kuri telefoni yawe. Bwemeze kugirango wishyure.';
+  String get paymentInstructions => 'Uzohererezwa ubutumwa kuri telefoni yawe. Bwemeze kugirango wishyure.';
 
   @override
   String get paymentTotal => 'Igiteranyo';
