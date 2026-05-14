@@ -71,9 +71,10 @@ class DropdownRow extends StatelessWidget {
               height: 14,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isOrigin ? Colors.transparent : DColors.primary,
+                color:
+                    isOrigin ? Colors.transparent : context.colors.primary,
                 border: isOrigin
-                    ? Border.all(color: DColors.primary, width: 2.5)
+                    ? Border.all(color: context.colors.primary, width: 2.5)
                     : null,
               ),
             ),
@@ -85,8 +86,8 @@ class DropdownRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: const TextStyle(
-                      color: DColors.neutral4,
+                    style: TextStyle(
+                      color: context.colors.neutral4,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.4,
@@ -97,7 +98,7 @@ class DropdownRow extends StatelessWidget {
                     value ?? 'Select city',
                     style: TextStyle(
                       color:
-                          value == null ? DColors.neutral4 : DColors.neutral6,
+                          value == null ? context.colors.neutral4 : DColors.neutral6,
                       fontSize: 16,
                       fontWeight: value == null
                           ? FontWeight.w500
@@ -107,8 +108,8 @@ class DropdownRow extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Iconsax.arrow_down_1,
-                size: 16, color: DColors.neutral4),
+            Icon(Iconsax.arrow_down_1,
+                size: 16, color: context.colors.neutral4),
           ],
         ),
       ),
@@ -155,7 +156,7 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
               height: 4,
               margin: const EdgeInsets.only(top: 12),
               decoration: BoxDecoration(
-                color: DColors.neutral2,
+                color: context.colors.neutral2,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -168,11 +169,11 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w800),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Iconsax.close_circle,
-                        color: DColors.neutral4),
+                    icon: Icon(Iconsax.close_circle,
+                        color: context.colors.neutral4),
                   ),
                 ],
               ),
@@ -186,7 +187,7 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
                   hintText: 'Search city',
                   prefixIcon: const Icon(Iconsax.search_normal, size: 18),
                   filled: true,
-                  fillColor: DColors.surfaceVariant,
+                  fillColor: context.colors.surfaceVariant,
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 0),
                   border: OutlineInputBorder(
@@ -196,12 +197,12 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Expanded(
               child: filtered.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text('No matches',
-                          style: TextStyle(color: DColors.neutral4)),
+                          style: TextStyle(color: context.colors.neutral4)),
                     )
                   : ListView.builder(
                       controller: scrollCtrl,
@@ -224,12 +225,13 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
                                     width: 36,
                                     height: 36,
                                     decoration: BoxDecoration(
-                                      color: DColors.primary1,
+                                      color: context.colors.primary1,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     alignment: Alignment.center,
-                                    child: const Icon(Iconsax.location,
-                                        size: 18, color: DColors.primary),
+                                    child: Icon(Iconsax.location,
+                                        size: 18,
+                                        color: context.colors.primary),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
@@ -241,14 +243,15 @@ class _CityPickerSheetState extends State<_CityPickerSheet> {
                                             ? FontWeight.w800
                                             : FontWeight.w600,
                                         color: isSelected
-                                            ? DColors.primary
-                                            : DColors.neutral6,
+                                            ? context.colors.primary
+                                            : context.colors.neutral6,
                                       ),
                                     ),
                                   ),
                                   if (isSelected)
-                                    const Icon(Icons.check_circle_rounded,
-                                        color: DColors.primary, size: 20),
+                                    Icon(Icons.check_circle_rounded,
+                                        color: context.colors.primary,
+                                        size: 20),
                                 ],
                               ),
                             ),

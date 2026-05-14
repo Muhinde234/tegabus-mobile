@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile/data/providers.dart';
+import 'package:mobile/screens/layout.dart';
 import 'package:mobile/screens/onbording_screen.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/theme.dart';
@@ -17,17 +18,25 @@ void main() async {
 
   const storage = FlutterSecureStorage();
   final localeCode = await storage.read(key: 'locale') ?? 'en';
+  final themeRaw = await storage.read(key: 'theme_mode');
+  final initialThemeMode = ThemeModeNotifier.decode(themeRaw);
 
-  // Demo mode: always start at onboarding so the full passenger journey
-  // (onboarding → login → home → book → ticket) can be walked through on every
-  // launch. Drop any leftover dummy token from previous runs.
-  await storage.delete(key: 'token');
-  const initialScreen = OnbordingScreen();
+  // Session bootstrap: if a PASSENGER token is already present, skip onboarding
+  // and drop the user straight into the app. Any non-passenger session is
+  // cleared by AuthService.cachedUser().
+  final token = await storage.read(key: 'token');
+  final userJson = await storage.read(key: 'user_data');
+  final hasPassengerSession = (token != null && token.isNotEmpty) &&
+      (userJson != null && userJson.contains('"PASSENGER"'));
+  final Widget initialScreen =
+      hasPassengerSession ? const Layout() : const OnbordingScreen();
 
   runApp(
     ProviderScope(
       overrides: [
         localeProvider.overrideWith((ref) => LocaleNotifier(localeCode)),
+        themeModeProvider
+            .overrideWith((ref) => ThemeModeNotifier(initialThemeMode)),
       ],
       child: Application(initialScreen: initialScreen),
     ),
@@ -38,9 +47,109 @@ class Application extends ConsumerWidget {
   final Widget initialScreen;
   const Application({super.key, required this.initialScreen});
 
+  ThemeData _lightTheme(BuildContext context) {
+    final base = Theme.of(context);
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: DColors.primary,
+        brightness: Brightness.light,
+        primary: DColors.primary,
+        surface: DColors.surface,
+      ),
+      scaffoldBackgroundColor: DColors.background,
+      appBarTheme: DTheme.appBarTheme,
+      textTheme: GoogleFonts.outfitTextTheme(base.textTheme),
+      elevatedButtonTheme: DTheme.elevatedButtonThemeData,
+      outlinedButtonTheme: DTheme.outlinedButtonThemeData,
+      inputDecorationTheme: DTheme.inputDecorationTheme,
+      cardTheme: DTheme.cardThemeData,
+      navigationBarTheme: DTheme.navigationBarTheme,
+      dialogTheme: const DialogThemeData(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+      ),
+      datePickerTheme: const DatePickerThemeData(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+      ),
+    );
+  }
+
+  ThemeData _darkTheme(BuildContext context) {
+    final base = Theme.of(context);
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: DColorsDark.primary,
+        brightness: Brightness.dark,
+        primary: DColorsDark.primary,
+        surface: DColorsDark.surface,
+      ),
+      scaffoldBackgroundColor: DColorsDark.background,
+      appBarTheme: DTheme.darkAppBarTheme,
+      textTheme: GoogleFonts.outfitTextTheme(base.textTheme).apply(
+        bodyColor: DColorsDark.neutral6,
+        displayColor: DColorsDark.neutral6,
+      ),
+      elevatedButtonTheme: DTheme.darkElevatedButtonThemeData,
+      outlinedButtonTheme: DTheme.darkOutlinedButtonThemeData,
+      inputDecorationTheme: DTheme.darkInputDecorationTheme,
+      cardTheme: DTheme.darkCardThemeData,
+      // Dark navigation bar styling — built inline so it stays in sync with
+      // the bottom-nav widget that already overrides this with its own pill.
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: DColorsDark.surface,
+        indicatorColor: DColorsDark.primary1,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              color: DColorsDark.primary,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            );
+          }
+          return const TextStyle(color: DColorsDark.neutral4, fontSize: 11);
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: DColorsDark.primary, size: 22);
+          }
+          return const IconThemeData(color: DColorsDark.neutral4, size: 22);
+        }),
+      ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: DColorsDark.surface,
+        surfaceTintColor: DColorsDark.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+      ),
+      datePickerTheme: const DatePickerThemeData(
+        backgroundColor: DColorsDark.surface,
+        surfaceTintColor: DColorsDark.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -62,37 +171,9 @@ class Application extends ConsumerWidget {
         Locale('rw'),
         Locale('fr'),
       ],
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: DColors.primary,
-          primary: DColors.primary,
-          surface: DColors.surface,
-        ),
-        scaffoldBackgroundColor: DColors.background,
-        appBarTheme: DTheme.appBarTheme,
-        textTheme: GoogleFonts.outfitTextTheme(Theme.of(context).textTheme),
-        elevatedButtonTheme: DTheme.elevatedButtonThemeData,
-        outlinedButtonTheme: DTheme.outlinedButtonThemeData,
-        inputDecorationTheme: DTheme.inputDecorationTheme,
-        cardTheme: DTheme.cardThemeData,
-        navigationBarTheme: DTheme.navigationBarTheme,
-        dialogTheme: const DialogThemeData(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-          ),
-        ),
-        datePickerTheme: const DatePickerThemeData(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-          ),
-        ),
-      ),
-      themeMode: ThemeMode.light,
+      theme: _lightTheme(context),
+      darkTheme: _darkTheme(context),
+      themeMode: themeMode,
       home: initialScreen,
     );
   }

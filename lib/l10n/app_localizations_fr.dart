@@ -399,4 +399,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get paymentTrip => 'Trajet';
+
+  @override
+  String get themeTitle => 'Apparence';
+
+  @override
+  String get themeLight => 'Clair';
+
+  @override
+  String get themeDark => 'Sombre';
+
+  @override
+  String get themeSystem => 'Système';
 }

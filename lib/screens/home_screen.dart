@@ -36,7 +36,6 @@ class HomeScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: DColors.background,
       // Floating chatbot bubble (Meta-AI / WhatsApp style). Opens the existing
       // ChatbotScreen so the assistant is reachable from anywhere on Home
       // without taking a tab slot in the bottom nav.
@@ -97,9 +96,9 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: DColors.elevatedShadow,
+                      boxShadow: context.colors.elevatedShadow,
                     ),
                     padding: const EdgeInsets.all(16),
                     child: const HomeSearch(),
@@ -117,8 +116,8 @@ class HomeScreen extends ConsumerWidget {
                             fontSize: 17, fontWeight: FontWeight.w800),
                       ),
                       Text(l.seeAll,
-                          style: const TextStyle(
-                              color: DColors.primary,
+                          style: TextStyle(
+                              color: context.colors.primary,
                               fontWeight: FontWeight.w600,
                               fontSize: 13)),
                     ],
@@ -166,8 +165,8 @@ class HomeScreen extends ConsumerWidget {
                               fontSize: 17, fontWeight: FontWeight.w800),
                         ),
                         Text(l.seeAll,
-                            style: const TextStyle(
-                                color: DColors.primary,
+                            style: TextStyle(
+                                color: context.colors.primary,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13)),
                       ],
@@ -191,8 +190,8 @@ class HomeScreen extends ConsumerWidget {
                         child: _FeatureTile(
                           icon: Iconsax.shield_tick,
                           label: l.safeAndSecure,
-                          color: DColors.primary,
-                          bgColor: DColors.primary1,
+                          color: context.colors.primary,
+                          bgColor: context.colors.primary1,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -200,8 +199,8 @@ class HomeScreen extends ConsumerWidget {
                         child: _FeatureTile(
                           icon: Iconsax.flash_1,
                           label: l.instantBooking,
-                          color: DColors.warning6,
-                          bgColor: DColors.warning1,
+                          color: context.colors.warning6,
+                          bgColor: context.colors.warning1,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -209,8 +208,8 @@ class HomeScreen extends ConsumerWidget {
                         child: _FeatureTile(
                           icon: Iconsax.scan_barcode,
                           label: l.digitalTicket,
-                          color: DColors.success6,
-                          bgColor: DColors.success1,
+                          color: context.colors.success6,
+                          bgColor: context.colors.success1,
                         ),
                       ),
                     ],
@@ -240,9 +239,9 @@ class _CompanyChip extends StatelessWidget {
         width: 168,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: DColors.softShadow,
+          boxShadow: context.colors.softShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,13 +275,13 @@ class _CompanyChip extends StatelessWidget {
               style:
                   const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               company.tagline,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  color: DColors.neutral4,
+              style: TextStyle(
+                  color: context.colors.neutral4,
                   fontSize: 11,
                   height: 1.3),
             ),
@@ -311,9 +310,9 @@ class _FeatureTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: DColors.softShadow,
+        boxShadow: context.colors.softShadow,
       ),
       child: Column(
         children: [
@@ -348,19 +347,20 @@ class _RecentTripCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: DColors.softShadow,
+        boxShadow: context.colors.softShadow,
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: DColors.primary1,
+              color: context.colors.primary1,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Iconsax.bus, color: DColors.primary, size: 20),
+            child: Icon(Iconsax.bus,
+                color: context.colors.primary, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -371,9 +371,9 @@ class _RecentTripCard extends StatelessWidget {
                   '${ticket.origin} → ${ticket.destination}',
                   style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(dep,
-                    style: const TextStyle(color: DColors.neutral4, fontSize: 12)),
+                    style: TextStyle(color: context.colors.neutral4, fontSize: 12)),
               ],
             ),
           ),

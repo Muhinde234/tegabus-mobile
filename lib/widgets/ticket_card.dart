@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/data/api/services/ticket_schedule_service.dart';
+import 'package:mobile/data/responses/company.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/screens/schedule_details_screen.dart';
 import 'package:mobile/utils/colors.dart';
@@ -22,7 +22,8 @@ class TicketCard extends StatelessWidget {
     final priceText =
         '${NumberFormat('#,###').format(schedule.price.toInt())} RWF';
     final isLow = schedule.remainingSeats <= 5;
-    final company = TicketScheduleService.companyFor(schedule.id);
+    final company =
+        CompanyCache.byId(schedule.companyId) ?? CompanyCache.fallback();
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -33,9 +34,9 @@ class TicketCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.colors.surface,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: DColors.softShadow,
+          boxShadow: context.colors.softShadow,
         ),
         child: Row(
           children: [
@@ -44,7 +45,9 @@ class TicketCard extends StatelessWidget {
               width: 4,
               height: 120,
               decoration: BoxDecoration(
-                color: isLow ? DColors.danger6 : DColors.primary,
+                color: isLow
+                    ? context.colors.danger6
+                    : context.colors.primary,
                 borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
               ),
             ),
@@ -87,8 +90,8 @@ class TicketCard extends StatelessWidget {
                                       fontWeight: FontWeight.w700,
                                       fontSize: 14)),
                               Text(schedule.bus,
-                                  style: const TextStyle(
-                                      color: DColors.neutral4, fontSize: 11)),
+                                  style: TextStyle(
+                                      color: context.colors.neutral4, fontSize: 11)),
                             ],
                           ),
                         ),
@@ -96,10 +99,10 @@ class TicketCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(priceText,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
-                                    color: DColors.primary)),
+                                    color: context.colors.primary)),
                             const SizedBox(height: 2),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -148,9 +151,9 @@ class TicketCard extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(durationText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 10,
-                                      color: DColors.neutral4,
+                                      color: context.colors.neutral4,
                                       fontWeight: FontWeight.w500)),
                               const SizedBox(height: 4),
                               Row(
@@ -160,28 +163,32 @@ class TicketCard extends StatelessWidget {
                                     height: 6,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: Border.all(color: DColors.primary, width: 1.5),
+                                      border: Border.all(
+                                          color: context.colors.primary,
+                                          width: 1.5),
                                     ),
                                   ),
                                   Expanded(
                                     child: Container(
                                       height: 1,
-                                      color: DColors.primary3,
+                                      color: context.colors.primary3,
                                     ),
                                   ),
-                                  const Icon(Iconsax.bus, size: 12, color: DColors.primary),
+                                  Icon(Iconsax.bus,
+                                      size: 12,
+                                      color: context.colors.primary),
                                   Expanded(
                                     child: Container(
                                       height: 1,
-                                      color: DColors.primary3,
+                                      color: context.colors.primary3,
                                     ),
                                   ),
                                   Container(
                                     width: 6,
                                     height: 6,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: DColors.primary,
+                                      color: context.colors.primary,
                                     ),
                                   ),
                                 ],

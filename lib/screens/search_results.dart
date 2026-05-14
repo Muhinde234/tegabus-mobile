@@ -37,13 +37,12 @@ class SearchResults extends ConsumerWidget {
     final resultCount = state.isSuccess ? (state.data?.length ?? 0) : 0;
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: DColors.surfaceVariant,
+              color: context.colors.surfaceVariant,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Iconsax.arrow_left_2, size: 18),
@@ -58,14 +57,14 @@ class SearchResults extends ConsumerWidget {
               children: [
                 Text(
                   '${date.day}/${date.month}/${date.year}',
-                  style: const TextStyle(color: DColors.neutral4, fontSize: 12),
+                  style: TextStyle(color: context.colors.neutral4, fontSize: 12),
                 ),
                 if (state.isSuccess) ...[
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: DColors.primary1,
+                      color: context.colors.primary1,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -115,21 +114,21 @@ class SearchResults extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: DColors.primary1,
+                    color: context.colors.primary1,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Iconsax.search_status,
-                      size: 40, color: DColors.primary3),
+                  child: Icon(Iconsax.search_status,
+                      size: 40, color: context.colors.primary3),
                 ),
                 const SizedBox(height: 16),
                 Text(l.noSchedulesFound,
                     style: const TextStyle(
                         fontWeight: FontWeight.w700, fontSize: 17)),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(l.tryDifferentDateOrRoute,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: DColors.neutral4, fontSize: 14)),
+                    style: TextStyle(
+                        color: context.colors.neutral4, fontSize: 14)),
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
                   onPressed: () => Navigator.pop(context),
@@ -170,10 +169,10 @@ class SearchResults extends ConsumerWidget {
               child: const Icon(Icons.error_outline,
                   color: DColors.danger6, size: 40),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text('${state.error}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: DColors.neutral4)),
+                style: TextStyle(color: context.colors.neutral4)),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => ref

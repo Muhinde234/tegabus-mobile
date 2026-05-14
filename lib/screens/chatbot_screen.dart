@@ -59,9 +59,8 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
     _scrollToBottom();
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surface,
         title: Row(
           children: [
             Container(
@@ -120,13 +119,14 @@ class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: DColors.primary3),
+                        border:
+                            Border.all(color: context.colors.primary3),
                       ),
                       child: Text(s,
-                          style: const TextStyle(
-                              color: DColors.primary,
+                          style: TextStyle(
+                              color: context.colors.primary,
                               fontSize: 12,
                               fontWeight: FontWeight.w600)),
                     ),
@@ -203,7 +203,9 @@ class _ChatBubble extends StatelessWidget {
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.72),
             decoration: BoxDecoration(
-              color: isUser ? DColors.primary : Colors.white,
+              color: isUser
+                  ? context.colors.primary
+                  : context.colors.surface,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(16),
                 topRight: const Radius.circular(16),
@@ -221,7 +223,7 @@ class _ChatBubble extends StatelessWidget {
             child: Text(
               message.text,
               style: TextStyle(
-                color: isUser ? Colors.white : DColors.neutral6,
+                color: isUser ? Colors.white : context.colors.neutral6,
                 fontSize: 14,
                 height: 1.4,
               ),
@@ -241,9 +243,9 @@ class _TypingIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: DColors.softShadow,
+        boxShadow: context.colors.softShadow,
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
@@ -298,8 +300,8 @@ class _DotState extends State<_Dot> with SingleTickerProviderStateMixin {
       child: Container(
         width: 8,
         height: 8,
-        decoration: const BoxDecoration(
-          color: DColors.primary,
+        decoration: BoxDecoration(
+          color: context.colors.primary,
           shape: BoxShape.circle,
         ),
       ),
@@ -325,7 +327,7 @@ class _ChatInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -347,7 +349,7 @@ class _ChatInput extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 12),
                   filled: true,
-                  fillColor: DColors.surfaceVariant,
+                  fillColor: context.colors.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                     borderSide: BorderSide.none,

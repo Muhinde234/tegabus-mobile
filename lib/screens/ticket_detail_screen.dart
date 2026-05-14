@@ -18,21 +18,26 @@ class TicketDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    // Backend doesn't surface arrival time on the ticket DTO; fall back to a
+    // departure + 3h estimate so layouts that rely on `arrivalTime` stay
+    // intact without changing the design.
+    final arrivalTime =
+        ticket.arrivalTime ?? ticket.departureTime.add(const Duration(hours: 3));
     final dep = DateFormat('h:mm a').format(ticket.departureTime);
-    final arr = DateFormat('h:mm a').format(ticket.arrivalTime);
+    final arr = DateFormat('h:mm a').format(arrivalTime);
     final date = DateFormat('EEEE, MMMM d, yyyy').format(ticket.departureTime);
-    final dur = ticket.arrivalTime.difference(ticket.departureTime);
+    final dur = arrivalTime.difference(ticket.departureTime);
     final durationText = '${dur.inHours}h ${dur.inMinutes % 60}m';
     final isUpcoming = ticket.departureTime.isAfter(DateTime.now());
     final shortRef = ticket.id.length > 8
         ? ticket.id.substring(0, 8).toUpperCase()
         : ticket.id.toUpperCase();
-    final company = DummyCompanies.byId(
-      MyTicketsNotifier.companyIdForTicket(ticket.id),
-    );
+    final company = CompanyCache.byId(
+          ticket.companyId ?? MyTicketsNotifier.companyIdForTicket(ticket.id),
+        ) ??
+        CompanyCache.fallback();
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
         title: const Text('Ticket Details'),
         centerTitle: true,
@@ -40,7 +45,7 @@ class TicketDetailScreen extends StatelessWidget {
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: DColors.surfaceVariant,
+              color: context.colors.surfaceVariant,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Iconsax.arrow_left_2, size: 18),
@@ -58,9 +63,9 @@ class TicketDetailScreen extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: DColors.elevatedShadow,
+                  boxShadow: context.colors.elevatedShadow,
                 ),
                 child: Column(
                   children: [
@@ -263,9 +268,9 @@ class TicketDetailScreen extends StatelessWidget {
                       child: SizedBox(height: 16),
                     ),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28),
-                      child: DashedLine(color: DColors.neutral2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 28),
+                      child: DashedLine(color: context.colors.neutral2),
                     ),
 
                     const SizedBox(height: 8),
@@ -298,14 +303,14 @@ class TicketDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        color: DColors.surfaceVariant,
+                        color: context.colors.surfaceVariant,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
                         children: [
                           Text(l.scanToVerify,
-                              style: const TextStyle(
-                                  color: DColors.neutral4,
+                              style: TextStyle(
+                                  color: context.colors.neutral4,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500)),
                           const SizedBox(height: 12),
@@ -346,8 +351,8 @@ class TicketDetailScreen extends StatelessWidget {
                     icon: const Icon(Iconsax.share, size: 18),
                     label: const Text('Share'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: DColors.primary,
-                      side: const BorderSide(color: DColors.primary),
+                      foregroundColor: context.colors.primary,
+                      side: BorderSide(color: context.colors.primary),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
@@ -361,7 +366,7 @@ class TicketDetailScreen extends StatelessWidget {
                     icon: const Icon(Iconsax.document_download, size: 18),
                     label: const Text('Download'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: DColors.primary,
+                      backgroundColor: context.colors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -407,10 +412,10 @@ class _InfoItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: DColors.primary1,
+              color: context.colors.primary1,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 16, color: DColors.primary),
+            child: Icon(icon, size: 16, color: context.colors.primary),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -418,8 +423,8 @@ class _InfoItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: const TextStyle(
-                        color: DColors.neutral4,
+                    style: TextStyle(
+                        color: context.colors.neutral4,
                         fontSize: 11,
                         fontWeight: FontWeight.w500)),
                 Text(value,

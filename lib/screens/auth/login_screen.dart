@@ -51,7 +51,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     return Scaffold(
-      backgroundColor: DColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -83,11 +82,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('TegaBus',
+                  Text('TegaBus',
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
-                          color: DColors.primary)),
+                          color: context.colors.primary)),
                 ],
               ),
               const SizedBox(height: 40),
@@ -99,7 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 6),
               Text(l.signInSubtitle,
                   style:
-                      const TextStyle(color: DColors.neutral4, fontSize: 15)),
+                      TextStyle(color: context.colors.neutral4, fontSize: 15)),
               const SizedBox(height: 36),
 
               // ── Form ──
@@ -224,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text('or',
                         style: TextStyle(
-                            color: DColors.neutral4,
+                            color: context.colors.neutral4,
                             fontSize: 13,
                             fontWeight: FontWeight.w500)),
                   ),
@@ -254,7 +253,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(l.dontHaveAccount,
-                      style: const TextStyle(color: DColors.neutral4)),
+                      style: TextStyle(color: context.colors.neutral4)),
                   GestureDetector(
                     onTap: () => Navigator.pushReplacement(
                       context,

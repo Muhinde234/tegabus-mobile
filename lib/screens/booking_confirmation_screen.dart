@@ -53,12 +53,12 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
     final shortRef = b.id.length > 8
         ? b.id.substring(0, 8).toUpperCase()
         : b.id.toUpperCase();
-    final company = DummyCompanies.byId(
-      MyTicketsNotifier.companyIdForTicket(b.id),
-    );
+    final company = CompanyCache.byId(
+          b.companyId ?? MyTicketsNotifier.companyIdForTicket(b.id),
+        ) ??
+        CompanyCache.fallback();
 
     return Scaffold(
-      backgroundColor: DColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -108,7 +108,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
               const SizedBox(height: 6),
               Text(
                 l.ticketBookedSuccessfully,
-                style: const TextStyle(fontSize: 14, color: DColors.neutral4),
+                style: TextStyle(fontSize: 14, color: context.colors.neutral4),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -119,9 +119,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: DColors.elevatedShadow,
+                    boxShadow: context.colors.elevatedShadow,
                   ),
                   child: Column(
                     children: [
@@ -268,9 +268,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
 
                       // Dashed separator
                       const SizedBox(height: 12),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28),
-                        child: DashedLine(color: DColors.neutral2),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 28),
+                        child: DashedLine(color: context.colors.neutral2),
                       ),
 
                       // QR Code section
@@ -280,14 +280,14 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
                           children: [
                             Text(
                               l.scanToVerify,
-                              style: const TextStyle(
-                                  color: DColors.neutral4, fontSize: 12),
+                              style: TextStyle(
+                                  color: context.colors.neutral4, fontSize: 12),
                             ),
                             const SizedBox(height: 14),
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: DColors.surfaceVariant,
+                                color: context.colors.surfaceVariant,
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: b.qrCodeUrl.isNotEmpty
@@ -361,8 +361,8 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen>
                   (_) => false,
                 ),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: DColors.primary,
-                  side: const BorderSide(color: DColors.primary),
+                  foregroundColor: context.colors.primary,
+                  side: BorderSide(color: context.colors.primary),
                   minimumSize: const Size(double.infinity, 52),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14)),

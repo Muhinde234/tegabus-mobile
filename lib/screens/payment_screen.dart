@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/data/api/services/ticket_schedule_service.dart';
 import 'package:mobile/data/providers.dart';
+import 'package:mobile/data/responses/company.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/screens/booking_confirmation_screen.dart';
 import 'package:mobile/utils/colors.dart';
@@ -50,14 +50,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   Future<void> _pay() async {
     if (!_validatePhone()) return;
-    // The dummy buyTicket already does a 600ms simulated delay; navigate
-    // straight to the confirmation screen on success. The success listener
-    // is below in build() so the same handler covers form/refresh-driven
-    // re-runs of the buy flow.
+    // Fire the booking request. The backend will create a PENDING_PAYMENT
+    // ticket, lock the seat, and (when MoMo is configured) initiate the
+    // mobile-money charge. The success listener below navigates to the
+    // confirmation screen as soon as the ticket comes back.
     await ref.read(buyTicketNotifierProvider.notifier).buyTicket(
           widget.schedule.id,
           widget.seatId,
           price: widget.schedule.price,
+          seatNumber: widget.seatNumber,
+          companyId: widget.schedule.companyId,
         );
   }
 
@@ -66,7 +68,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     final l = context.l10n;
     final s = widget.schedule;
     final buyState = ref.watch(buyTicketNotifierProvider);
-    final company = TicketScheduleService.companyFor(s.id);
+    // Resolve the operating company from the schedule's own companyId. We
+    // fall back to the runtime company cache so this works even if the
+    // schedule's companyId is null (e.g. very old backend responses).
+    final company = CompanyCache.byId(s.companyId) ?? CompanyCache.fallback();
 
     final priceText = '${NumberFormat('#,###').format(s.price.toInt())} RWF';
     final dep = DateFormat('EEE, MMM d • h:mm a').format(s.departureTime);
@@ -90,7 +95,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     });
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
         title: Text(l.paymentTitle),
         leading: IconButton(
@@ -118,9 +122,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: DColors.softShadow,
+                    boxShadow: context.colors.softShadow,
                   ),
                   child: Column(
                     children: [
@@ -155,8 +159,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                                         fontWeight: FontWeight.w800,
                                         fontSize: 14)),
                                 Text(s.bus,
-                                    style: const TextStyle(
-                                        color: DColors.neutral4,
+                                    style: TextStyle(
+                                        color: context.colors.neutral4,
                                         fontSize: 11)),
                               ],
                             ),
@@ -180,8 +184,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                                   fontWeight: FontWeight.w600,
                                   fontSize: 13)),
                           Text(priceText,
-                              style: const TextStyle(
-                                  color: DColors.primary,
+                              style: TextStyle(
+                                  color: context.colors.primary,
                                   fontWeight: FontWeight.w900,
                                   fontSize: 18)),
                         ],
@@ -253,7 +257,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         const BoxConstraints(minWidth: 0, minHeight: 0),
                     errorText: _phoneError,
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: context.colors.surface,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 14),
                     border: OutlineInputBorder(
@@ -268,16 +272,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide:
-                          const BorderSide(color: DColors.primary, width: 1.5),
+                      borderSide: BorderSide(
+                          color: context.colors.primary, width: 1.5),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   l.paymentInstructions,
-                  style: const TextStyle(
-                      color: DColors.neutral4, fontSize: 12, height: 1.4),
+                  style: TextStyle(
+                      color: context.colors.neutral4, fontSize: 12, height: 1.4),
                 ),
               ],
             ),
@@ -291,7 +295,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.05),
@@ -354,14 +358,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const CircularProgressIndicator(
-                            color: DColors.primary, strokeWidth: 3),
+                        CircularProgressIndicator(
+                            color: context.colors.primary, strokeWidth: 3),
                         const SizedBox(height: 18),
                         Text(l.paymentProcessing,
                             style: const TextStyle(
@@ -411,8 +415,8 @@ class _SummaryRow extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(label,
-                style: const TextStyle(
-                    color: DColors.neutral4, fontSize: 12)),
+                style: TextStyle(
+                    color: context.colors.neutral4, fontSize: 12)),
           ),
           Expanded(
             flex: 3,
@@ -453,7 +457,7 @@ class _MethodTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: context.colors.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
@@ -464,13 +468,16 @@ class _MethodTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: selected ? DColors.primary : DColors.neutral2,
+              color: selected
+                  ? context.colors.primary
+                  : context.colors.neutral2,
               width: selected ? 1.8 : 1,
             ),
             boxShadow: selected
                 ? [
                     BoxShadow(
-                      color: DColors.primary.withValues(alpha: 0.12),
+                      color:
+                          context.colors.primary.withValues(alpha: 0.18),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -508,10 +515,10 @@ class _MethodTile extends StatelessWidget {
                     Text(title,
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w800)),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(subtitle,
-                        style: const TextStyle(
-                            color: DColors.neutral4, fontSize: 12)),
+                        style: TextStyle(
+                            color: context.colors.neutral4, fontSize: 12)),
                   ],
                 ),
               ),
@@ -522,9 +529,13 @@ class _MethodTile extends StatelessWidget {
                 height: 22,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: selected ? DColors.primary : Colors.white,
+                  color: selected
+                      ? context.colors.primary
+                      : context.colors.surface,
                   border: Border.all(
-                    color: selected ? DColors.primary : DColors.neutral3,
+                    color: selected
+                        ? context.colors.primary
+                        : context.colors.neutral3,
                     width: 2,
                   ),
                 ),

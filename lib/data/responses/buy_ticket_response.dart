@@ -8,7 +8,7 @@ abstract class BuyTicketResponse with _$BuyTicketResponse {
   const factory BuyTicketResponse({
     required String id,
     required String fullName,
-    required String phoneNumber,
+    String? phoneNumber,
     required String origin,
     required String destination,
     required DateTime departureTime,
@@ -16,6 +16,10 @@ abstract class BuyTicketResponse with _$BuyTicketResponse {
     required String bookingDate,
     required String seatNumber,
     required String qrCodeUrl,
+    String? companyId,
+    String? companyName,
+    @Default(0) double price,
+    String? status,
   }) = _BuyTicketResponse;
 
   factory BuyTicketResponse.fromJson(Map<String, dynamic> json) =>

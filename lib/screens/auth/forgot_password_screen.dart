@@ -55,12 +55,12 @@ class _ForgotPasswordScreenState
               Container(
                 width: 60,
                 height: 60,
-                decoration: const BoxDecoration(
-                  color: DColors.primary2,
+                decoration: BoxDecoration(
+                  color: context.colors.primary1,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.lock_reset,
-                    color: DColors.primary, size: 30),
+                child: Icon(Icons.lock_reset,
+                    color: context.colors.primary, size: 30),
               ),
               const SizedBox(height: 20),
               Text(
@@ -68,11 +68,11 @@ class _ForgotPasswordScreenState
                 style: const TextStyle(
                     fontSize: 22, fontWeight: FontWeight.w800),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 l.forgotPasswordDesc,
-                style: const TextStyle(
-                    color: DColors.neutral4, fontSize: 14, height: 1.5),
+                style: TextStyle(
+                    color: context.colors.neutral4, fontSize: 14, height: 1.5),
               ),
               const SizedBox(height: 32),
               Form(

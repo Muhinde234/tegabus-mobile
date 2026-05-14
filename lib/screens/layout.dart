@@ -72,12 +72,16 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            // Stronger shadow on dark canvas so the bar still separates
+            // visibly from the body background.
+            color:
+                Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
             blurRadius: 24,
             offset: const Offset(0, -6),
           ),
@@ -130,8 +134,12 @@ class _NavItem extends StatelessWidget {
     // wraps the icon in a brand-tinted circle (no top accent bar) so the
     // highlight feels self-contained and on-target. Label adopts brand color
     // when selected. Inactive tabs are quiet greys.
-    final iconColor = selected ? DColors.primary : DColors.neutral4;
-    final labelColor = selected ? DColors.primary : DColors.neutral4;
+    //
+    // The brand colour comes from `context.colors.primary` so it brightens
+    // in dark mode (deep green is invisible on a dark surface).
+    final brand = context.colors.primary;
+    final iconColor = selected ? brand : DColors.neutral4;
+    final labelColor = selected ? brand : DColors.neutral4;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -148,8 +156,11 @@ class _NavItem extends StatelessWidget {
               height: 38,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                // Bumped alpha to 0.22 (was 0.15) — the lower value got
+                // swallowed on dark surfaces and made the active pill
+                // basically invisible.
                 color: selected
-                    ? DColors.primary.withValues(alpha: 0.15)
+                    ? brand.withValues(alpha: 0.22)
                     : Colors.transparent,
               ),
               alignment: Alignment.center,

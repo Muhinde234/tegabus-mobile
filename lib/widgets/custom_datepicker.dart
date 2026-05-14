@@ -46,14 +46,14 @@ class _CustomDatepickerState extends State<CustomDatepicker> {
                     DateFormat('E').format(date)[0],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.white : DColors.neutral4,
+                      color: isSelected ? Colors.white : context.colors.neutral4,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     date.day.toString(),
                     style: TextStyle(
-                      color: isSelected ? Colors.white : DColors.neutral4,
+                      color: isSelected ? Colors.white : context.colors.neutral4,
                       fontSize: 16,
                     ),
                   ),

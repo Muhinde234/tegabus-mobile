@@ -18,7 +18,6 @@ class ProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(profileNotifierProvider);
 
     return Scaffold(
-      backgroundColor: DColors.background,
       body: RefreshIndicator(
         color: DColors.primary,
         onRefresh: () =>
@@ -178,9 +177,9 @@ class _ProfileContent extends ConsumerWidget {
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: DColors.softShadow,
+                  boxShadow: context.colors.softShadow,
                 ),
                 child: Column(
                   children: [
@@ -188,16 +187,54 @@ class _ProfileContent extends ConsumerWidget {
                         icon: Iconsax.call,
                         label: l.phoneLabel,
                         value: profile.phoneNumber),
-                    const Divider(height: 1, indent: 52, color: DColors.neutral1),
+                    Divider(height: 1, indent: 52, color: context.colors.neutral2),
                     _InfoRow(
                         icon: Iconsax.global,
                         label: l.nationalityInfo,
                         value: profile.nationality),
-                    const Divider(height: 1, indent: 52, color: DColors.neutral1),
+                    Divider(height: 1, indent: 52, color: context.colors.neutral2),
                     _InfoRow(
                         icon: Iconsax.calendar_1,
                         label: l.memberSince,
                         value: joined),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // ── Appearance section ──
+              _SectionHeader(title: l.themeTitle, icon: Iconsax.brush_2),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: context.colors.softShadow,
+                ),
+                child: Column(
+                  children: [
+                    _ThemeTile(
+                      icon: Iconsax.sun_1,
+                      label: l.themeLight,
+                      mode: ThemeMode.light,
+                      isFirst: true,
+                    ),
+                    Divider(
+                        height: 1, indent: 52, color: context.colors.neutral2),
+                    _ThemeTile(
+                      icon: Iconsax.moon,
+                      label: l.themeDark,
+                      mode: ThemeMode.dark,
+                    ),
+                    Divider(
+                        height: 1, indent: 52, color: context.colors.neutral2),
+                    _ThemeTile(
+                      icon: Iconsax.mobile,
+                      label: l.themeSystem,
+                      mode: ThemeMode.system,
+                      isLast: true,
+                    ),
                   ],
                 ),
               ),
@@ -209,9 +246,9 @@ class _ProfileContent extends ConsumerWidget {
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: DColors.softShadow,
+                  boxShadow: context.colors.softShadow,
                 ),
                 child: Column(
                   children: [
@@ -223,7 +260,7 @@ class _ProfileContent extends ConsumerWidget {
                       ref: ref,
                       isFirst: true,
                     ),
-                    const Divider(height: 1, indent: 52, color: DColors.neutral1),
+                    Divider(height: 1, indent: 52, color: context.colors.neutral2),
                     _LanguageTile(
                       flag: '🇷🇼',
                       label: l.kinyarwandaLanguage,
@@ -231,7 +268,7 @@ class _ProfileContent extends ConsumerWidget {
                       isSelected: currentLocale == 'rw',
                       ref: ref,
                     ),
-                    const Divider(height: 1, indent: 52, color: DColors.neutral1),
+                    Divider(height: 1, indent: 52, color: context.colors.neutral2),
                     _LanguageTile(
                       flag: '🇫🇷',
                       label: l.frenchLanguage,
@@ -264,11 +301,13 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: DColors.primary),
+        Icon(icon, size: 18, color: context.colors.primary),
         const SizedBox(width: 8),
         Text(title,
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w700, color: DColors.neutral6)),
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: context.colors.neutral6)),
       ],
     );
   }
@@ -289,20 +328,90 @@ class _InfoRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: DColors.primary1,
+              color: context.colors.primary1,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: DColors.primary, size: 16),
+            child: Icon(icon, color: context.colors.primary, size: 16),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(label,
-              style: const TextStyle(
-                  color: DColors.neutral4, fontSize: 13)),
+              style: TextStyle(
+                  color: context.colors.neutral4, fontSize: 13)),
           const Spacer(),
           Text(value,
               style: const TextStyle(
                   fontWeight: FontWeight.w600, fontSize: 14)),
         ],
+      ),
+    );
+  }
+}
+
+/// Tile for picking a theme mode (Light / Dark / System). Reads the active
+/// mode from the provider so the radio fill updates instantly.
+class _ThemeTile extends ConsumerWidget {
+  final IconData icon;
+  final String label;
+  final ThemeMode mode;
+  final bool isFirst;
+  final bool isLast;
+
+  const _ThemeTile({
+    required this.icon,
+    required this.label,
+    required this.mode,
+    this.isFirst = false,
+    this.isLast = false,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSelected = ref.watch(themeModeProvider) == mode;
+    final brand = context.colors.primary;
+    return GestureDetector(
+      onTap: () => ref.read(themeModeProvider.notifier).setMode(mode),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: isSelected ? context.colors.primary1 : Colors.transparent,
+          borderRadius: BorderRadius.vertical(
+            top: isFirst ? const Radius.circular(16) : Radius.zero,
+            bottom: isLast ? const Radius.circular(16) : Radius.zero,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: context.colors.surfaceVariant,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: Icon(icon,
+                  size: 16,
+                  color: isSelected ? brand : context.colors.neutral5),
+            ),
+            const SizedBox(width: 12),
+            Text(label,
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: isSelected ? brand : context.colors.neutral6)),
+            const Spacer(),
+            if (isSelected)
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: brand,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check,
+                    color: Colors.white, size: 14),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -329,13 +438,14 @@ class _LanguageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brand = context.colors.primary;
     return GestureDetector(
       onTap: () =>
           ref.read(localeProvider.notifier).setLocale(code),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? DColors.primary1 : Colors.transparent,
+          color: isSelected ? context.colors.primary1 : Colors.transparent,
           borderRadius: BorderRadius.vertical(
             top: isFirst ? const Radius.circular(16) : Radius.zero,
             bottom: isLast ? const Radius.circular(16) : Radius.zero,
@@ -347,7 +457,7 @@ class _LanguageTile extends StatelessWidget {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: DColors.surfaceVariant,
+                color: context.colors.surfaceVariant,
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
@@ -358,14 +468,13 @@ class _LanguageTile extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
-                    color:
-                        isSelected ? DColors.primary : DColors.neutral6)),
+                    color: isSelected ? brand : context.colors.neutral6)),
             const Spacer(),
             if (isSelected)
               Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  color: DColors.primary,
+                decoration: BoxDecoration(
+                  color: brand,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.check, color: Colors.white, size: 14),
@@ -403,11 +512,11 @@ class _ProfileError extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Check your connection and try again.',
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: DColors.neutral4, fontSize: 14, height: 1.5),
+                color: context.colors.neutral4, fontSize: 14, height: 1.5),
           ),
           const SizedBox(height: 28),
           ElevatedButton.icon(

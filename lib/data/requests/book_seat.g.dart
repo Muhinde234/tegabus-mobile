@@ -8,12 +8,12 @@ part of 'book_seat.dart';
 
 _BookSeatRequest _$BookSeatRequestFromJson(Map<String, dynamic> json) =>
     _BookSeatRequest(
-      scheduleId: (json['scheduleId'] as num).toInt(),
-      seatId: (json['seatId'] as num).toInt(),
+      seatAvailabilityId: (json['seatAvailabilityId'] as num).toInt(),
+      seatNumber: json['seatNumber'] as String,
     );
 
 Map<String, dynamic> _$BookSeatRequestToJson(_BookSeatRequest instance) =>
     <String, dynamic>{
-      'scheduleId': instance.scheduleId,
-      'seatId': instance.seatId,
+      'seatAvailabilityId': instance.seatAvailabilityId,
+      'seatNumber': instance.seatNumber,
     };

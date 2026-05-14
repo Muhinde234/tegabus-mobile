@@ -11,6 +11,7 @@ _SeatAvailability _$SeatAvailabilityFromJson(Map<String, dynamic> json) =>
       seatId: (json['seatId'] as num).toInt(),
       seatNumber: json['seatNumber'] as String,
       booked: json['booked'] as bool,
+      locked: json['locked'] as bool? ?? false,
       version: (json['version'] as num?)?.toInt() ?? 0,
     );
 
@@ -19,6 +20,7 @@ Map<String, dynamic> _$SeatAvailabilityToJson(_SeatAvailability instance) =>
       'seatId': instance.seatId,
       'seatNumber': instance.seatNumber,
       'booked': instance.booked,
+      'locked': instance.locked,
       'version': instance.version,
     };
 

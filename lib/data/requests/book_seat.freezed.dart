@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookSeatRequest {
 
- int get scheduleId; int get seatId;
+ int get seatAvailabilityId; String get seatNumber;
 /// Create a copy of BookSeatRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BookSeatRequestCopyWith<BookSeatRequest> get copyWith => _$BookSeatRequestCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookSeatRequest&&(identical(other.scheduleId, scheduleId) || other.scheduleId == scheduleId)&&(identical(other.seatId, seatId) || other.seatId == seatId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookSeatRequest&&(identical(other.seatAvailabilityId, seatAvailabilityId) || other.seatAvailabilityId == seatAvailabilityId)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduleId,seatId);
+int get hashCode => Object.hash(runtimeType,seatAvailabilityId,seatNumber);
 
 @override
 String toString() {
-  return 'BookSeatRequest(scheduleId: $scheduleId, seatId: $seatId)';
+  return 'BookSeatRequest(seatAvailabilityId: $seatAvailabilityId, seatNumber: $seatNumber)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $BookSeatRequestCopyWith<$Res>  {
   factory $BookSeatRequestCopyWith(BookSeatRequest value, $Res Function(BookSeatRequest) _then) = _$BookSeatRequestCopyWithImpl;
 @useResult
 $Res call({
- int scheduleId, int seatId
+ int seatAvailabilityId, String seatNumber
 });
 
 
@@ -65,11 +65,11 @@ class _$BookSeatRequestCopyWithImpl<$Res>
 
 /// Create a copy of BookSeatRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scheduleId = null,Object? seatId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? seatAvailabilityId = null,Object? seatNumber = null,}) {
   return _then(_self.copyWith(
-scheduleId: null == scheduleId ? _self.scheduleId : scheduleId // ignore: cast_nullable_to_non_nullable
-as int,seatId: null == seatId ? _self.seatId : seatId // ignore: cast_nullable_to_non_nullable
-as int,
+seatAvailabilityId: null == seatAvailabilityId ? _self.seatAvailabilityId : seatAvailabilityId // ignore: cast_nullable_to_non_nullable
+as int,seatNumber: null == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int scheduleId,  int seatId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int seatAvailabilityId,  String seatNumber)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookSeatRequest() when $default != null:
-return $default(_that.scheduleId,_that.seatId);case _:
+return $default(_that.seatAvailabilityId,_that.seatNumber);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.scheduleId,_that.seatId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int scheduleId,  int seatId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int seatAvailabilityId,  String seatNumber)  $default,) {final _that = this;
 switch (_that) {
 case _BookSeatRequest():
-return $default(_that.scheduleId,_that.seatId);case _:
+return $default(_that.seatAvailabilityId,_that.seatNumber);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.scheduleId,_that.seatId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int scheduleId,  int seatId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int seatAvailabilityId,  String seatNumber)?  $default,) {final _that = this;
 switch (_that) {
 case _BookSeatRequest() when $default != null:
-return $default(_that.scheduleId,_that.seatId);case _:
+return $default(_that.seatAvailabilityId,_that.seatNumber);case _:
   return null;
 
 }
@@ -210,11 +210,11 @@ return $default(_that.scheduleId,_that.seatId);case _:
 @JsonSerializable()
 
 class _BookSeatRequest implements BookSeatRequest {
-  const _BookSeatRequest({required this.scheduleId, required this.seatId});
+  const _BookSeatRequest({required this.seatAvailabilityId, required this.seatNumber});
   factory _BookSeatRequest.fromJson(Map<String, dynamic> json) => _$BookSeatRequestFromJson(json);
 
-@override final  int scheduleId;
-@override final  int seatId;
+@override final  int seatAvailabilityId;
+@override final  String seatNumber;
 
 /// Create a copy of BookSeatRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookSeatRequest&&(identical(other.scheduleId, scheduleId) || other.scheduleId == scheduleId)&&(identical(other.seatId, seatId) || other.seatId == seatId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookSeatRequest&&(identical(other.seatAvailabilityId, seatAvailabilityId) || other.seatAvailabilityId == seatAvailabilityId)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduleId,seatId);
+int get hashCode => Object.hash(runtimeType,seatAvailabilityId,seatNumber);
 
 @override
 String toString() {
-  return 'BookSeatRequest(scheduleId: $scheduleId, seatId: $seatId)';
+  return 'BookSeatRequest(seatAvailabilityId: $seatAvailabilityId, seatNumber: $seatNumber)';
 }
 
 
@@ -249,7 +249,7 @@ abstract mixin class _$BookSeatRequestCopyWith<$Res> implements $BookSeatRequest
   factory _$BookSeatRequestCopyWith(_BookSeatRequest value, $Res Function(_BookSeatRequest) _then) = __$BookSeatRequestCopyWithImpl;
 @override @useResult
 $Res call({
- int scheduleId, int seatId
+ int seatAvailabilityId, String seatNumber
 });
 
 
@@ -266,11 +266,11 @@ class __$BookSeatRequestCopyWithImpl<$Res>
 
 /// Create a copy of BookSeatRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scheduleId = null,Object? seatId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? seatAvailabilityId = null,Object? seatNumber = null,}) {
   return _then(_BookSeatRequest(
-scheduleId: null == scheduleId ? _self.scheduleId : scheduleId // ignore: cast_nullable_to_non_nullable
-as int,seatId: null == seatId ? _self.seatId : seatId // ignore: cast_nullable_to_non_nullable
-as int,
+seatAvailabilityId: null == seatAvailabilityId ? _self.seatAvailabilityId : seatAvailabilityId // ignore: cast_nullable_to_non_nullable
+as int,seatNumber: null == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

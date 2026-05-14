@@ -12,11 +12,17 @@ _Ticket _$TicketFromJson(Map<String, dynamic> json) => _Ticket(
   destination: json['destination'] as String,
   seatNumber: json['seatNumber'] as String,
   departureTime: DateTime.parse(json['departureTime'] as String),
-  arrivalTime: DateTime.parse(json['arrivalTime'] as String),
+  arrivalTime:
+      json['arrivalTime'] == null
+          ? null
+          : DateTime.parse(json['arrivalTime'] as String),
   bookingDate: json['bookingDate'] as String,
   qrCodeUrl: json['qrCodeUrl'] as String,
   fullName: json['fullName'] as String?,
   price: (json['price'] as num?)?.toDouble(),
+  companyId: json['companyId'] as String?,
+  companyName: json['companyName'] as String?,
+  status: json['status'] as String?,
 );
 
 Map<String, dynamic> _$TicketToJson(_Ticket instance) => <String, dynamic>{
@@ -25,11 +31,14 @@ Map<String, dynamic> _$TicketToJson(_Ticket instance) => <String, dynamic>{
   'destination': instance.destination,
   'seatNumber': instance.seatNumber,
   'departureTime': instance.departureTime.toIso8601String(),
-  'arrivalTime': instance.arrivalTime.toIso8601String(),
+  'arrivalTime': instance.arrivalTime?.toIso8601String(),
   'bookingDate': instance.bookingDate,
   'qrCodeUrl': instance.qrCodeUrl,
   'fullName': instance.fullName,
   'price': instance.price,
+  'companyId': instance.companyId,
+  'companyName': instance.companyName,
+  'status': instance.status,
 };
 
 _MyTicketResponse _$MyTicketResponseFromJson(Map<String, dynamic> json) =>

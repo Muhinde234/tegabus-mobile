@@ -81,7 +81,6 @@ class _CompanySchedulesScreenState
     final c = widget.company;
 
     return Scaffold(
-      backgroundColor: DColors.background,
       body: CustomScrollView(
         slivers: [
           // ── Branded header ──
@@ -208,10 +207,10 @@ class _CompanySchedulesScreenState
                             },
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Icon(Iconsax.arrow_right_3,
-                        size: 16, color: DColors.neutral4),
+                        size: 16, color: context.colors.neutral4),
                   ),
                   Expanded(
                     child: _RoutePill(
@@ -273,7 +272,7 @@ class _CompanySchedulesScreenState
                     padding: const EdgeInsets.symmetric(vertical: 60),
                     child: Center(
                       child: Text('${state.error}',
-                          style: const TextStyle(color: DColors.neutral4)),
+                          style: TextStyle(color: context.colors.neutral4)),
                     ),
                   ),
                 );
@@ -288,16 +287,16 @@ class _CompanySchedulesScreenState
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: DColors.primary1,
+                            color: context.colors.primary1,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Iconsax.bus,
-                              size: 40, color: DColors.primary3),
+                          child: Icon(Iconsax.bus,
+                              size: 40, color: context.colors.primary3),
                         ),
                         const SizedBox(height: 14),
                         Text(l.noSchedulesForCompany,
-                            style: const TextStyle(
-                                color: DColors.neutral4,
+                            style: TextStyle(
+                                color: context.colors.neutral4,
                                 fontWeight: FontWeight.w600)),
                       ],
                     ),
@@ -341,7 +340,7 @@ class _RoutePill extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSet = value != null;
     return Material(
-      color: Colors.white,
+      color: context.colors.surface,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -351,7 +350,8 @@ class _RoutePill extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isSet ? DColors.primary : DColors.neutral2,
+              color:
+                  isSet ? context.colors.primary : context.colors.neutral2,
               width: isSet ? 1.5 : 1,
             ),
           ),
@@ -364,10 +364,10 @@ class _RoutePill extends StatelessWidget {
                   children: [
                     Text(
                       label.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
-                        color: DColors.neutral4,
+                        color: context.colors.neutral4,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -380,7 +380,7 @@ class _RoutePill extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: isSet ? FontWeight.w800 : FontWeight.w500,
                         color:
-                            isSet ? DColors.neutral6 : DColors.neutral4,
+                            isSet ? DColors.neutral6 : context.colors.neutral4,
                       ),
                     ),
                   ],
@@ -389,15 +389,15 @@ class _RoutePill extends StatelessWidget {
               if (onClear != null)
                 GestureDetector(
                   onTap: onClear,
-                  child: const Padding(
-                    padding: EdgeInsets.all(4),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
                     child: Icon(Iconsax.close_circle,
-                        size: 18, color: DColors.neutral4),
+                        size: 18, color: context.colors.neutral4),
                   ),
                 )
               else
-                const Icon(Iconsax.arrow_down_1,
-                    size: 14, color: DColors.neutral4),
+                Icon(Iconsax.arrow_down_1,
+                    size: 14, color: context.colors.neutral4),
             ],
           ),
         ),

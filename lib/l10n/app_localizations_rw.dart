@@ -397,4 +397,16 @@ class AppLocalizationsRw extends AppLocalizations {
 
   @override
   String get paymentTrip => 'Urugendo';
+
+  @override
+  String get themeTitle => 'Imiterere';
+
+  @override
+  String get themeLight => 'Urumuri';
+
+  @override
+  String get themeDark => 'Umwijima';
+
+  @override
+  String get themeSystem => 'Iya sisitemu';
 }

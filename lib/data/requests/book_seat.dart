@@ -6,8 +6,8 @@ part 'book_seat.g.dart';
 @freezed
 abstract class BookSeatRequest with _$BookSeatRequest {
   const factory BookSeatRequest({
-    required int scheduleId,
-    required int seatId,
+    required int seatAvailabilityId,
+    required String seatNumber,
   }) = _BookSeatRequest;
 
   factory BookSeatRequest.fromJson(Map<String, dynamic> json) =>

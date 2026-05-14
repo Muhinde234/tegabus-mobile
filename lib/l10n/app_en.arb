@@ -178,5 +178,10 @@
   "paymentInstructions": "A prompt will be sent to your phone. Approve it to complete payment.",
   "paymentTotal": "Total",
   "paymentSeat": "Seat",
-  "paymentTrip": "Trip"
+  "paymentTrip": "Trip",
+
+  "themeTitle": "Appearance",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System default"
 }

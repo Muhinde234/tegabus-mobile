@@ -43,15 +43,13 @@ class _ScheduleDetailsScreenState
     final dateText = DateFormat('EEE, MMM d').format(s.departureTime);
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
         title: Text('${s.from} → ${s.to}'),
-        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: DColors.surfaceVariant,
+              color: context.colors.surfaceVariant,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Iconsax.arrow_left_2, size: 18),
@@ -227,9 +225,9 @@ class _ScheduleDetailsScreenState
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: DColors.softShadow,
+                  boxShadow: context.colors.softShadow,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -246,7 +244,7 @@ class _ScheduleDetailsScreenState
             // ── Seat map ──
             Expanded(
               child: RefreshIndicator(
-                color: DColors.primary,
+                color: context.colors.primary,
                 onRefresh: () => ref
                     .read(seatsNotifierProvider(widget.schedule.id).notifier)
                     .fetchSeats(),
@@ -282,9 +280,9 @@ class _ScheduleDetailsScreenState
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: DColors.softShadow,
+                      boxShadow: context.colors.softShadow,
                     ),
                     child: Column(
                       children: [
@@ -293,7 +291,7 @@ class _ScheduleDetailsScreenState
                           width: 60,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: DColors.primary3,
+                            color: context.colors.primary3,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -302,11 +300,11 @@ class _ScheduleDetailsScreenState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Iconsax.driver,
-                                size: 14, color: DColors.neutral4),
+                                size: 14, color: context.colors.neutral4),
                             const SizedBox(width: 4),
-                            const Text('Front',
+                            Text('Front',
                                 style: TextStyle(
-                                    color: DColors.neutral4,
+                                    color: context.colors.neutral4,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500)),
                           ],
@@ -354,7 +352,7 @@ class _ScheduleDetailsScreenState
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.colors.surface,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
@@ -420,7 +418,7 @@ class _ScheduleDetailsScreenState
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: selectedSeatId == null
-                              ? DColors.neutral4
+                              ? context.colors.neutral4
                               : Colors.white),
                     ),
                   ),
@@ -446,7 +444,7 @@ class _ScheduleDetailsScreenState
           ),
           child: Icon(Iconsax.personalcard,
               size: 10,
-              color: color == DColors.neutral2 ? DColors.neutral4 : Colors.white),
+              color: color == DColors.neutral2 ? context.colors.neutral4 : Colors.white),
         ),
         const SizedBox(width: 6),
         Text(label,

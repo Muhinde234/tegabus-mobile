@@ -10,7 +10,7 @@ _BuyTicketResponse _$BuyTicketResponseFromJson(Map<String, dynamic> json) =>
     _BuyTicketResponse(
       id: json['id'] as String,
       fullName: json['fullName'] as String,
-      phoneNumber: json['phoneNumber'] as String,
+      phoneNumber: json['phoneNumber'] as String?,
       origin: json['origin'] as String,
       destination: json['destination'] as String,
       departureTime: DateTime.parse(json['departureTime'] as String),
@@ -18,6 +18,10 @@ _BuyTicketResponse _$BuyTicketResponseFromJson(Map<String, dynamic> json) =>
       bookingDate: json['bookingDate'] as String,
       seatNumber: json['seatNumber'] as String,
       qrCodeUrl: json['qrCodeUrl'] as String,
+      companyId: json['companyId'] as String?,
+      companyName: json['companyName'] as String?,
+      price: (json['price'] as num?)?.toDouble() ?? 0,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$BuyTicketResponseToJson(_BuyTicketResponse instance) =>
@@ -32,4 +36,8 @@ Map<String, dynamic> _$BuyTicketResponseToJson(_BuyTicketResponse instance) =>
       'bookingDate': instance.bookingDate,
       'seatNumber': instance.seatNumber,
       'qrCodeUrl': instance.qrCodeUrl,
+      'companyId': instance.companyId,
+      'companyName': instance.companyName,
+      'price': instance.price,
+      'status': instance.status,
     };

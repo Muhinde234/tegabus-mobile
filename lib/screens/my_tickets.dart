@@ -24,7 +24,6 @@ class MyTickets extends ConsumerWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: DColors.background,
         appBar: AppBar(
           title: Text(l.myTickets),
           centerTitle: true,
@@ -33,7 +32,7 @@ class MyTickets extends ConsumerWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: DColors.surfaceVariant,
+                color: context.colors.surfaceVariant,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TabBar(
@@ -44,7 +43,7 @@ class MyTickets extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 labelColor: Colors.white,
-                unselectedLabelColor: DColors.neutral4,
+                unselectedLabelColor: context.colors.neutral4,
                 labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
                 unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                 padding: const EdgeInsets.all(3),
@@ -123,10 +122,10 @@ class _TicketList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: DColors.primary1,
+                color: context.colors.primary1,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Iconsax.ticket, size: 40, color: DColors.primary3),
+              child: Icon(Iconsax.ticket, size: 40, color: context.colors.primary3),
             ),
             const SizedBox(height: 16),
             Text(emptyMsg,
@@ -163,18 +162,18 @@ class _EmptyState extends StatelessWidget {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: DColors.primary1,
+                color: context.colors.primary1,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Iconsax.ticket_2, size: 48, color: DColors.primary3),
+              child: Icon(Iconsax.ticket_2, size: 48, color: context.colors.primary3),
             ),
             const SizedBox(height: 20),
             Text(l.noTicketsYet,
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(l.bookFirstTrip,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: DColors.neutral4, fontSize: 14, height: 1.5)),
+                style: TextStyle(color: context.colors.neutral4, fontSize: 14, height: 1.5)),
           ],
         ),
       ),
@@ -206,10 +205,10 @@ class _ErrorState extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'We couldn\'t load your tickets.\nPull down to refresh.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: DColors.neutral4, fontSize: 14, height: 1.5),
+              style: TextStyle(color: context.colors.neutral4, fontSize: 14, height: 1.5),
             ),
           ],
         ),

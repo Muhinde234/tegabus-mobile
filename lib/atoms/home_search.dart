@@ -95,7 +95,7 @@ class _HomeSearchState extends ConsumerState<HomeSearch>
         // are tap-to-pick (validation happens on the Search button below).
         Container(
           decoration: BoxDecoration(
-            color: DColors.surfaceVariant,
+            color: context.colors.surfaceVariant,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -116,7 +116,7 @@ class _HomeSearchState extends ConsumerState<HomeSearch>
                   children: [
                     Container(
                       height: 1,
-                      color: DColors.neutral2.withValues(alpha: 0.7),
+                      color: context.colors.neutral2.withValues(alpha: 0.7),
                     ),
                     Positioned(
                       right: 0,
@@ -250,9 +250,9 @@ class _SearchErrorState extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
           ),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Check your connection and try again.',
-            style: TextStyle(color: DColors.neutral4, fontSize: 13),
+            style: TextStyle(color: context.colors.neutral4, fontSize: 13),
           ),
           const SizedBox(height: 16),
           OutlinedButton.icon(

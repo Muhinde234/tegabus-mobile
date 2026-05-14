@@ -166,5 +166,10 @@
   "paymentInstructions": "Uzohererezwa ubutumwa kuri telefoni yawe. Bwemeze kugirango wishyure.",
   "paymentTotal": "Igiteranyo",
   "paymentSeat": "Intebe",
-  "paymentTrip": "Urugendo"
+  "paymentTrip": "Urugendo",
+
+  "themeTitle": "Imiterere",
+  "themeLight": "Urumuri",
+  "themeDark": "Umwijima",
+  "themeSystem": "Iya sisitemu"
 }

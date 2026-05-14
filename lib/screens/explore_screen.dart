@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:mobile/data/api/services/ticket_schedule_service.dart';
 import 'package:mobile/data/providers.dart';
 import 'package:mobile/data/responses/company.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
@@ -40,13 +39,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   }
 
   /// Apply text + company filters to whatever the schedules notifier returned.
-  /// We filter on the client because the dummy service is in-memory; once the
-  /// real API is wired, prefer pushing filters into the request instead.
+  /// Company filtering uses the `companyId` carried on each schedule from the
+  /// backend; we keep the text query client-side because the API doesn't
+  /// expose a free-text search yet.
   List<Schedule> _applyFilters(List<Schedule> schedules) {
     final q = _query.trim().toLowerCase();
     return schedules.where((s) {
-      if (_companyId != null &&
-          TicketScheduleService.companyFor(s.id).id != _companyId) {
+      if (_companyId != null && s.companyId != _companyId) {
         return false;
       }
       if (q.isEmpty) return true;
@@ -63,7 +62,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     final companiesState = ref.watch(companiesNotifierProvider);
 
     return Scaffold(
-      backgroundColor: DColors.background,
       appBar: AppBar(
         title: Text(l.exploreRoutes),
         actions: [
@@ -111,7 +109,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: context.colors.surface,
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 10),
                 border: OutlineInputBorder(
@@ -206,23 +204,23 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: DColors.primary1,
+                    color: context.colors.primary1,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Iconsax.search_status,
-                      size: 40, color: DColors.primary3),
+                  child: Icon(Iconsax.search_status,
+                      size: 40, color: context.colors.primary3),
                 ),
                 const SizedBox(height: 16),
                 Text(l.noSchedulesFound,
-                    style: const TextStyle(
-                        color: DColors.neutral4,
+                    style: TextStyle(
+                        color: context.colors.neutral4,
                         fontSize: 15,
                         fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 Text(l.tryDifferentDateOrRoute,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: DColors.neutral4, fontSize: 13)),
+                    style: TextStyle(
+                        color: context.colors.neutral4, fontSize: 13)),
               ],
             ),
           ],
@@ -258,10 +256,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'We couldn\'t fetch schedules.\nCheck your internet and try again.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: DColors.neutral4, fontSize: 14, height: 1.5),
+              style: TextStyle(color: context.colors.neutral4, fontSize: 14, height: 1.5),
             ),
             const SizedBox(height: 28),
             ElevatedButton.icon(
@@ -301,7 +299,7 @@ class _CompanyFilterChip extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: selected ? color : Colors.white,
+            color: selected ? color : context.colors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: selected ? color : DColors.neutral2,
@@ -320,7 +318,7 @@ class _CompanyFilterChip extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: selected ? Colors.white : DColors.neutral6,
+              color: selected ? Colors.white : context.colors.neutral6,
               fontWeight: FontWeight.w600,
               fontSize: 11,
             ),

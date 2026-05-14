@@ -1,208 +1,44 @@
 import 'package:mobile/data/api/api_client.dart';
+import 'package:mobile/data/api/services/auth_service.dart' show ApiException;
 import 'package:mobile/data/responses/buy_ticket_response.dart';
 import 'package:mobile/data/responses/company.dart';
+import 'package:mobile/data/responses/my_ticket_response.dart';
 import 'package:mobile/data/responses/schedules_response.dart';
 import 'package:mobile/data/responses/single_schedule_response.dart';
 
-// NOTE: Service stubbed with dummy data for UI development.
-// Replace each method body with the real API call when integrating.
+/// Service that talks to the schedule/ticket endpoints. All responses are
+/// normalised here so the rest of the app stays insulated from the backend
+/// DTO shape.
 class TicketScheduleService {
-  // ignore: unused_field
   final ApiClient _apiClient;
 
   TicketScheduleService({required ApiClient apiClient})
       : _apiClient = apiClient;
 
-  static const _fakeDelay = Duration(milliseconds: 600);
-
-  // ── Dummy catalogue ──────────────────────────────────────────────────────
-  static final _baseDate = DateTime.now();
-
-  static DateTime _at(int dayOffset, int hour, int minute) =>
-      DateTime(_baseDate.year, _baseDate.month, _baseDate.day, hour, minute)
-          .add(Duration(days: dayOffset));
-
-  static final List<Schedule> _dummySchedules = [
-    Schedule(
-      id: 1,
-      bus: 'Volcano Express - VE-001',
-      price: 5000,
-      driverName: 'Jean Bosco',
-      driverPhone: '+250 788 111 222',
-      from: 'Kigali',
-      to: 'Musanze',
-      departureTime: _at(0, 7, 30),
-      arrivalTime: _at(0, 10, 0),
-      totalSeats: 48,
-      remainingSeats: 32,
-    ),
-    Schedule(
-      id: 2,
-      bus: 'Horizon Coach - HC-104',
-      price: 4500,
-      driverName: 'Eric Manzi',
-      driverPhone: '+250 788 222 333',
-      from: 'Kigali',
-      to: 'Huye',
-      departureTime: _at(0, 9, 0),
-      arrivalTime: _at(0, 11, 30),
-      totalSeats: 48,
-      remainingSeats: 18,
-    ),
-    Schedule(
-      id: 3,
-      bus: 'Ritco Star - RS-220',
-      price: 7000,
-      driverName: 'Patrick Niyonzima',
-      driverPhone: '+250 788 333 444',
-      from: 'Kigali',
-      to: 'Rubavu',
-      departureTime: _at(0, 6, 0),
-      arrivalTime: _at(0, 9, 30),
-      totalSeats: 48,
-      remainingSeats: 24,
-    ),
-    Schedule(
-      id: 4,
-      bus: 'Virunga Travel - VT-077',
-      price: 12000,
-      driverName: 'Alphonse Mugisha',
-      driverPhone: '+250 788 444 555',
-      from: 'Kigali',
-      to: 'Rusizi',
-      departureTime: _at(1, 5, 30),
-      arrivalTime: _at(1, 11, 0),
-      totalSeats: 48,
-      remainingSeats: 8,
-    ),
-    Schedule(
-      id: 5,
-      bus: 'Volcano Express - VE-005',
-      price: 3500,
-      driverName: 'Diane Uwase',
-      driverPhone: '+250 788 555 666',
-      from: 'Musanze',
-      to: 'Rubavu',
-      departureTime: _at(0, 14, 0),
-      arrivalTime: _at(0, 15, 45),
-      totalSeats: 48,
-      remainingSeats: 40,
-    ),
-    Schedule(
-      id: 6,
-      bus: 'Horizon Coach - HC-118',
-      price: 6500,
-      driverName: 'Olivier Habimana',
-      driverPhone: '+250 788 666 777',
-      from: 'Kigali',
-      to: 'Nyagatare',
-      departureTime: _at(0, 12, 30),
-      arrivalTime: _at(0, 15, 30),
-      totalSeats: 48,
-      remainingSeats: 21,
-    ),
-    Schedule(
-      id: 7,
-      bus: 'Trinity Liner - TL-009',
-      price: 15000,
-      driverName: 'Cedric Nshuti',
-      driverPhone: '+250 788 777 888',
-      from: 'Kigali',
-      to: 'Kampala',
-      departureTime: _at(1, 21, 0),
-      arrivalTime: _at(2, 6, 30),
-      totalSeats: 48,
-      remainingSeats: 12,
-    ),
-    Schedule(
-      id: 8,
-      bus: 'Ritco Star - RS-301',
-      price: 5500,
-      driverName: 'Aimable Kayitare',
-      driverPhone: '+250 788 888 999',
-      from: 'Huye',
-      to: 'Kigali',
-      departureTime: _at(0, 16, 0),
-      arrivalTime: _at(0, 18, 30),
-      totalSeats: 48,
-      remainingSeats: 30,
-    ),
-    Schedule(
-      id: 9,
-      bus: 'Virunga Travel - VT-085',
-      price: 13500,
-      driverName: 'Fidele Bizimana',
-      driverPhone: '+250 788 999 000',
-      from: 'Kigali',
-      to: 'Rusizi',
-      departureTime: _at(2, 6, 0),
-      arrivalTime: _at(2, 11, 30),
-      totalSeats: 48,
-      remainingSeats: 22,
-    ),
-    Schedule(
-      id: 10,
-      bus: 'Trinity Liner - TL-012',
-      price: 16000,
-      driverName: 'Innocent Karangwa',
-      driverPhone: '+250 788 100 200',
-      from: 'Kigali',
-      to: 'Bujumbura',
-      departureTime: _at(2, 22, 0),
-      arrivalTime: _at(3, 8, 0),
-      totalSeats: 48,
-      remainingSeats: 17,
-    ),
-  ];
-
-  /// Mapping of schedule id → company id. Lives next to schedules so we don't
-  /// have to regenerate freezed. When the API arrives, drop this and put
-  /// `companyId` on the Schedule DTO.
-  static const Map<int, String> _scheduleCompany = {
-    1: 'volcano',
-    2: 'horizon',
-    3: 'ritco',
-    4: 'virunga',
-    5: 'volcano',
-    6: 'horizon',
-    7: 'trinity',
-    8: 'ritco',
-    9: 'virunga',
-    10: 'trinity',
-  };
-
-  /// Public lookup so screens / cards can resolve a schedule's company.
-  static Company companyFor(int scheduleId) {
-    final id = _scheduleCompany[scheduleId] ?? 'volcano';
-    return DummyCompanies.byId(id);
-  }
-
-  static const List<String> _origins = [
-    'Kigali',
-    'Musanze',
-    'Huye',
-    'Rubavu',
-    'Nyagatare',
-    'Rusizi',
-  ];
-
-  static const List<String> _destinations = [
-    'Kigali',
-    'Musanze',
-    'Huye',
-    'Rubavu',
-    'Rusizi',
-    'Nyagatare',
-    'Kampala',
-    'Bujumbura',
-  ];
-
-  // ── API methods ──────────────────────────────────────────────────────────
+  // ── Companies ────────────────────────────────────────────────────────────
 
   Future<List<Company>> getCompanies() async {
-    await Future.delayed(_fakeDelay);
-    return List<Company>.from(DummyCompanies.all);
+    final res = await _apiClient.get('/api/v1/companies');
+    final list = (res.data as List)
+        .map((e) => Company.fromBackend(Map<String, dynamic>.from(e as Map)))
+        .toList();
+    // Keep the in-memory lookup up to date so cards anywhere can resolve a
+    // company by id without an extra round trip.
+    CompanyCache.replaceAll(list);
+    return list;
   }
+
+  /// Returns the cached company for [companyId]. Falls back to a generic
+  /// branded shell if the cache hasn't been populated yet (e.g. deep link
+  /// scenarios). Kept as a static so screens that already call
+  /// `TicketScheduleService.companyFor(...)` don't have to be rewritten.
+  static Company companyFor(dynamic identifier) {
+    if (identifier == null) return CompanyCache.fallback();
+    final id = identifier.toString();
+    return CompanyCache.byId(id) ?? CompanyCache.fallback();
+  }
+
+  // ── Schedules ────────────────────────────────────────────────────────────
 
   Future<List<Schedule>> getAllSchedules({
     String? from,
@@ -210,137 +46,230 @@ class TicketScheduleService {
     String? departureDate,
     String? companyId,
   }) async {
-    await Future.delayed(_fakeDelay);
-    return _dummySchedules.where((s) {
-      if (from != null && from.isNotEmpty &&
-          s.from.toLowerCase() != from.toLowerCase()) {
-        return false;
-      }
-      if (to != null && to.isNotEmpty &&
-          s.to.toLowerCase() != to.toLowerCase()) {
-        return false;
-      }
-      if (companyId != null && companyId.isNotEmpty) {
-        if (_scheduleCompany[s.id] != companyId) return false;
-      }
-      return true;
-    }).toList();
+    final params = <String, dynamic>{};
+    if (from != null && from.isNotEmpty) params['from'] = from;
+    if (to != null && to.isNotEmpty) params['to'] = to;
+    if (departureDate != null && departureDate.isNotEmpty) {
+      params['departureDate'] = departureDate;
+    }
+    if (companyId != null && companyId.isNotEmpty) {
+      params['companyId'] = companyId;
+    }
+
+    final res = await _apiClient.get('/api/v1/schedules', params: params);
+
+    // The endpoint either returns a flat list or a Spring Page envelope. Be
+    // permissive about both so we don't break if pagination is enabled later.
+    final raw = res.data;
+    final List items = raw is List
+        ? raw
+        : (raw is Map && raw['content'] is List ? raw['content'] as List : const []);
+
+    return items
+        .map((e) => _scheduleFromBackend(Map<String, dynamic>.from(e as Map)))
+        .toList();
   }
 
   Future<ScheduleSeats> getScheduleSeats(int scheduleId) async {
-    await Future.delayed(_fakeDelay);
+    final res = await _apiClient.get('/api/v1/schedules/$scheduleId/seats');
+    final raw = Map<String, dynamic>.from(res.data as Map);
 
-    // Pre-book a deterministic set of seats per schedule so it looks realistic.
-    final bookedSet = <String>{
-      'A2', 'A5', 'B1', 'B7', 'C3', 'C4', 'D9', 'D12',
-      if (scheduleId.isEven) ...['A8', 'B11', 'C7'],
-      if (scheduleId.isOdd) ...['B4', 'D2', 'E1'],
-    };
+    final seatsJson = (raw['seats'] as List? ?? const [])
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
 
-    int seatId = 1;
-    final seats = <SeatAvailability>[];
-
-    for (final col in ['A', 'B', 'C', 'D']) {
-      for (var row = 1; row <= 12; row++) {
-        final number = '$col$row';
-        seats.add(SeatAvailability(
-          seatId: seatId++,
-          seatNumber: number,
-          booked: bookedSet.contains(number),
-        ));
-      }
-    }
-    // Back-row "E" seats (5 across).
-    for (var row = 1; row <= 5; row++) {
-      final number = 'E$row';
-      seats.add(SeatAvailability(
-        seatId: seatId++,
-        seatNumber: number,
-        booked: bookedSet.contains(number),
-      ));
-    }
+    final seats = seatsJson.map((s) {
+      return SeatAvailability(
+        seatId: (s['seatId'] as num).toInt(),
+        seatNumber: s['seatNumber']?.toString() ?? '',
+        booked: s['booked'] == true,
+        locked: s['locked'] == true,
+        version: (s['version'] is num) ? (s['version'] as num).toInt() : 0,
+      );
+    }).toList();
 
     return ScheduleSeats(seats: seats);
   }
 
-  Future<BuyTicketResponse> buyTicket(int scheduleId, int seatId) async {
-    await Future.delayed(_fakeDelay);
+  // ── Booking ──────────────────────────────────────────────────────────────
 
-    final schedule = _dummySchedules.firstWhere(
-      (s) => s.id == scheduleId,
-      orElse: () => _dummySchedules.first,
+  Future<BuyTicketResponse> buyTicket(int scheduleId, int seatId,
+      {String? seatNumber}) async {
+    // POST /api/v1/tickets — body identifies the seat-availability row to
+    // lock. The schedule is implied by the seat availability on the backend.
+    // Seat locking gives idempotency naturally even without the
+    // `Idempotency-Key` header, so we don't need to thread it through here.
+    final res = await _apiClient.post(
+      '/api/v1/tickets',
+      data: {
+        'seatAvailabilityId': seatId,
+        if (seatNumber != null && seatNumber.isNotEmpty) 'seatNumber': seatNumber,
+      },
     );
 
-    // Reverse-engineer a plausible seat number from the seatId.
-    final cols = ['A', 'B', 'C', 'D'];
-    final String seatNumber;
-    if (seatId <= 48) {
-      final colIdx = (seatId - 1) ~/ 12;
-      final row = ((seatId - 1) % 12) + 1;
-      seatNumber = '${cols[colIdx]}$row';
-    } else {
-      seatNumber = 'E${seatId - 48}';
-    }
-
-    final bookingId = 'TGB-${DateTime.now().millisecondsSinceEpoch}';
-
-    return BuyTicketResponse(
-      id: bookingId,
-      fullName: 'Denis Rukwaya',
-      phoneNumber: '+250 788 123 456',
-      origin: schedule.from,
-      destination: schedule.to,
-      departureTime: schedule.departureTime,
-      arrivalTime: schedule.arrivalTime,
-      bookingDate: DateTime.now().toIso8601String(),
-      seatNumber: seatNumber,
-      qrCodeUrl: '',
-    );
+    final data = Map<String, dynamic>.from(res.data as Map);
+    return _ticketResponseFromBackend(data);
   }
 
+  Future<List<Ticket>> getMyTickets() async {
+    final res = await _apiClient.get('/api/v1/tickets/my');
+    final raw = res.data;
+    // Spring's `Page<T>` envelopes data inside `.content`.
+    final List items = raw is List
+        ? raw
+        : (raw is Map && raw['content'] is List
+            ? raw['content'] as List
+            : const []);
+
+    return items
+        .map((e) => _ticketFromBackend(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  }
+
+  // ── Origins / Destinations ───────────────────────────────────────────────
+  //
+  // The backend doesn't expose dedicated origin/destination catalogue
+  // endpoints, so we derive both from the currently-known schedules. The home
+  // screen falls back to a static city list if the schedules haven't been
+  // loaded yet — this matches the behaviour the UI already expects.
+
+  static const _staticCities = <String>[
+    'Kigali',
+    'Musanze',
+    'Huye',
+    'Rubavu',
+    'Nyagatare',
+    'Rusizi',
+    'Kampala',
+    'Bujumbura',
+  ];
+
   Future<List<String>> getOrigins() async {
-    await Future.delayed(_fakeDelay);
-    return List<String>.from(_origins);
+    final schedules = await getAllSchedules();
+    final origins = schedules.map((s) => s.from).toSet().toList()..sort();
+    if (origins.isEmpty) return List<String>.from(_staticCities);
+    return origins;
   }
 
   Future<List<String>> getDestinations() async {
-    await Future.delayed(_fakeDelay);
-    return List<String>.from(_destinations);
+    final schedules = await getAllSchedules();
+    final dests = schedules.map((s) => s.to).toSet().toList()..sort();
+    if (dests.isEmpty) return List<String>.from(_staticCities);
+    return dests;
   }
 
   Future<List<String>> getDestinationsFor(String start) async {
-    await Future.delayed(_fakeDelay);
-    return _destinations.where((d) => d.toLowerCase() != start.toLowerCase()).toList();
+    final schedules = await getAllSchedules(from: start);
+    final dests = schedules.map((s) => s.to).toSet().toList()..sort();
+    if (dests.isEmpty) {
+      return _staticCities.where((c) => c.toLowerCase() != start.toLowerCase()).toList();
+    }
+    return dests;
   }
 
-  Future<String> sendChatMessage(String message) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+  // ── Chatbot ──────────────────────────────────────────────────────────────
 
-    final lower = message.toLowerCase();
-    if (lower.contains('route')) {
-      return 'We currently serve Kigali, Musanze, Huye, Rubavu, Nyagatare, Rusizi, '
-          'Kampala and Bujumbura. Tap "Explore" to see live schedules.';
+  Future<String> sendChatMessage(String message) async {
+    try {
+      final res = await _apiClient.post(
+        '/api/v1/ai/chat',
+        data: {'message': message},
+      );
+      final data = res.data;
+      if (data is Map) {
+        return (data['reply'] ?? data['message'] ?? data['response'] ?? '')
+            .toString();
+      }
+      return data?.toString() ?? '';
+    } catch (_) {
+      throw const ApiException(
+          'Sorry, the assistant is unavailable right now. Please try again.');
     }
-    if (lower.contains('compan')) {
-      return 'TegaBus partners with Volcano Express, Horizon Coach, Ritco Star, '
-          'Virunga Travel and Trinity Liner. Tap a company on the home screen '
-          'to see its schedules.';
+  }
+
+  // ── Internal: backend → mobile DTO mapping ───────────────────────────────
+
+  Schedule _scheduleFromBackend(Map<String, dynamic> json) {
+    final price = (json['price'] is num) ? (json['price'] as num).toDouble() : 0.0;
+    final total = (json['totalSeats'] is num)
+        ? (json['totalSeats'] as num).toInt()
+        : 0;
+    final remaining = (json['remainingSeats'] is num)
+        ? (json['remainingSeats'] as num).toInt()
+        : 0;
+    return Schedule(
+      id: (json['id'] as num).toInt(),
+      bus: json['bus']?.toString() ?? '',
+      price: price,
+      companyId: json['companyId']?.toString(),
+      companyName: json['companyName']?.toString(),
+      driverName: json['driverName']?.toString(),
+      driverPhone: json['driverPhone']?.toString(),
+      from: json['from']?.toString() ?? '',
+      to: json['to']?.toString() ?? '',
+      departureTime: _parseDate(json['departureTime']),
+      arrivalTime: _parseDate(json['arrivalTime']),
+      totalSeats: total,
+      remainingSeats: remaining,
+    );
+  }
+
+  BuyTicketResponse _ticketResponseFromBackend(Map<String, dynamic> json) {
+    final firstName = json['firstName']?.toString() ?? '';
+    final lastName = json['lastName']?.toString() ?? '';
+    final fullName = '${firstName} ${lastName}'.trim();
+    final price = (json['price'] is num) ? (json['price'] as num).toDouble() : 0.0;
+
+    return BuyTicketResponse(
+      id: json['id']?.toString() ?? '',
+      fullName: fullName.isEmpty ? 'Passenger' : fullName,
+      origin: json['from']?.toString() ?? '',
+      destination: json['to']?.toString() ?? '',
+      departureTime: _parseDate(json['departureTime']),
+      // Backend `TicketResponse` doesn't carry arrival time — fall back to
+      // departure + 3h so the confirmation screen still renders sensibly.
+      arrivalTime: _parseDate(json['departureTime'])
+          .add(const Duration(hours: 3)),
+      bookingDate: DateTime.now().toIso8601String(),
+      seatNumber: json['seatNumber']?.toString() ?? '',
+      qrCodeUrl: json['qrCodeUrl']?.toString() ?? '',
+      companyId: json['companyId']?.toString(),
+      companyName: json['companyName']?.toString(),
+      price: price,
+      status: json['status']?.toString(),
+    );
+  }
+
+  Ticket _ticketFromBackend(Map<String, dynamic> json) {
+    final firstName = json['firstName']?.toString() ?? '';
+    final lastName = json['lastName']?.toString() ?? '';
+    final fullName = '$firstName $lastName'.trim();
+    final price = (json['price'] is num) ? (json['price'] as num).toDouble() : null;
+    final dep = _parseDate(json['departureTime']);
+
+    return Ticket(
+      id: json['id']?.toString() ?? '',
+      origin: json['from']?.toString() ?? '',
+      destination: json['to']?.toString() ?? '',
+      seatNumber: json['seatNumber']?.toString() ?? '',
+      departureTime: dep,
+      arrivalTime: dep.add(const Duration(hours: 3)),
+      bookingDate: DateTime.now().toIso8601String(),
+      qrCodeUrl: json['qrCodeUrl']?.toString() ?? '',
+      fullName: fullName.isEmpty ? null : fullName,
+      price: price,
+      companyId: json['companyId']?.toString(),
+      companyName: json['companyName']?.toString(),
+      status: json['status']?.toString(),
+    );
+  }
+
+  DateTime _parseDate(dynamic raw) {
+    if (raw == null) return DateTime.now();
+    try {
+      return DateTime.parse(raw.toString());
+    } catch (_) {
+      return DateTime.now();
     }
-    if (lower.contains('book') || lower.contains('how')) {
-      return 'Booking is easy: pick your origin and destination on the home screen, '
-          'choose a date, select a bus, pick your seat, and confirm. Your e-ticket '
-          'with QR code will appear under "My Tickets".';
-    }
-    if (lower.contains('price') || lower.contains('cost') ||
-        lower.contains('huye')) {
-      return 'Kigali → Huye is currently 4,500 RWF on Horizon Coach. '
-          'Prices vary by operator and time of day.';
-    }
-    if (lower.contains('refund') || lower.contains('cancel')) {
-      return 'Tickets can be cancelled up to 2 hours before departure for a full refund. '
-          'Contact support@tegabus.rw for help.';
-    }
-    return 'Thanks for your message! I\'m here to help with routes, bookings, '
-        'pricing, or any TegaBus question. What would you like to know?';
   }
 }

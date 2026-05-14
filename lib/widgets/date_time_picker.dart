@@ -61,7 +61,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
-          color: DColors.surfaceVariant,
+          color: context.colors.surfaceVariant,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -69,11 +69,11 @@ class _DateTimePickerState extends State<DateTimePicker> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: DColors.primary1,
+                color: context.colors.primary1,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Iconsax.calendar_1,
-                  size: 18, color: DColors.primary),
+              child: Icon(Iconsax.calendar_1,
+                  size: 18, color: context.colors.primary),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -81,10 +81,10 @@ class _DateTimePickerState extends State<DateTimePicker> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'DEPARTURE',
                     style: TextStyle(
-                      color: DColors.neutral4,
+                      color: context.colors.neutral4,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.4,
@@ -94,8 +94,9 @@ class _DateTimePickerState extends State<DateTimePicker> {
                   Text(
                     formatted,
                     style: TextStyle(
-                      color:
-                          isSet ? DColors.neutral6 : DColors.neutral4,
+                      color: isSet
+                          ? context.colors.neutral6
+                          : context.colors.neutral4,
                       fontSize: 14,
                       fontWeight:
                           isSet ? FontWeight.w800 : FontWeight.w500,
@@ -104,8 +105,8 @@ class _DateTimePickerState extends State<DateTimePicker> {
                 ],
               ),
             ),
-            const Icon(Iconsax.arrow_down_1,
-                size: 16, color: DColors.neutral4),
+            Icon(Iconsax.arrow_down_1,
+                size: 16, color: context.colors.neutral4),
           ],
         ),
       ),

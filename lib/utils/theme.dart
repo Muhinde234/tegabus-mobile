@@ -116,4 +116,97 @@ class DTheme {
           return const IconThemeData(color: DColors.neutral4, size: 22);
         }),
       );
+
+  // ── Dark variants ──────────────────────────────────────────────────────
+  // Mirrors of the light theme bits, sourced from DColorsDark so backgrounds,
+  // borders, and text adapt automatically when the user picks dark mode.
+
+  static ElevatedButtonThemeData get darkElevatedButtonThemeData =>
+      ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: DColorsDark.primary,
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            letterSpacing: 0.3,
+          ),
+        ),
+      );
+
+  static OutlinedButtonThemeData get darkOutlinedButtonThemeData =>
+      OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: DColorsDark.primary,
+          side: const BorderSide(color: DColorsDark.primary, width: 1.5),
+          minimumSize: const Size(double.infinity, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+      );
+
+  static InputDecorationTheme get darkInputDecorationTheme =>
+      InputDecorationTheme(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        filled: true,
+        fillColor: DColorsDark.surfaceVariant,
+        labelStyle:
+            const TextStyle(fontSize: 14, color: DColorsDark.neutral5),
+        hintStyle:
+            const TextStyle(fontSize: 14, color: DColorsDark.neutral4),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColorsDark.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColorsDark.danger6, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: DColorsDark.danger6, width: 2),
+        ),
+        errorMaxLines: 3,
+      );
+
+  static CardThemeData get darkCardThemeData => CardThemeData(
+        elevation: 0,
+        color: DColorsDark.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        margin: EdgeInsets.zero,
+      );
+
+  static AppBarTheme get darkAppBarTheme => const AppBarTheme(
+        backgroundColor: DColorsDark.surface,
+        surfaceTintColor: DColorsDark.surface,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          color: DColorsDark.neutral6,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
+        iconTheme: IconThemeData(color: DColorsDark.neutral6),
+      );
 }

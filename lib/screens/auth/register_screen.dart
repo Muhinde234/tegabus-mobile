@@ -62,7 +62,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     });
 
     return Scaffold(
-      backgroundColor: DColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -85,11 +84,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text('TegaBus',
+                  Text('TegaBus',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
-                          color: DColors.primary)),
+                          color: context.colors.primary)),
                 ],
               ),
               const SizedBox(height: 28),
@@ -99,7 +98,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               const SizedBox(height: 6),
               Text(l.registerSubtitle,
                   style:
-                      const TextStyle(color: DColors.neutral4, fontSize: 15)),
+                      TextStyle(color: context.colors.neutral4, fontSize: 15)),
               const SizedBox(height: 28),
 
               Form(
@@ -255,7 +254,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(l.alreadyHaveAccount,
-                      style: const TextStyle(color: DColors.neutral4)),
+                      style: TextStyle(color: context.colors.neutral4)),
                   GestureDetector(
                     onTap: () => Navigator.pushReplacement(
                       context,

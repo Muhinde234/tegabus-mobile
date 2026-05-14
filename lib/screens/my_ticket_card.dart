@@ -20,14 +20,21 @@ class MyTicketCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final arrivalTime =
+        ticket.arrivalTime ?? ticket.departureTime.add(const Duration(hours: 3));
     final dep = DateFormat('h:mm a').format(ticket.departureTime);
-    final arr = DateFormat('h:mm a').format(ticket.arrivalTime);
+    final arr = DateFormat('h:mm a').format(arrivalTime);
     final date = DateFormat('EEE, MMM d yyyy').format(ticket.departureTime);
-    final dur = ticket.arrivalTime.difference(ticket.departureTime);
+    final dur = arrivalTime.difference(ticket.departureTime);
     final durationText = '${dur.inHours}h ${dur.inMinutes % 60}m';
-    final company = DummyCompanies.byId(
-      MyTicketsNotifier.companyIdForTicket(ticket.id),
-    );
+    // Resolve company from the ticket's own companyId where present, falling
+    // back to the runtime cache populated by /companies. If neither is
+    // available (e.g. before the cache loads) we use a neutral fallback.
+    final company = CompanyCache.byId(
+          ticket.companyId ??
+              MyTicketsNotifier.companyIdForTicket(ticket.id),
+        ) ??
+        CompanyCache.fallback();
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -40,9 +47,9 @@ class MyTicketCard extends StatelessWidget {
         clipper: TicketClipper(notchRadius: 18, notchPosition: 0.58),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.colors.surface,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: DColors.cardShadow,
+            boxShadow: context.colors.cardShadow,
           ),
           child: Column(
             children: [
@@ -82,11 +89,11 @@ class MyTicketCard extends StatelessWidget {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 14)),
-                              const SizedBox(height: 1),
+                              SizedBox(height: 1),
                               Text(
                                 '$date  •  ${l.seatLabel(ticket.seatNumber)}',
-                                style: const TextStyle(
-                                    color: DColors.neutral4, fontSize: 11),
+                                style: TextStyle(
+                                    color: context.colors.neutral4, fontSize: 11),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -126,9 +133,9 @@ class MyTicketCard extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(durationText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 11,
-                                      color: DColors.neutral4,
+                                      color: context.colors.neutral4,
                                       fontWeight: FontWeight.w500)),
                               const SizedBox(height: 6),
                               Row(
@@ -138,28 +145,32 @@ class MyTicketCard extends StatelessWidget {
                                     height: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: Border.all(color: DColors.primary, width: 2),
+                                      border: Border.all(
+                                          color: context.colors.primary,
+                                          width: 2),
                                     ),
                                   ),
                                   Expanded(
                                     child: Container(
                                       height: 1.5,
-                                      color: DColors.primary3,
+                                      color: context.colors.primary3,
                                     ),
                                   ),
-                                  const Icon(Iconsax.bus, size: 14, color: DColors.primary),
+                                  Icon(Iconsax.bus,
+                                      size: 14,
+                                      color: context.colors.primary),
                                   Expanded(
                                     child: Container(
                                       height: 1.5,
-                                      color: DColors.primary3,
+                                      color: context.colors.primary3,
                                     ),
                                   ),
                                   Container(
                                     width: 8,
                                     height: 8,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: DColors.primary,
+                                      color: context.colors.primary,
                                     ),
                                   ),
                                 ],
@@ -207,15 +218,16 @@ class MyTicketCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: DColors.surfaceVariant,
+                        color: context.colors.surfaceVariant,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Iconsax.scan_barcode, size: 16, color: DColors.primary),
+                      child: Icon(Iconsax.scan_barcode,
+                          size: 16, color: context.colors.primary),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Text(l.tapToViewQr,
-                        style: const TextStyle(
-                            color: DColors.neutral4,
+                        style: TextStyle(
+                            color: context.colors.neutral4,
                             fontSize: 12,
                             fontWeight: FontWeight.w500)),
                     const Spacer(),
@@ -240,7 +252,9 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: isUpcoming ? DColors.success1 : DColors.neutral1,
+        color: isUpcoming
+            ? context.colors.success1
+            : context.colors.neutral1,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -251,14 +265,16 @@ class _StatusBadge extends StatelessWidget {
             height: 6,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isUpcoming ? DColors.success6 : DColors.neutral4,
+              color: isUpcoming
+                  ? context.colors.success6
+                  : context.colors.neutral4,
             ),
           ),
           const SizedBox(width: 5),
           Text(
             isUpcoming ? 'Upcoming' : 'Completed',
             style: TextStyle(
-              color: isUpcoming ? DColors.success6 : DColors.neutral4,
+              color: isUpcoming ? DColors.success6 : context.colors.neutral4,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),

@@ -9,6 +9,7 @@ abstract class SeatAvailability with _$SeatAvailability {
     required int seatId,
     required String seatNumber,
     required bool booked,
+    @Default(false) bool locked,
     @Default(0) int version,
   }) = _SeatAvailability;
 

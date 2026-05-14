@@ -9,6 +9,8 @@ abstract class Schedule with _$Schedule {
     required int id,
     required String bus,
     required double price,
+    String? companyId,
+    String? companyName,
     String? driverName,
     String? driverPhone,
     required String from,

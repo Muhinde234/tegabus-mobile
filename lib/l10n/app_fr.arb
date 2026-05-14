@@ -166,5 +166,10 @@
   "paymentInstructions": "Un message sera envoyé sur votre téléphone. Confirmez pour finaliser le paiement.",
   "paymentTotal": "Total",
   "paymentSeat": "Siège",
-  "paymentTrip": "Trajet"
+  "paymentTrip": "Trajet",
+
+  "themeTitle": "Apparence",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "themeSystem": "Système"
 }

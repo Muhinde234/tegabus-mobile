@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BuyTicketResponse {
 
- String get id; String get fullName; String get phoneNumber; String get origin; String get destination; DateTime get departureTime; DateTime get arrivalTime; String get bookingDate; String get seatNumber; String get qrCodeUrl;
+ String get id; String get fullName; String? get phoneNumber; String get origin; String get destination; DateTime get departureTime; DateTime get arrivalTime; String get bookingDate; String get seatNumber; String get qrCodeUrl; String? get companyId; String? get companyName; double get price; String? get status;
 /// Create a copy of BuyTicketResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BuyTicketResponseCopyWith<BuyTicketResponse> get copyWith => _$BuyTicketRespons
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyTicketResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.departureTime, departureTime) || other.departureTime == departureTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.bookingDate, bookingDate) || other.bookingDate == bookingDate)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.qrCodeUrl, qrCodeUrl) || other.qrCodeUrl == qrCodeUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyTicketResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.departureTime, departureTime) || other.departureTime == departureTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.bookingDate, bookingDate) || other.bookingDate == bookingDate)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.qrCodeUrl, qrCodeUrl) || other.qrCodeUrl == qrCodeUrl)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.price, price) || other.price == price)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,phoneNumber,origin,destination,departureTime,arrivalTime,bookingDate,seatNumber,qrCodeUrl);
+int get hashCode => Object.hash(runtimeType,id,fullName,phoneNumber,origin,destination,departureTime,arrivalTime,bookingDate,seatNumber,qrCodeUrl,companyId,companyName,price,status);
 
 @override
 String toString() {
-  return 'BuyTicketResponse(id: $id, fullName: $fullName, phoneNumber: $phoneNumber, origin: $origin, destination: $destination, departureTime: $departureTime, arrivalTime: $arrivalTime, bookingDate: $bookingDate, seatNumber: $seatNumber, qrCodeUrl: $qrCodeUrl)';
+  return 'BuyTicketResponse(id: $id, fullName: $fullName, phoneNumber: $phoneNumber, origin: $origin, destination: $destination, departureTime: $departureTime, arrivalTime: $arrivalTime, bookingDate: $bookingDate, seatNumber: $seatNumber, qrCodeUrl: $qrCodeUrl, companyId: $companyId, companyName: $companyName, price: $price, status: $status)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $BuyTicketResponseCopyWith<$Res>  {
   factory $BuyTicketResponseCopyWith(BuyTicketResponse value, $Res Function(BuyTicketResponse) _then) = _$BuyTicketResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String fullName, String phoneNumber, String origin, String destination, DateTime departureTime, DateTime arrivalTime, String bookingDate, String seatNumber, String qrCodeUrl
+ String id, String fullName, String? phoneNumber, String origin, String destination, DateTime departureTime, DateTime arrivalTime, String bookingDate, String seatNumber, String qrCodeUrl, String? companyId, String? companyName, double price, String? status
 });
 
 
@@ -65,19 +65,23 @@ class _$BuyTicketResponseCopyWithImpl<$Res>
 
 /// Create a copy of BuyTicketResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? phoneNumber = null,Object? origin = null,Object? destination = null,Object? departureTime = null,Object? arrivalTime = null,Object? bookingDate = null,Object? seatNumber = null,Object? qrCodeUrl = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? phoneNumber = freezed,Object? origin = null,Object? destination = null,Object? departureTime = null,Object? arrivalTime = null,Object? bookingDate = null,Object? seatNumber = null,Object? qrCodeUrl = null,Object? companyId = freezed,Object? companyName = freezed,Object? price = null,Object? status = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
-as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
+as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
 as String,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
 as String,departureTime: null == departureTime ? _self.departureTime : departureTime // ignore: cast_nullable_to_non_nullable
 as DateTime,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime,bookingDate: null == bookingDate ? _self.bookingDate : bookingDate // ignore: cast_nullable_to_non_nullable
 as String,seatNumber: null == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
 as String,qrCodeUrl: null == qrCodeUrl ? _self.qrCodeUrl : qrCodeUrl // ignore: cast_nullable_to_non_nullable
-as String,
+as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
+as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as String?,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as double,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -162,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String fullName,  String phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String fullName,  String? phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl,  String? companyId,  String? companyName,  double price,  String? status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BuyTicketResponse() when $default != null:
-return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl);case _:
+return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl,_that.companyId,_that.companyName,_that.price,_that.status);case _:
   return orElse();
 
 }
@@ -183,10 +187,10 @@ return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.des
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String fullName,  String phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String fullName,  String? phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl,  String? companyId,  String? companyName,  double price,  String? status)  $default,) {final _that = this;
 switch (_that) {
 case _BuyTicketResponse():
-return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl);case _:
+return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl,_that.companyId,_that.companyName,_that.price,_that.status);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +207,10 @@ return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.des
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String fullName,  String phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String fullName,  String? phoneNumber,  String origin,  String destination,  DateTime departureTime,  DateTime arrivalTime,  String bookingDate,  String seatNumber,  String qrCodeUrl,  String? companyId,  String? companyName,  double price,  String? status)?  $default,) {final _that = this;
 switch (_that) {
 case _BuyTicketResponse() when $default != null:
-return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl);case _:
+return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.destination,_that.departureTime,_that.arrivalTime,_that.bookingDate,_that.seatNumber,_that.qrCodeUrl,_that.companyId,_that.companyName,_that.price,_that.status);case _:
   return null;
 
 }
@@ -218,12 +222,12 @@ return $default(_that.id,_that.fullName,_that.phoneNumber,_that.origin,_that.des
 @JsonSerializable()
 
 class _BuyTicketResponse implements BuyTicketResponse {
-  const _BuyTicketResponse({required this.id, required this.fullName, required this.phoneNumber, required this.origin, required this.destination, required this.departureTime, required this.arrivalTime, required this.bookingDate, required this.seatNumber, required this.qrCodeUrl});
+  const _BuyTicketResponse({required this.id, required this.fullName, this.phoneNumber, required this.origin, required this.destination, required this.departureTime, required this.arrivalTime, required this.bookingDate, required this.seatNumber, required this.qrCodeUrl, this.companyId, this.companyName, this.price = 0, this.status});
   factory _BuyTicketResponse.fromJson(Map<String, dynamic> json) => _$BuyTicketResponseFromJson(json);
 
 @override final  String id;
 @override final  String fullName;
-@override final  String phoneNumber;
+@override final  String? phoneNumber;
 @override final  String origin;
 @override final  String destination;
 @override final  DateTime departureTime;
@@ -231,6 +235,10 @@ class _BuyTicketResponse implements BuyTicketResponse {
 @override final  String bookingDate;
 @override final  String seatNumber;
 @override final  String qrCodeUrl;
+@override final  String? companyId;
+@override final  String? companyName;
+@override@JsonKey() final  double price;
+@override final  String? status;
 
 /// Create a copy of BuyTicketResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuyTicketResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.departureTime, departureTime) || other.departureTime == departureTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.bookingDate, bookingDate) || other.bookingDate == bookingDate)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.qrCodeUrl, qrCodeUrl) || other.qrCodeUrl == qrCodeUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuyTicketResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.departureTime, departureTime) || other.departureTime == departureTime)&&(identical(other.arrivalTime, arrivalTime) || other.arrivalTime == arrivalTime)&&(identical(other.bookingDate, bookingDate) || other.bookingDate == bookingDate)&&(identical(other.seatNumber, seatNumber) || other.seatNumber == seatNumber)&&(identical(other.qrCodeUrl, qrCodeUrl) || other.qrCodeUrl == qrCodeUrl)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.price, price) || other.price == price)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,phoneNumber,origin,destination,departureTime,arrivalTime,bookingDate,seatNumber,qrCodeUrl);
+int get hashCode => Object.hash(runtimeType,id,fullName,phoneNumber,origin,destination,departureTime,arrivalTime,bookingDate,seatNumber,qrCodeUrl,companyId,companyName,price,status);
 
 @override
 String toString() {
-  return 'BuyTicketResponse(id: $id, fullName: $fullName, phoneNumber: $phoneNumber, origin: $origin, destination: $destination, departureTime: $departureTime, arrivalTime: $arrivalTime, bookingDate: $bookingDate, seatNumber: $seatNumber, qrCodeUrl: $qrCodeUrl)';
+  return 'BuyTicketResponse(id: $id, fullName: $fullName, phoneNumber: $phoneNumber, origin: $origin, destination: $destination, departureTime: $departureTime, arrivalTime: $arrivalTime, bookingDate: $bookingDate, seatNumber: $seatNumber, qrCodeUrl: $qrCodeUrl, companyId: $companyId, companyName: $companyName, price: $price, status: $status)';
 }
 
 
@@ -265,7 +273,7 @@ abstract mixin class _$BuyTicketResponseCopyWith<$Res> implements $BuyTicketResp
   factory _$BuyTicketResponseCopyWith(_BuyTicketResponse value, $Res Function(_BuyTicketResponse) _then) = __$BuyTicketResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String fullName, String phoneNumber, String origin, String destination, DateTime departureTime, DateTime arrivalTime, String bookingDate, String seatNumber, String qrCodeUrl
+ String id, String fullName, String? phoneNumber, String origin, String destination, DateTime departureTime, DateTime arrivalTime, String bookingDate, String seatNumber, String qrCodeUrl, String? companyId, String? companyName, double price, String? status
 });
 
 
@@ -282,19 +290,23 @@ class __$BuyTicketResponseCopyWithImpl<$Res>
 
 /// Create a copy of BuyTicketResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? phoneNumber = null,Object? origin = null,Object? destination = null,Object? departureTime = null,Object? arrivalTime = null,Object? bookingDate = null,Object? seatNumber = null,Object? qrCodeUrl = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? phoneNumber = freezed,Object? origin = null,Object? destination = null,Object? departureTime = null,Object? arrivalTime = null,Object? bookingDate = null,Object? seatNumber = null,Object? qrCodeUrl = null,Object? companyId = freezed,Object? companyName = freezed,Object? price = null,Object? status = freezed,}) {
   return _then(_BuyTicketResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
-as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
+as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
 as String,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
 as String,departureTime: null == departureTime ? _self.departureTime : departureTime // ignore: cast_nullable_to_non_nullable
 as DateTime,arrivalTime: null == arrivalTime ? _self.arrivalTime : arrivalTime // ignore: cast_nullable_to_non_nullable
 as DateTime,bookingDate: null == bookingDate ? _self.bookingDate : bookingDate // ignore: cast_nullable_to_non_nullable
 as String,seatNumber: null == seatNumber ? _self.seatNumber : seatNumber // ignore: cast_nullable_to_non_nullable
 as String,qrCodeUrl: null == qrCodeUrl ? _self.qrCodeUrl : qrCodeUrl // ignore: cast_nullable_to_non_nullable
-as String,
+as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
+as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as String?,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as double,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
