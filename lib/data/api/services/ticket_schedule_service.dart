@@ -122,8 +122,9 @@ class TicketScheduleService {
     );
   }
 
-  Future<List<Ticket>> getMyTickets() async {
+  Future<List<Ticket>> getMyTickets({String? passengerName}) async {
     // Mock: return sample tickets so the My Tickets tab works without a backend.
+    final name = passengerName ?? 'Passenger';
     final now = DateTime.now();
     return [
       Ticket(
@@ -135,7 +136,7 @@ class TicketScheduleService {
         arrivalTime: now.subtract(const Duration(days: 1)),
         bookingDate: now.subtract(const Duration(days: 2)).toIso8601String(),
         qrCodeUrl: '',
-        fullName: 'Demo Passenger',
+        fullName: name,
         price: 3000,
         companyName: 'TegaBus',
         status: 'CONFIRMED',
@@ -149,7 +150,7 @@ class TicketScheduleService {
         arrivalTime: now.add(const Duration(days: 2, hours: 2)),
         bookingDate: now.subtract(const Duration(hours: 3)).toIso8601String(),
         qrCodeUrl: '',
-        fullName: 'Demo Passenger',
+        fullName: name,
         price: 3000,
         companyName: 'TegaBus',
         status: 'CONFIRMED',
@@ -163,7 +164,7 @@ class TicketScheduleService {
         arrivalTime: now.add(const Duration(days: 5, hours: 11)),
         bookingDate: now.toIso8601String(),
         qrCodeUrl: '',
-        fullName: 'Demo Passenger',
+        fullName: name,
         price: 5000,
         companyName: 'TegaBus',
         status: 'PENDING_PAYMENT',

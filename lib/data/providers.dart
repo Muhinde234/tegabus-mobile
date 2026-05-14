@@ -282,7 +282,8 @@ final seatsNotifierProvider = StateNotifierProvider.autoDispose
 
 class MyTicketsNotifier extends StateNotifier<State<MyTicketResponse>> {
   final TicketScheduleService _service;
-  MyTicketsNotifier(this._service) : super(const State.init());
+  final AuthService _auth;
+  MyTicketsNotifier(this._service, this._auth) : super(const State.init());
 
   // Side-map of ticket id → company id. Kept as an in-memory cache only —
   // when the backend returns `companyId` on the ticket itself we use that
@@ -298,7 +299,9 @@ class MyTicketsNotifier extends StateNotifier<State<MyTicketResponse>> {
   Future<void> fetchMyTickets() async {
     state = const State.loading();
     try {
-      final tickets = await _service.getMyTickets();
+      final user = await _auth.cachedUser();
+      final name = (user?.fullName.trim().isNotEmpty == true) ? user!.fullName : null;
+      final tickets = await _service.getMyTickets(passengerName: name);
       for (final t in tickets) {
         if (t.companyId != null && t.companyId!.isNotEmpty) {
           _ticketCompany[t.id] = t.companyId!;
@@ -345,7 +348,10 @@ class MyTicketsNotifier extends StateNotifier<State<MyTicketResponse>> {
 
 final myTicketsNotifierProvider =
     StateNotifierProvider<MyTicketsNotifier, State<MyTicketResponse>>((ref) {
-  return MyTicketsNotifier(ref.watch(ticketScheduleServiceProvider));
+  return MyTicketsNotifier(
+    ref.watch(ticketScheduleServiceProvider),
+    ref.watch(authServiceProvider),
+  );
 });
 
 // ── Buy ticket notifier ──────────────────────────────────────────────────────
@@ -353,8 +359,9 @@ final myTicketsNotifierProvider =
 class BuyTicketNotifier extends StateNotifier<State<BuyTicketResponse>> {
   final TicketScheduleService _service;
   final MyTicketsNotifier _myTickets;
+  final AuthService _auth;
 
-  BuyTicketNotifier(this._service, this._myTickets)
+  BuyTicketNotifier(this._service, this._myTickets, this._auth)
       : super(const State.init());
 
   Future<void> buyTicket(
@@ -367,11 +374,14 @@ class BuyTicketNotifier extends StateNotifier<State<BuyTicketResponse>> {
   }) async {
     state = const State.loading();
     try {
+      final user = await _auth.cachedUser();
+      final name = (user?.fullName.trim().isNotEmpty == true) ? user!.fullName : null;
       final ticket = await _service.buyTicket(
         scheduleId,
         seatId,
         seatNumber: seatNumber,
         schedule: schedule,
+        passengerName: name,
       );
       // Prefer the company id the backend returned on the ticket; fall back
       // to whatever the caller supplied (from the originating schedule).
@@ -392,6 +402,7 @@ final buyTicketNotifierProvider = StateNotifierProvider.autoDispose<
   return BuyTicketNotifier(
     ref.watch(ticketScheduleServiceProvider),
     ref.read(myTicketsNotifierProvider.notifier),
+    ref.watch(authServiceProvider),
   );
 });
 
